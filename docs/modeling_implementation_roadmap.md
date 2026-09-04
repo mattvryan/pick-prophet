@@ -191,11 +191,13 @@ Inventory: `docs/pickem_inventory.md`.
 
 ## M06 — Point-in-time rating adapters
 
+**Status:** M06 feasibility memo complete; adapter implementation deferred.
 **Branch:** `data/m06-pit-ratings`
 **Dependencies:** M03
 
 First produce a feasibility memo for Elo, FPI, and SP+ covering weekly historical
 availability, publication semantics, licensing, identifiers, and coverage.
+See `docs/ratings_feasibility.md`.
 
 Implement only sources that pass review:
 

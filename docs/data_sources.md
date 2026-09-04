@@ -49,6 +49,8 @@ verifiers). Track archive search progress in `docs/pickem_inventory.md`.
   prior completed games in the same season (see `attach_history_features`).
   Poll ranks and weekly Elo joins that must use team **names** emit
   `*.name_join_audit.csv` beside the processed season table.
+- Ratings feasibility and temporal semantics (M06 memo): see
+  `docs/ratings_feasibility.md`. Adapter decisions are deferred.
 - Live CFBD smoke checks are manual only; see `docs/cfbd_live_smoke.md`.
 - Returning-QB status, rivalry labels, and coach tenure need separately sourced,
   season-specific tables; current rosters must never be projected backward.

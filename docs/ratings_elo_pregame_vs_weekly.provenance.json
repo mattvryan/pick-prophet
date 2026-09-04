@@ -1,0 +1,110 @@
+{
+  "conflicting_duplicate_count": 0,
+  "exclusions": {
+    "non_fbs_games": 15617
+  },
+  "generated_at_utc": "2026-09-04T19:23:22.281825Z",
+  "helper_module": "pick_prophet.research.elo_pregame_vs_weekly",
+  "helper_sha256": "46e3a0ab217987b1b14cc79a48f45042c2979fbb21ed8b8e7da142934b0827fd",
+  "identical_duplicate_count": 0,
+  "input_game_rows": 7763,
+  "input_side_rows": 15526,
+  "notes": [
+    "conflicting_duplicate_count is 0 because conflicting weekly Elo duplicates raise ConflictError",
+    "Numeric agreement does not prove publication time relative to kickoff"
+  ],
+  "output_aggregate_rows": 149,
+  "parameters": {
+    "output_csv": "docs/ratings_elo_pregame_vs_weekly.csv",
+    "output_provenance": "docs/ratings_elo_pregame_vs_weekly.provenance.json",
+    "raw_root": "data/raw/cfbd",
+    "seasons": [
+      2017,
+      2018,
+      2019,
+      2020,
+      2021,
+      2022,
+      2023,
+      2024,
+      2025
+    ],
+    "tolerance": 1.0
+  },
+  "percentile_method": "sorted_index",
+  "repository_revision": "20bc3f333bd43a0dc956682016b3eaca76020aa7",
+  "season_types": [
+    "postseason",
+    "regular",
+    "spring_regular"
+  ],
+  "seasons": [
+    2017,
+    2018,
+    2019,
+    2020,
+    2021,
+    2022,
+    2023,
+    2024,
+    2025
+  ],
+  "snapshot_selection_rule": "lexicographic_max_subdir_with_games_and_elo_json",
+  "snapshots": [
+    {
+      "elo_sha256": "0d56218ccee0eb43c601661364c1cdd6b39e0c4c062c1641470b49a7ba9466b9",
+      "games_sha256": "ccc85536eb6e61caecf06b5f5d28551db4e08426bcffdd487b0234787c4853b7",
+      "path": "data/raw/cfbd/2017/20260904T154208Z",
+      "season": 2017
+    },
+    {
+      "elo_sha256": "7a383eda1616969c3d66f79a7ef9266c6a24732509919edf1841628cb3c57aa0",
+      "games_sha256": "daef1e503dd48bf9179f6ff8a084e239d5aecad7d7cfa36e32c492bf510a1b8e",
+      "path": "data/raw/cfbd/2018/20260904T154217Z",
+      "season": 2018
+    },
+    {
+      "elo_sha256": "9a71329406b8cca5cb6cd475e7e495c8a01a5f5a8ccad365facc32b10935c60f",
+      "games_sha256": "12b952fdf507788b8a095a6dca47f2d50c90e8d7cdf3af99472d76e4041d4c48",
+      "path": "data/raw/cfbd/2019/20260904T154226Z",
+      "season": 2019
+    },
+    {
+      "elo_sha256": "8218039ea6dddb5f43a392cd9490b490e9068d6d5d040cf38d4c9ef4d81e3ea9",
+      "games_sha256": "fa7cbaf54250f837a311c41f7cb623bffec525a733dfb58437514fb73481aa6f",
+      "path": "data/raw/cfbd/2020/20260904T154233Z",
+      "season": 2020
+    },
+    {
+      "elo_sha256": "0338b393b62a21bfab55ab12dece255bc596f208726c620ebe34a22c555c282d",
+      "games_sha256": "f09966fb028a08d8ef09aaf1775a9b96b068341cec93bdcd2a0d8cf0d9e609ca",
+      "path": "data/raw/cfbd/2021/20260904T154242Z",
+      "season": 2021
+    },
+    {
+      "elo_sha256": "298e18b99bce4fb3bb606a57b25603dc78af1995b6549260e4d794e9ce85df13",
+      "games_sha256": "2ede707809a8b287bc4ffbff688590c0214fdf930941b246cc02d2ac718ad441",
+      "path": "data/raw/cfbd/2022/20260904T154251Z",
+      "season": 2022
+    },
+    {
+      "elo_sha256": "ad9cd9d9426e8a0e65d9d53e7ad77d0b94cded4e992da12a507d60682fc43f24",
+      "games_sha256": "3b6a6f9074db35ab4b9a7625228d3b14bfaf7b02ec111c4be4e2e56003bdcfd3",
+      "path": "data/raw/cfbd/2023/20260904T154307Z",
+      "season": 2023
+    },
+    {
+      "elo_sha256": "7914bb41febcbca1f5767aae47031ae9ea5999c5e40509cd74615ffec4fd6bdc",
+      "games_sha256": "ae6acaf3d0718c2bbd0688f3565bdc48786bac663523ad95025cab871e5009d8",
+      "path": "data/raw/cfbd/2024/20260904T154320Z",
+      "season": 2024
+    },
+    {
+      "elo_sha256": "b5fd5bd4ed7dfc15a7a9530bfd260a444f248d2a10a756a56aeefe39653a283d",
+      "games_sha256": "7aeebd1ab4de1e5d94b5c8dfe4fb2916b736cb98e59c0cf7fc3d26218cf799b1",
+      "path": "data/raw/cfbd/2025/20260904T141337Z",
+      "season": 2025
+    }
+  ],
+  "tolerance": 1.0
+}
