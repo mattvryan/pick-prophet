@@ -228,10 +228,9 @@ def _normalize_pickem_pct(value: Any) -> float | None:
     if parsed is None:
         return None
     # Accept 0-1 fractions by scaling; values already in percentage points stay.
-    if 0.0 <= parsed <= 1.0:
-        # Ambiguous: 1.0 could be 1% or 100%. Prefer treating (0,1) exclusive as fraction.
-        if 0.0 < parsed < 1.0:
-            return parsed * 100.0
+    # Ambiguous at 1.0 (1% vs 100%); treat exclusive (0,1) as fractions.
+    if 0.0 < parsed < 1.0:
+        return parsed * 100.0
     return parsed
 
 
@@ -459,12 +458,54 @@ def write_json_stable(payload: dict[str, Any], path: Path) -> None:
     )
 
 
+def write_run_envelope(*, output_dir: Path, generated_at_utc: str) -> Path:
+    path = output_dir / "matrix_run.json"
+    write_json_stable(
+        {
+            "generated_at_utc": generated_at_utc,
+            "matrix_schema_version": MATRIX_SCHEMA_VERSION,
+        },
+        path,
+    )
+    return path
+
+
+def parse_seasons_arg(text: str) -> list[int]:
+    """Parse '2017,2018' or '2017-2025' or mixed '2017-2019,2021'."""
+
+    seasons: list[int] = []
+    for part in text.split(","):
+        token = part.strip()
+        if not token:
+            continue
+        if "-" in token:
+            start_s, end_s = token.split("-", 1)
+            start, end = int(start_s), int(end_s)
+            if end < start:
+                raise ValueError(f"invalid season range: {token}")
+            seasons.extend(range(start, end + 1))
+        else:
+            seasons.append(int(token))
+    if not seasons:
+        raise ValueError("no seasons provided")
+    return seasons
+
+
 def build_and_write(
     *,
-    input_paths: list[Path],
+    input_dir: Path | None = None,
+    input_paths: list[Path] | None = None,
     seasons: list[int],
     output_dir: Path,
+    generated_at_utc: str | None = None,
 ) -> MatrixBuildResult:
+    from datetime import UTC, datetime
+
+    if input_paths is None:
+        if input_dir is None:
+            raise ValueError("input_dir or input_paths required")
+        input_paths = sorted(input_dir.glob("games_*.csv"))
+
     season_rows: list[tuple[Any, Any, list[dict[str, Any]]]] = []
     used_paths: list[Path] = []
     for season in seasons:
@@ -496,4 +537,7 @@ def build_and_write(
         exclusions_path=exclusions_path,
     )
     write_json_stable(manifest, output_dir / "matrix_manifest.json")
+    stamp = generated_at_utc or datetime.now(UTC).isoformat().replace("+00:00", "Z")
+    write_run_envelope(output_dir=output_dir, generated_at_utc=stamp)
+    result.input_paths = used_paths
     return result
