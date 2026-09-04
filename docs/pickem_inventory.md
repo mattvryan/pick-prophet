@@ -46,7 +46,8 @@ enter `verified_espn_pickem`.
 
 | Season | Week | Source type | Location / URL | Captured at | Verifiers | Status | Notes |
 | ---: | ---: | --- | --- | --- | --- | --- | --- |
-| | | | | | | | |
+| 2024 | 3 | Dated third-party article | RotoBaller candidate (see M15 inventory) | 2024-09-11 | one source | candidate only | Not imported; requires independent verification and canonical IDs |
+| 2024 | 12 | Dated third-party article | RotoBaller candidate (see M15 inventory) | 2024-11-14 | one source | candidate only | Not imported; requires independent verification and canonical IDs |
 
 Leave cells blank until a real artifact exists. Empty rows are intentional.
 
