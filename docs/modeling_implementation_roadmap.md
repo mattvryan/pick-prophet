@@ -318,17 +318,21 @@ approved from one favorable season or exploratory slice.
 Notes: Human dispositions recorded in `decision_worksheet.csv` and
 `approved_feature_set.json` (`status=no_features_promoted`). Season-drop
 analysis aggregates existing held-out predictions (not a retrain). Anomalous
-season predeclared: 2020. Verified-ESPN `n < 50` → `insufficient`. M11 remains
-fail-closed on empty `promoted_features` unless a design explicitly permits
-baseline-only / no-challenger.
+season predeclared: 2020. Verified-ESPN `n < 50` → `insufficient`. Downstream
+M11 is closed as not-run for this evidence version (market baseline retained).
 
 ## M11 — Gradient-boosting challenger
 
-**Branch:** `modeling/m11-boosted-challenger`
-**Dependencies:** M10 approved feature set (`promoted_features` non-empty, or
-explicit baseline-only design)
+**Status:** M11 not run: M10 promoted no features; market baseline retained.
+**Branch:** `modeling/m11-no-challenger-decision` (not-run close-out);
+`modeling/m11-boosted-challenger` reserved if a later M10 promote set reopens
+training.
+**Dependencies:** M10 approved feature set (`promoted_features` non-empty to
+train a challenger)
+**Decision:** [`docs/boosted_challenger_decision.md`](boosted_challenger_decision.md)
+**Artifact:** [`docs/modeling_artifacts/m11/1.0.0/decision.json`](modeling_artifacts/m11/1.0.0/decision.json)
 
-Scope:
+Scope (deferred until a promoted feature set exists):
 
 - Implement one justified boosting family using the approved M10 feature set.
 - Use the same folds and rows as market and logistic benchmarks.
@@ -336,10 +340,24 @@ Scope:
 - Compare raw and training-only calibrated probabilities.
 - Report feature importance with explicit non-causal caveats.
 
+Close-out (this evidence version):
+
+- [x] Validate M10 `approved_feature_set.json` hash before accepting the M11
+  decision.
+- [x] Record `status=not_run_no_promoted_features`, `challenger_trained=false`,
+  baseline retained = `market_only`.
+- [x] Document that skipping M11 is an evidence-driven successful outcome.
+- [x] Keep future runs fail-closed until at least one feature is explicitly
+  promoted; `review_only` / rejected features remain ineligible.
+
 Tests and acceptance:
 
-- Held-out seasons cannot influence tuning or calibration.
-- Seeds reproduce predictions and missing-value behavior is tested.
+- Decision artifact references the exact M10 approved-feature-set SHA-256.
+- No model bundle or prediction artifact is created for this not-run close-out.
+- Held-out seasons cannot influence tuning or calibration (when training is
+  later reopened).
+- Seeds reproduce predictions and missing-value behavior is tested (when
+  reopened).
 - Reject added complexity unless proper-score gains are stable and meaningful.
 
 ## M12 — Model registry and promotion gate
