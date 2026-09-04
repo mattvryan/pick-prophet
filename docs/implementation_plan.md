@@ -170,12 +170,12 @@ directory has been frozen.
 
 ### P1.1 — Harden ingestion
 
-- [ ] Add retries with bounded exponential backoff for retryable HTTP responses.
-- [ ] Add endpoint-schema validation and actionable errors.
-- [ ] Support targeted seasons/weeks and resume incomplete snapshots.
-- [ ] Record request parameters, API version if exposed, row counts, hashes, and
+- [x] Add retries with bounded exponential backoff for retryable HTTP responses.
+- [x] Add endpoint-schema validation and actionable errors.
+- [x] Support targeted seasons/weeks and resume incomplete snapshots.
+- [x] Record request parameters, API version if exposed, row counts, hashes, and
   retrieval time in the manifest.
-- [ ] Add fixture-based contract tests for every endpoint.
+- [x] Add fixture-based contract tests for every endpoint.
 
 Never silently adapt to a provider schema change. Preserve the bad raw response,
 fail the build, and update the adapter plus fixture deliberately.

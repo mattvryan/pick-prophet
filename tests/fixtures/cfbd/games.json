@@ -1,0 +1,14 @@
+[
+  {
+    "id": 1,
+    "season": 2025,
+    "week": 1,
+    "seasonType": "regular",
+    "homeTeam": "A",
+    "awayTeam": "B",
+    "homeId": 10,
+    "awayId": 20,
+    "homeClassification": "fbs",
+    "awayClassification": "fbs"
+  }
+]
