@@ -51,7 +51,9 @@ def parse_moneyline(value: str, field_name: str, row_label: str) -> float | None
     try:
         odds = float(text)
     except ValueError as exc:
-        raise ValueError(f"{row_label}: {field_name} must be numeric, got {value!r}") from exc
+        raise ValueError(
+            f"{row_label}: {field_name} must be numeric, got {value!r}"
+        ) from exc
     if odds == 0:
         raise ValueError(f"{row_label}: {field_name} must be nonzero")
     if -100 < odds < 100:
@@ -145,11 +147,15 @@ def validate_slate(
         if not home:
             row_errors.append(f"{label}: home_team is required")
         if away and home and away == home:
-            row_errors.append(f"{label}: away_team and home_team must not be the same team")
+            row_errors.append(
+                f"{label}: away_team and home_team must not be the same team"
+            )
 
         neutral_site: bool | None = None
         try:
-            neutral_site = parse_boolean(raw.get("neutral_site", ""), "neutral_site", label)
+            neutral_site = parse_boolean(
+                raw.get("neutral_site", ""), "neutral_site", label
+            )
         except ValueError as exc:
             row_errors.append(str(exc))
 
@@ -185,11 +191,15 @@ def validate_slate(
         away_ml: float | None = None
         home_ml: float | None = None
         try:
-            away_ml = parse_moneyline(raw.get("away_moneyline", ""), "away_moneyline", label)
+            away_ml = parse_moneyline(
+                raw.get("away_moneyline", ""), "away_moneyline", label
+            )
         except ValueError as exc:
             row_errors.append(str(exc))
         try:
-            home_ml = parse_moneyline(raw.get("home_moneyline", ""), "home_moneyline", label)
+            home_ml = parse_moneyline(
+                raw.get("home_moneyline", ""), "home_moneyline", label
+            )
         except ValueError as exc:
             row_errors.append(str(exc))
 
@@ -211,9 +221,13 @@ def validate_slate(
             row_errors.append(f"{label}: public-pick percentages must be numeric")
 
         if away_pub is not None and not 0 <= away_pub <= 100:
-            row_errors.append(f"{label}: away_public_pick_pct must be between 0 and 100")
+            row_errors.append(
+                f"{label}: away_public_pick_pct must be between 0 and 100"
+            )
         if home_pub is not None and not 0 <= home_pub <= 100:
-            row_errors.append(f"{label}: home_public_pick_pct must be between 0 and 100")
+            row_errors.append(
+                f"{label}: home_public_pick_pct must be between 0 and 100"
+            )
         if (
             away_pub is not None
             and home_pub is not None
@@ -242,9 +256,13 @@ def validate_slate(
                 "home_moneyline": home_ml,
                 "away_public_pick_pct": away_pub,
                 "home_public_pick_pct": home_pub,
-                "lock_at_utc": lock_at.isoformat().replace("+00:00", "Z") if lock_at else None,
+                "lock_at_utc": lock_at.isoformat().replace("+00:00", "Z")
+                if lock_at
+                else None,
                 "captured_at_utc": (
-                    captured_at.isoformat().replace("+00:00", "Z") if captured_at else None
+                    captured_at.isoformat().replace("+00:00", "Z")
+                    if captured_at
+                    else None
                 ),
                 "spread_home": parse_optional_float(raw.get("spread_home", ""))
                 if "spread_home" in raw

@@ -129,14 +129,22 @@ class ValidateSlateTests(unittest.TestCase):
             )
             result = validate_slate(slate)
             self.assertTrue(
-                any("captured_at_utc" in error and "lock" in error for error in result.errors)
+                any(
+                    "captured_at_utc" in error and "lock" in error
+                    for error in result.errors
+                )
             )
 
     def test_as_of_after_lock(self) -> None:
         with tempfile.TemporaryDirectory() as directory:
             slate = _write_slate(Path(directory) / "slate.csv", [_row()])
             result = validate_slate(slate, as_of="2026-09-05T20:00:00Z")
-            self.assertTrue(any("as-of" in error.lower() or "as_of" in error for error in result.errors))
+            self.assertTrue(
+                any(
+                    "as-of" in error.lower() or "as_of" in error
+                    for error in result.errors
+                )
+            )
 
     def test_invalid_moneyline(self) -> None:
         with tempfile.TemporaryDirectory() as directory:
@@ -145,7 +153,9 @@ class ValidateSlateTests(unittest.TestCase):
                 [_row(away_moneyline="+50", home_moneyline="-60")],
             )
             result = validate_slate(slate)
-            self.assertTrue(any("moneyline" in error.lower() for error in result.errors))
+            self.assertTrue(
+                any("moneyline" in error.lower() for error in result.errors)
+            )
 
     def test_two_negative_moneylines_are_allowed(self) -> None:
         with tempfile.TemporaryDirectory() as directory:
@@ -174,7 +184,9 @@ class ValidateSlateTests(unittest.TestCase):
             )
             result = validate_slate(slate)
             self.assertEqual(result.errors, [])
-            self.assertTrue(any("moneyline" in warning.lower() for warning in result.warnings))
+            self.assertTrue(
+                any("moneyline" in warning.lower() for warning in result.warnings)
+            )
 
     def test_same_team_rejected(self) -> None:
         with tempfile.TemporaryDirectory() as directory:
@@ -183,7 +195,12 @@ class ValidateSlateTests(unittest.TestCase):
                 [_row(away_team="Duke", home_team="Duke")],
             )
             result = validate_slate(slate)
-            self.assertTrue(any("same" in error.lower() or "equal" in error.lower() for error in result.errors))
+            self.assertTrue(
+                any(
+                    "same" in error.lower() or "equal" in error.lower()
+                    for error in result.errors
+                )
+            )
 
     def test_neutral_site_must_be_boolean(self) -> None:
         with tempfile.TemporaryDirectory() as directory:
@@ -204,7 +221,9 @@ class RecommendTests(unittest.TestCase):
                 [_row(away_moneyline="+150", home_moneyline="-170")],
             )
             output = root / "output" / "run1"
-            artifacts = recommend(slate, as_of="2026-09-05T12:00:00Z", output_dir=output)
+            artifacts = recommend(
+                slate, as_of="2026-09-05T12:00:00Z", output_dir=output
+            )
             with artifacts["recommendations"].open(encoding="utf-8") as handle:
                 rows = list(csv.DictReader(handle))
             self.assertEqual(len(rows), 1)
@@ -212,7 +231,8 @@ class RecommendTests(unittest.TestCase):
             self.assertEqual(row["baseline_pick"], "Home U")
             self.assertGreater(float(row["home_market_probability"]), 0.5)
             self.assertAlmostEqual(
-                float(row["away_market_probability"]) + float(row["home_market_probability"]),
+                float(row["away_market_probability"])
+                + float(row["home_market_probability"]),
                 1.0,
                 places=9,
             )
@@ -239,7 +259,9 @@ class RecommendTests(unittest.TestCase):
                 [_row(away_moneyline="", home_moneyline="")],
             )
             output = root / "output" / "run-missing"
-            artifacts = recommend(slate, as_of="2026-09-05T12:00:00Z", output_dir=output)
+            artifacts = recommend(
+                slate, as_of="2026-09-05T12:00:00Z", output_dir=output
+            )
             with artifacts["recommendations"].open(encoding="utf-8") as handle:
                 row = next(csv.DictReader(handle))
             self.assertEqual(row["recommendation_status"], "insufficient_data")
@@ -272,7 +294,9 @@ class RecommendTests(unittest.TestCase):
                 ],
             )
             output = root / "output" / "order"
-            artifacts = recommend(slate, as_of="2026-09-05T12:00:00Z", output_dir=output)
+            artifacts = recommend(
+                slate, as_of="2026-09-05T12:00:00Z", output_dir=output
+            )
             with artifacts["recommendations"].open(encoding="utf-8") as handle:
                 rows = list(csv.DictReader(handle))
             self.assertEqual([row["display_order"] for row in rows], ["1", "2"])
@@ -296,12 +320,16 @@ class RecommendTests(unittest.TestCase):
                 ],
             )
             output = root / "output" / "public"
-            artifacts = recommend(slate, as_of="2026-09-05T12:00:00Z", output_dir=output)
+            artifacts = recommend(
+                slate, as_of="2026-09-05T12:00:00Z", output_dir=output
+            )
             with artifacts["recommendations"].open(encoding="utf-8") as handle:
                 row = next(csv.DictReader(handle))
             self.assertEqual(row["baseline_pick"], "Home U")
             expected = float(row["home_market_probability"]) - 0.10
-            self.assertAlmostEqual(float(row["public_disagreement"]), expected, places=9)
+            self.assertAlmostEqual(
+                float(row["public_disagreement"]), expected, places=9
+            )
 
     def test_deterministic_recommendations_and_card(self) -> None:
         with tempfile.TemporaryDirectory() as directory:
