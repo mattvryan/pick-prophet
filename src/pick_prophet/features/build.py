@@ -110,7 +110,86 @@ def build_rows(snapshot_dir: Path) -> list[dict[str, Any]]:
             if row.get(f"{name}_away") is None:
                 row[f"{name}_away"] = index.get((feature_week, away))
         output.append(row)
+    attach_history_features(output)
     return output
+
+
+def _history_team_key(season: Any, team_id: Any, team_name: Any) -> tuple[Any, str, Any]:
+    if team_id is not None and str(team_id).strip() != "":
+        return (season, "id", int(team_id))
+    return (season, "name", team_name)
+
+
+def _win_pct(wins: int, losses: int) -> float | None:
+    total = wins + losses
+    if total <= 0:
+        return None
+    return wins / total
+
+
+def attach_history_features(rows: list[dict[str, Any]]) -> None:
+    """Add entering W-L, previous result, and SOS using only prior completed games.
+
+    Mutates rows in place. Games are ordered by kickoff then game_id so a later
+    result cannot change an earlier row. Incomplete games and ties do not update
+    team records.
+    """
+
+    ordered = sorted(
+        rows,
+        key=lambda r: (
+            str(r.get("kickoff_utc") or ""),
+            int(r["game_id"]),
+        ),
+    )
+    record: dict[tuple[Any, str, Any], tuple[int, int]] = {}
+    previous: dict[tuple[Any, str, Any], int | None] = {}
+    opponents_faced: dict[tuple[Any, str, Any], list[tuple[Any, str, Any]]] = {}
+
+    for row in ordered:
+        season = row.get("season")
+        home_key = _history_team_key(season, row.get("home_team_id"), row.get("home_team"))
+        away_key = _history_team_key(season, row.get("away_team_id"), row.get("away_team"))
+        home_w, home_l = record.get(home_key, (0, 0))
+        away_w, away_l = record.get(away_key, (0, 0))
+        row["home_entering_wins"] = home_w
+        row["home_entering_losses"] = home_l
+        row["away_entering_wins"] = away_w
+        row["away_entering_losses"] = away_l
+        row["home_previous_result"] = previous.get(home_key)
+        row["away_previous_result"] = previous.get(away_key)
+
+        def sos_for(team_key: tuple[Any, str, Any]) -> float | None:
+            faced = opponents_faced.get(team_key, [])
+            values: list[float] = []
+            for opp in faced:
+                ow, ol = record.get(opp, (0, 0))
+                pct = _win_pct(ow, ol)
+                if pct is not None:
+                    values.append(pct)
+            if not values:
+                return None
+            return sum(values) / len(values)
+
+        row["home_sos"] = sos_for(home_key)
+        row["away_sos"] = sos_for(away_key)
+
+        home_win = row.get("home_win")
+        if home_win is None:
+            continue
+        # Update only after features are frozen for this kickoff.
+        if int(home_win) == 1:
+            record[home_key] = (home_w + 1, home_l)
+            record[away_key] = (away_w, away_l + 1)
+            previous[home_key] = 1
+            previous[away_key] = 0
+        else:
+            record[home_key] = (home_w, home_l + 1)
+            record[away_key] = (away_w + 1, away_l)
+            previous[home_key] = 0
+            previous[away_key] = 1
+        opponents_faced.setdefault(home_key, []).append(away_key)
+        opponents_faced.setdefault(away_key, []).append(home_key)
 
 
 def merge_pickem(rows: list[dict[str, Any]], path: Path) -> None:

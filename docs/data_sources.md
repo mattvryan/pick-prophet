@@ -43,6 +43,8 @@ verifiers). Track archive search progress in `docs/pickem_inventory.md`.
 - Ratings joined to week *w* must be published before the game. CFBD's current
   FPI and SP+ endpoints are season-level, so those values remain unjoined until
   dated weekly archives are available. Elo is requested weekly and joined from
-  week *w - 1*.
+  week *w - 1*. Entering W-L, previous result, and SOS are derived only from
+  prior completed games in the same season (see `attach_history_features`).
 - Returning-QB status, rivalry labels, and coach tenure need separately sourced,
   season-specific tables; current rosters must never be projected backward.
+  Massey/Sagarin remain deferred pending licensing.
