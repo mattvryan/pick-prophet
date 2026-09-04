@@ -1,0 +1,61 @@
+# Safety-first hooks for credentials, accidental data dumps, and basic hygiene.
+# Install once after creating the venv: pre-commit install
+repos:
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v5.0.0
+    hooks:
+      - id: trailing-whitespace
+      - id: end-of-file-fixer
+      - id: check-yaml
+      - id: check-toml
+      - id: check-merge-conflict
+      - id: check-added-large-files
+        args: ["--maxkb=512"]
+      - id: detect-private-key
+      - id: mixed-line-ending
+        args: ["--fix=lf"]
+
+  - repo: https://github.com/gitleaks/gitleaks
+    rev: v8.24.3
+    hooks:
+      - id: gitleaks
+
+  - repo: https://github.com/astral-sh/ruff-pre-commit
+    rev: v0.11.2
+    hooks:
+      - id: ruff
+        args: ["--fix"]
+
+  - repo: local
+    hooks:
+      - id: block-dotenv
+        name: block committed .env files
+        entry: env files must stay local; commit .env.example only
+        language: fail
+        files: '(^|/)\.env(\.|$)'
+        exclude: '(^|/)\.env\.example$'
+
+      - id: block-raw-snapshots
+        name: block raw CFBD / API snapshots
+        entry: raw provider JSON stays untracked under data/raw/
+        language: fail
+        files: '^data/raw/.*\.json$'
+
+      - id: block-processed-outputs
+        name: block processed build outputs
+        entry: processed CSV/JSON stays untracked under data/processed/
+        language: fail
+        files: '^data/processed/.*\.(csv|json)$'
+
+      - id: block-weekly-outputs
+        name: block weekly card outputs
+        entry: weekly outputs stay local under weekly/*/output/
+        language: fail
+        files: '^weekly/.+/output/'
+
+      - id: no-live-cfbd-key
+        name: block live CFBD_API_KEY assignments
+        description: Reject committed CFBD key values; placeholders and env lookups are fine.
+        language: pygrep
+        entry: '(?i)CFBD_API_KEY\s*=\s*["'']?(?!replace_with_your_key["'']?$)[A-Za-z0-9_-]{16,}'
+        exclude: '(^|/)\.env\.example$'
