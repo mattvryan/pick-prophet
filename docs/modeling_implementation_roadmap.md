@@ -164,26 +164,30 @@ Contract doc: `docs/market_contract.md`.
 
 ## M05 — Verified ESPN Pick'em sampling-frame registry
 
+**Status:** implemented (tooling; no historical archives ingested yet)
 **Branch:** `data/m05-espn-slate-registry`
 **Dependencies:** M02; parallel with M03–M04
 
 Scope:
 
-- Define a source-provenanced historical slate import contract.
-- Support verified transcription of screenshots/exports with source hashes.
-- Store contest season/week, display order, game ID, public percentage and its
+- [x] Define a source-provenanced historical slate import contract.
+- [x] Support verified transcription of screenshots/exports with source hashes.
+- [x] Store contest season/week, display order, game ID, public percentage and its
   capture time, tiebreaker identity, and verification status when available.
-- Join by stable ID and isolate fallback matches for review.
-- Add explicit `all_fbs` and `verified_espn_pickem` sampling-frame labels.
-- Inventory available evidence and report unrecoverable weeks.
+- [x] Join by stable ID and isolate fallback matches for review.
+- [x] Add explicit `all_fbs` and `verified_espn_pickem` sampling-frame labels.
+- [x] Inventory available evidence and report unrecoverable weeks.
 
 Tests and acceptance:
 
-- Reject duplicate positions/games and ambiguous matches.
-- Never infer ESPN membership from ranking, TV, or prominence.
-- Every evaluation output labels its sampling frame.
+- [x] Reject duplicate positions/games and ambiguous matches.
+- [x] Never infer ESPN membership from ranking, TV, or prominence.
+- [x] Every evaluation output labels its sampling frame.
 
 Do not scrape sources in violation of their terms.
+
+Commands: `pick-prophet pickem validate-import|import|from-slate|build-registry|inventory-gaps`.
+Inventory: `docs/pickem_inventory.md`.
 
 ## M06 — Point-in-time rating adapters
 

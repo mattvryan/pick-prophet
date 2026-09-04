@@ -1,2 +1,2 @@
-game_id,season,week,is_pickem_game,espn_home_pick_pct,espn_expert_home_pct,captured_at,source_url,verification_status,verifier_1,verifier_2
-401000001,2025,1,true,,,2025-08-25T12:00:00Z,https://example.invalid/espn-pickem,unverified,,
+game_id,season,week,display_order,is_pickem_game,espn_home_pick_pct,espn_expert_home_pct,pct_captured_at,captured_at,source_url,source_sha256,tiebreaker_game_id,espn_game_id,match_status,verification_status,verifier_1,verifier_2
+401000001,2025,1,1,true,,,2025-08-25T12:00:00Z,2025-08-25T12:00:00Z,https://example.invalid/espn-pickem,,,,exact_id,unverified,,

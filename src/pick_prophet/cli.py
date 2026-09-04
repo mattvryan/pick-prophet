@@ -1,6 +1,8 @@
 from __future__ import annotations
 
 import argparse
+import csv
+import json
 import sys
 from pathlib import Path
 
@@ -15,6 +17,11 @@ from .features.pickem import (
     slate_to_template_rows,
     validate_pickem_import,
     write_template_csv,
+)
+from .features.pickem_registry import (
+    build_registry,
+    unrecoverable_weeks_report,
+    write_registry,
 )
 from .ingest.cfbd import ingest_season
 from .weekly.grade import grade_week
@@ -156,6 +163,38 @@ def parser() -> argparse.ArgumentParser:
     )
     from_slate.add_argument("path", type=Path)
     from_slate.add_argument("--output", type=Path, required=True)
+
+    build_registry_cmd = pickem_commands.add_parser(
+        "build-registry",
+        help="merge validated imports into a verified sampling-frame registry",
+    )
+    build_registry_cmd.add_argument(
+        "paths",
+        nargs="+",
+        type=Path,
+        help="one or more validated Pick'em import CSVs",
+    )
+    build_registry_cmd.add_argument(
+        "--output-dir",
+        type=Path,
+        default=Path("data/external/pickem_registry"),
+    )
+    build_registry_cmd.add_argument("--known-games", type=Path)
+
+    inventory_cmd = pickem_commands.add_parser(
+        "inventory-gaps",
+        help="list research weeks without recovered registry evidence",
+    )
+    inventory_cmd.add_argument(
+        "--recovered",
+        type=Path,
+        help="optional CSV with season,week columns already recovered",
+    )
+    inventory_cmd.add_argument(
+        "--output",
+        type=Path,
+        default=Path("docs/pickem_unrecoverable_weeks.json"),
+    )
 
     weekly = commands.add_parser("weekly", help="weekly Pick'em operations")
     weekly_commands = weekly.add_subparsers(dest="weekly_command", required=True)
@@ -351,6 +390,37 @@ def main(argv: list[str] | None = None) -> None:
             except (ValueError, OSError) as exc:
                 print(f"ERROR: {exc}", file=sys.stderr)
                 raise SystemExit(1) from exc
+        elif args.pickem_command == "build-registry":
+            known = None
+            if args.known_games:
+                known = load_known_game_ids(args.known_games)
+            registry = build_registry(list(args.paths), known_game_ids=known)
+            for warning in registry.warnings:
+                print(f"WARNING: {warning}", file=sys.stderr)
+            for error in registry.errors:
+                print(f"ERROR: {error}", file=sys.stderr)
+            if not registry.ok:
+                raise SystemExit(1)
+            artifacts = write_registry(registry, args.output_dir)
+            for path in artifacts.values():
+                print(path)
+        elif args.pickem_command == "inventory-gaps":
+            recovered: set[tuple[int, int]] = set()
+            if args.recovered and args.recovered.exists():
+                with args.recovered.open(newline="") as handle:
+                    for row in csv.DictReader(handle):
+                        recovered.add((int(row["season"]), int(row["week"])))
+            report = unrecoverable_weeks_report(
+                research_seasons=list(range(2017, 2026)),
+                recovered=recovered,
+            )
+            args.output.parent.mkdir(parents=True, exist_ok=True)
+            args.output.write_text(json.dumps(report, indent=2, sort_keys=True) + "\n")
+            print(args.output)
+            print(
+                "unrecoverable_or_unsearched="
+                f"{len(report['unrecoverable_or_unsearched_season_weeks'])}"
+            )
     elif args.command == "weekly":
         if args.weekly_command == "validate-slate":
             result = validate_slate(args.path, as_of=args.as_of)
