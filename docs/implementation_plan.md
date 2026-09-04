@@ -77,6 +77,9 @@ Implement `pick-prophet weekly validate-slate PATH`. It must reject duplicate ga
 IDs, duplicate display positions, missing teams, malformed timestamps, and games
 whose kickoff precedes capture. It must warn, not guess, on unmatched IDs.
 
+- [x] Implement `weekly validate-slate` with row-specific errors/warnings and
+  nonzero exit on failure.
+
 Acceptance: row count equals the visible ESPN slate, a second person or a second
 independent capture verifies the teams/order, and validation produces zero errors.
 
@@ -106,6 +109,10 @@ pick-prophet weekly recommend \
   --slate weekly/2026-WNN/slate.csv \
   --as-of 2026-09-05T16:00:00Z
 ```
+
+- [x] Implement market-baseline `weekly recommend` for standard contests (no
+  confidence points), writing `recommendations.csv`, `card.md`, and
+  `run_manifest.json`. Week 1 production card not published in this step.
 
 Rules for version 0:
 
@@ -310,6 +317,7 @@ Every implementation handoff should state:
 | 2026-09-04 | Keep all-FBS and confirmed ESPN-slate evaluation separate | ESPN's selection process changes the game distribution and may bias results |
 | 2026-09-04 | Preserve manual picks separately from model output | Required to measure whether qualitative intervention helps or hurts |
 | 2026-09-04 | Treat the screenshot's left team as away and lock times as America/Denver | All ten pairings are consistent with that orientation; retain as an explicit assumption pending user confirmation |
+| 2026-09-04 | Ship weekly validate/recommend machinery before publishing the Week 1 card | Lets the market baseline be tested on synthetic fixtures without locking in this weekend's selections early |
 
 ## Immediate human inputs needed
 
