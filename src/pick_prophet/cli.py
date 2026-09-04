@@ -11,6 +11,7 @@ from .evaluation.early_season import analyze_early_season
 from .evaluation.evaluate import evaluate
 from .features.build import build_rows, merge_pickem, write_dataset
 from .features.coverage import run_coverage
+from .features.matrix import build_and_write, parse_seasons_arg
 from .features.pickem import (
     import_pickem_file,
     load_known_game_ids,
@@ -89,6 +90,27 @@ def parser() -> argparse.ArgumentParser:
         "--protocol",
         default="1.0.0",
         help="evaluation protocol version (default: 1.0.0)",
+    )
+
+    matrix_cmd = commands.add_parser(
+        "matrix",
+        help="build the leakage-safe M07 modeling feature matrix",
+    )
+    matrix_cmd.add_argument(
+        "--input-dir",
+        type=Path,
+        default=Path("data/processed"),
+        help="directory containing games_{season}.csv",
+    )
+    matrix_cmd.add_argument(
+        "--seasons",
+        required=True,
+        help="comma seasons and/or ranges, e.g. 2017-2025 or 2018,2020",
+    )
+    matrix_cmd.add_argument(
+        "--output-dir",
+        type=Path,
+        default=Path("data/processed/matrix"),
     )
 
     coverage = commands.add_parser(
@@ -330,6 +352,19 @@ def main(argv: list[str] | None = None) -> None:
             raise SystemExit(1) from exc
         print(artifacts["summary"])
         print(artifacts["predictions"])
+    elif args.command == "matrix":
+        seasons = parse_seasons_arg(args.seasons)
+        result = build_and_write(
+            input_dir=args.input_dir,
+            seasons=seasons,
+            output_dir=args.output_dir,
+        )
+        print(args.output_dir / "games_matrix_v1.csv")
+        print(args.output_dir / "matrix_manifest.json")
+        print(
+            f"retained={len(result.rows)} excluded={len(result.exclusions)} "
+            f"input={result.input_rows}"
+        )
     elif args.command == "coverage":
         kwargs = {
             "report_path": args.report,

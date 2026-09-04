@@ -3,6 +3,10 @@
 One row represents one game. `game_id` is the CFBD identifier and is the stable
 join key. Team names are display labels, never join keys when IDs are available.
 
+For the **M07 modeling matrix** (role allowlists, history/rest recomputation,
+deferred ratings inventory), see `docs/matrix_schema.md`
+(`matrix_schema_version` 1.0.0). That contract is what M08 consumes.
+
 | Column | Type | Meaning / timing |
 |---|---|---|
 | `game_id` | integer | Source game identifier |

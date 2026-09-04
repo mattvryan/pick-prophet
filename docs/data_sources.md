@@ -51,6 +51,8 @@ verifiers). Track archive search progress in `docs/pickem_inventory.md`.
   `*.name_join_audit.csv` beside the processed season table.
 - Ratings feasibility and temporal semantics (M06 memo): see
   `docs/ratings_feasibility.md`. Adapter implementation is deferred.
+- Modeling feature matrix (M07): see `docs/matrix_schema.md`. Ratings remain
+  deferred in the matrix manifest inventory until an approved adapter PR.
 - Live CFBD smoke checks are manual only; see `docs/cfbd_live_smoke.md`.
 - Returning-QB status, rivalry labels, and coach tenure need separately sourced,
   season-specific tables; current rosters must never be projected backward.
