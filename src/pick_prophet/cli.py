@@ -32,6 +32,20 @@ def parser() -> argparse.ArgumentParser:
     ingest.add_argument("--season", type=int, required=True)
     ingest.add_argument("--raw-root", type=Path, default=Path("data/raw"))
     ingest.add_argument("--max-week", type=int, default=20)
+    ingest.add_argument(
+        "--weeks",
+        type=str,
+        help="comma-separated weeks for weekly endpoints (e.g. 1,2,3)",
+    )
+    ingest.add_argument(
+        "--snapshot",
+        help="snapshot directory name; required with --resume",
+    )
+    ingest.add_argument(
+        "--resume",
+        action="store_true",
+        help="resume an incomplete snapshot without overwriting completed files",
+    )
 
     build = commands.add_parser("build", help="build the canonical game table")
     build.add_argument("--season", type=int, required=True)
@@ -136,7 +150,19 @@ def parser() -> argparse.ArgumentParser:
 def main(argv: list[str] | None = None) -> None:
     args = parser().parse_args(argv)
     if args.command == "ingest":
-        print(ingest_season(args.season, args.raw_root, max_week=args.max_week))
+        weeks = None
+        if getattr(args, "weeks", None):
+            weeks = [int(part.strip()) for part in args.weeks.split(",") if part.strip()]
+        print(
+            ingest_season(
+                args.season,
+                args.raw_root,
+                max_week=args.max_week,
+                weeks=weeks,
+                snapshot=args.snapshot,
+                resume=args.resume,
+            )
+        )
     elif args.command == "build":
         snapshot = (
             args.raw_root / "cfbd" / str(args.season) / args.snapshot

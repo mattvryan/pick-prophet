@@ -1,0 +1,17 @@
+[
+  {
+    "season": 2025,
+    "week": 1,
+    "polls": [
+      {
+        "poll": "AP Top 25",
+        "ranks": [
+          {
+            "school": "A",
+            "rank": 1
+          }
+        ]
+      }
+    ]
+  }
+]
