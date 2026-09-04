@@ -13,6 +13,7 @@ data/raw/**/*.json
 data/raw/**/*.meta.json
 data/processed/*.csv
 data/processed/*.json
+data/processed/matrix/
 !data/**/.gitkeep
 weekly/*/output/
 weekly/*/market/**/cfbd_lines.json

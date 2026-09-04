@@ -217,30 +217,24 @@ obtained, finish the memo/interface and omit that source. Do not substitute.
 
 ## M07 — Leakage-safe modeling feature matrix
 
+**Status:** implemented (`matrix_schema_version` 1.0.0; ratings deferred in manifest)
 **Branch:** `modeling/m07-feature-matrix`
-**Dependencies:** M01, M02, M04; include merged M05/M06 outputs when available
+**Dependencies:** M01, M02, M04; M05/M06 outputs included where available
 
-Build one versioned row per game with target and verified pregame features:
+Schema/docs: `docs/matrix_schema.md`. Rebuild:
+`pick-prophet matrix --input-dir data/processed --seasons 2017-2025 --output-dir data/processed/matrix`.
 
-- market probability/logit, spread, total, and valid line movement;
-- approved pregame ratings and rating-versus-market disagreements;
-- home/neutral status, conference, season/week, and early-season interactions;
-- entering record, previous result, and rest derived by chronological shifts;
-- feature timestamps or snapshot IDs sufficient for audit.
+Built one versioned row per eligible game with role-separated columns:
 
-Keep transformation/scaling out of this raw matrix. Emit missingness and
-excluded-row reason reports, schema version, and input-manifest hashes.
+- [x] Market probability/logit as baseline inputs; spread/total/movement as model features
+- [x] Site/conference, early-season indicators, chronological history + rest
+- [x] Pick’em sampling-frame labels in audit columns only
+- [x] Manifest ratings inventory defers Elo/FPI/SP+ (no null rating columns)
+- [x] Missingness + exclusion reports; deterministic manifest; volatile run envelope
+- [x] Hard tests: no deferred rating fields in matrix; M08 surfaces disjoint
 
-Tests and acceptance:
-
-- Future-result mutation cannot alter earlier features.
-- Test chronological shifts, stable-ID joins, neutral sites, schema/order, and
-  deterministic rebuilds.
-- One command rebuilds the matrix; every column is defined in `docs/schema.md`.
-- Model-specific complete-case filtering does not occur in the shared build.
-
-Defer coaching, QB continuity, returning production, rivalry, travel, and weather
-until each has its own approved point-in-time source contract.
+Deferred coaching, QB, rivalry, travel, weather, and rating adapters pending
+approved PIT contracts / schema bumps.
 
 ## M08 — Market-residual logistic model
 
@@ -257,10 +251,18 @@ Use a tested fixed-offset implementation or its mathematically equivalent
 residual formulation; simply including market probability as an ordinary feature
 does not satisfy this contract.
 
+M08 must import `BASELINE_INPUT_COLUMNS` and `MODEL_FEATURE_COLUMNS` from
+`matrix_schema` (schema 1.0.0). Rating-disagreement and rating-combined variants
+are **conditional on a later approved matrix schema** that adds rating features.
+With 1.0.0, compare the market baseline against approved site, schedule,
+history, temporal, and market-context adjustments only.
+
 Scope:
 
-- Compare market only; market + each rating disagreement; market + approved
-  combined ratings; and market + basic temporal/site context.
+- Compare market only; market + basic temporal/site/history/market-context
+  adjustments from the M07 predictor allowlist.
+- (Later schema) market + each rating disagreement; market + approved combined
+  ratings — only after ratings enter an approved matrix version.
 - Fit imputation, missing indicators, scaling, regularization, and selection
   within each fold.
 - Save coefficients, offset behavior, feature list, model hash, and row-level

@@ -123,14 +123,10 @@ def assert_no_deferred_ratings(columns: Iterable[str]) -> None:
         if col in FORBIDDEN_EXACT or lower in {c.lower() for c in FORBIDDEN_EXACT}:
             raise ValueError(f"deferred rating column forbidden: {col}")
         if (
-            lower.startswith("elo_")
-            or lower.startswith("fpi_")
+            lower.startswith(("elo_", "fpi_", "ap_", "coaches_", "cfp_"))
             or (lower.startswith("sp_") and not lower.startswith("spread_"))
             or "vs_market" in lower
             or "rating_disagreement" in lower
-            or lower.startswith("ap_")
-            or lower.startswith("coaches_")
-            or lower.startswith("cfp_")
         ):
             raise ValueError(f"deferred rating column forbidden: {col}")
 
