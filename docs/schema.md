@@ -31,7 +31,7 @@ join key. Team names are display labels, never join keys when IDs are available.
 | `cfp_home_rank`, `cfp_away_rank` | integer | Latest pre-game CFP ranks |
 | `fpi_home`, `fpi_away` | float | Prior-week rating when a timestamped archive is available; otherwise null |
 | `sp_home`, `sp_away` | float | Prior-week SP+ when a timestamped archive is available; otherwise null |
-| `elo_home`, `elo_away` | float | Prior-week Elo rating |
+| `elo_home`, `elo_away` | float | Prefer game-level CFBD `home_pregame_elo` / `away_pregame_elo` when present; else weekly `/ratings/elo` at week *w−1* joined by team name (audited). Not proof of publication time. See `docs/ratings_feasibility.md`. |
 | `home_entering_wins`, `home_entering_losses` | integer | Team W-L entering kickoff from prior completed games in the same season |
 | `away_entering_wins`, `away_entering_losses` | integer | Same for away |
 | `home_previous_result`, `away_previous_result` | integer | Prior completed game result for that team (1=win, 0=loss); null if none |
