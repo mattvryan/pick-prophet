@@ -15,3 +15,5 @@ data/processed/*.csv
 data/processed/*.json
 !data/**/.gitkeep
 weekly/*/output/
+weekly/*/market/**/cfbd_lines.json
+weekly/*/signals/**/raw/

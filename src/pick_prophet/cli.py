@@ -8,6 +8,7 @@ from .evaluation.analyze import analyze_file
 from .features.build import build_rows, merge_pickem, write_dataset
 from .ingest.cfbd import ingest_season
 from .weekly.recommend import recommend
+from .weekly.signals import fetch_signals_snapshot
 from .weekly.validate import validate_slate
 
 
@@ -57,6 +58,12 @@ def parser() -> argparse.ArgumentParser:
     recommend_cmd.add_argument("--as-of", required=True)
     recommend_cmd.add_argument("--output-dir", type=Path)
 
+    fetch_signals = weekly_commands.add_parser(
+        "fetch-signals", help="capture ratings, rankings, and venue context"
+    )
+    fetch_signals.add_argument("--slate", type=Path, required=True)
+    fetch_signals.add_argument("--snapshot")
+
     return root
 
 
@@ -104,6 +111,12 @@ def main(argv: list[str] | None = None) -> None:
             print(artifacts["recommendations"])
             print(artifacts["card"])
             print(artifacts["run_manifest"])
+        elif args.weekly_command == "fetch-signals":
+            try:
+                print(fetch_signals_snapshot(args.slate, snapshot=args.snapshot))
+            except (ValueError, FileExistsError) as exc:
+                print(f"ERROR: {exc}", file=sys.stderr)
+                raise SystemExit(1) from exc
 
 
 if __name__ == "__main__":

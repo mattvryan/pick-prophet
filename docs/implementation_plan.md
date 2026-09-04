@@ -141,6 +141,8 @@ inputs is byte-stable except for an explicitly separated run manifest.
   reason, author, and timestamp.
 - [ ] Review injury, suspension, weather, venue, and late-QB news only for changes
   not plausibly captured by the odds snapshot.
+- [x] Capture an initial structured ratings/rankings/venue snapshot and official
+  game-week context review; weather and final availability refresh remain pending.
 - [ ] Refresh odds as close to contest lock as practical.
 - [ ] Generate a final versioned card and enter it in ESPN.
 - [ ] Save an entry-confirmation capture and checksum the final inputs/outputs.
