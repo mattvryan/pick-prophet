@@ -100,6 +100,29 @@ def parser() -> argparse.ArgumentParser:
         action="store_true",
         help="skip rewriting per-season .quality.json files",
     )
+    coverage.add_argument(
+        "--summary-json",
+        type=Path,
+        default=Path("docs/coverage_summary.json"),
+        help="machine-readable cross-season coverage summary",
+    )
+    coverage.add_argument(
+        "--week-csv",
+        type=Path,
+        default=Path("docs/coverage_by_week.csv"),
+        help="per season/week coverage table",
+    )
+    coverage.add_argument(
+        "--windows-json",
+        type=Path,
+        default=Path("docs/coverage_evaluation_windows.json"),
+        help="recommended evaluation windows by source",
+    )
+    coverage.add_argument(
+        "--no-machine-readable",
+        action="store_true",
+        help="skip JSON/CSV coverage exports",
+    )
 
     pickem = commands.add_parser("pickem", help="ESPN Pick'em import tooling")
     pickem_commands = pickem.add_subparsers(dest="pickem_command", required=True)
@@ -264,14 +287,26 @@ def main(argv: list[str] | None = None) -> None:
         print(artifacts["summary"])
         print(artifacts["predictions"])
     elif args.command == "coverage":
-        audits, _markdown = run_coverage(
-            args.processed_root,
-            report_path=args.report,
-            write_quality=not args.no_write_quality,
-        )
+        kwargs = {
+            "report_path": args.report,
+            "write_quality": not args.no_write_quality,
+        }
+        if not args.no_machine_readable:
+            kwargs.update(
+                {
+                    "summary_json": args.summary_json,
+                    "week_csv": args.week_csv,
+                    "windows_json": args.windows_json,
+                }
+            )
+        audits, _markdown = run_coverage(args.processed_root, **kwargs)
         for audit in sorted(audits, key=lambda a: a.season):
             print(f"{audit.season}: {audit.status} ({audit.rows} rows)")
         print(args.report)
+        if not args.no_machine_readable:
+            print(args.summary_json)
+            print(args.week_csv)
+            print(args.windows_json)
         if any(a.status == "fail" for a in audits) or not audits:
             raise SystemExit(1)
     elif args.command == "pickem":

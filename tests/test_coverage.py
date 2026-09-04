@@ -87,19 +87,60 @@ def test_run_coverage_writes_report(tmp_path: Path) -> None:
         [_base_row(season=2023, game_id=3, home_points="", away_points="", home_win="")],
     )
     report = tmp_path / "docs" / "data_coverage_report.md"
-    audits, markdown = run_coverage(processed, report_path=report)
+    summary_json = tmp_path / "docs" / "coverage_summary.json"
+    week_csv = tmp_path / "docs" / "coverage_by_week.csv"
+    windows_json = tmp_path / "docs" / "coverage_evaluation_windows.json"
+    audits, markdown = run_coverage(
+        processed,
+        report_path=report,
+        summary_json=summary_json,
+        week_csv=week_csv,
+        windows_json=windows_json,
+    )
     assert report.exists()
     assert "2023" in markdown and "2024" in markdown
+    assert "Recommended evaluation windows" in markdown
     assert len(audits) == 2
     # Incomplete outcomes warn; season still present.
     assert any(a.season == 2023 for a in audits)
     assert (processed / "games_2024.quality.json").exists()
     assert "Cross-season gate" in render_coverage_report(audits)
+    assert summary_json.exists() and week_csv.exists() and windows_json.exists()
+
+
+def test_week_gap_and_structural_fpi(tmp_path: Path) -> None:
+    rows = [
+        _base_row(game_id=1, week=1, fpi_home="", fpi_away="", sp_home="", sp_away=""),
+        _base_row(game_id=2, week=3, fpi_home="", fpi_away="", sp_home="", sp_away=""),
+    ]
+    # Ensure FPI/SP columns exist as empty structural nulls.
+    for row in rows:
+        row.setdefault("fpi_home", "")
+        row.setdefault("fpi_away", "")
+        row.setdefault("sp_home", "")
+        row.setdefault("sp_away", "")
+    audit = audit_rows(rows, season=2024)
+    week_check = next(c for c in audit.checks if c.name == "week_continuity")
+    assert week_check.status == "warn"
+    fpi = next(c for c in audit.checks if c.name == "fpi_missingness")
+    assert fpi.value["class"] == "structural_unjoined"
+    assert audit.usable_for["fpi_models"] == "blocked_structural"
+    assert audit.week_coverage[0]["week"] == 1
+    assert audit.week_coverage[1]["week"] == 3
+
+
+def test_missing_identity_fails() -> None:
+    audit = audit_rows([_base_row(home_team_id="")], season=2024)
+    check = next(c for c in audit.checks if c.name == "team_identity")
+    assert check.status == "fail"
+    assert audit.usable_for["market_baseline"] == "blocked_integrity"
 
 
 def test_audit_season_file_reads_path(tmp_path: Path) -> None:
     path = tmp_path / "games_2022.csv"
-    _write_csv(path, [_base_row(season=2022, game_id=9)])
+    _write_csv(path, [_base_row(season=2022, game_id=9, line_provider_count=2)])
     audit = audit_season_file(path)
     assert audit.season == 2022
-    assert audit.status == "pass"
+    assert audit.status != "fail"
+    assert audit.rows == 1
+    assert any(c.name == "unique_game_id" and c.status == "pass" for c in audit.checks)
