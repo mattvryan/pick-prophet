@@ -10,6 +10,7 @@ from .features.build import build_rows, merge_pickem, write_dataset
 from .ingest.cfbd import ingest_season
 from .weekly.recommend import recommend
 from .weekly.signals import fetch_signals_snapshot
+from .weekly.submission import record_submission
 from .weekly.tiebreaker import recommend_tiebreaker
 from .weekly.validate import validate_slate
 
@@ -81,6 +82,29 @@ def parser() -> argparse.ArgumentParser:
     tiebreaker.add_argument("--game-id", required=True)
     tiebreaker.add_argument("--as-of", required=True)
     tiebreaker.add_argument("--output-dir", type=Path, required=True)
+
+    record = weekly_commands.add_parser(
+        "record-submission",
+        help="record immutable confirmation of an ESPN Pick'em submission",
+    )
+    record.add_argument("--week-dir", type=Path, required=True)
+    record.add_argument("--submitted-at", required=True)
+    record.add_argument("--tiebreaker", type=int, required=True)
+    record.add_argument("--operator")
+    record.add_argument("--final-picks", type=Path)
+    record.add_argument(
+        "--submitted-picks",
+        type=Path,
+        help="optional CSV of what was entered if it differs from final_picks.csv",
+    )
+    record.add_argument("--confirmation-file", type=Path)
+    record.add_argument("--confirmation-sha256")
+    record.add_argument("--notes")
+    record.add_argument(
+        "--output",
+        type=Path,
+        help="defaults to week-dir/submission.json; use a new path for revisions",
+    )
 
     return root
 
@@ -154,6 +178,25 @@ def main(argv: list[str] | None = None) -> None:
                 raise SystemExit(1) from exc
             print(artifacts["json"])
             print(artifacts["card"])
+        elif args.weekly_command == "record-submission":
+            try:
+                print(
+                    record_submission(
+                        week_dir=args.week_dir,
+                        submitted_at=args.submitted_at,
+                        tiebreaker_total=args.tiebreaker,
+                        operator=args.operator,
+                        final_picks=args.final_picks,
+                        submitted_picks=args.submitted_picks,
+                        confirmation_file=args.confirmation_file,
+                        confirmation_sha256=args.confirmation_sha256,
+                        notes=args.notes,
+                        output_path=args.output,
+                    )
+                )
+            except (ValueError, FileExistsError, FileNotFoundError) as exc:
+                print(f"ERROR: {exc}", file=sys.stderr)
+                raise SystemExit(1) from exc
 
 
 if __name__ == "__main__":

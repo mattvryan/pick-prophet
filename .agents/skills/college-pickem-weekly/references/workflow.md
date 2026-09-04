@@ -171,18 +171,23 @@ files carefully by hand (or future tooling), without rewriting baseline outputs.
 
 ## 5. Submission recording
 
-**Capability gap:** no `weekly finalize` / submission CLI exists yet.
-
 After the user confirms ESPN entry (or an authorized submission action
-succeeds), record at least:
+succeeds), record an immutable confirmation:
 
-- exact submitted winners per game
-- submitted tiebreaker total
-- submission timestamp (UTC)
-- whether the submission matched `final_picks.csv`
+```bash
+pick-prophet weekly record-submission \
+  --week-dir weekly/YYYY-WNN \
+  --submitted-at 2026-09-04T18:30:00Z \
+  --tiebreaker 51 \
+  --operator <name> \
+  --confirmation-file path/to/entry-screenshot.png \
+  --notes "entered in ESPN UI"
+```
 
-Proposed location: `weekly/YYYY-WNN/submission.json` (and optional screenshot
-hash notes). Do not claim submission occurred without confirmation.
+Defaults to reading `final_picks.csv` and writing `weekly/YYYY-WNN/submission.json`.
+If the entered card differs from `final_picks.csv`, pass `--submitted-picks`.
+If `submission.json` already exists, write a new versioned `--output` path instead
+of overwriting. Do not claim submission occurred without confirmation.
 
 ## 6. Pre-lock recheck
 
@@ -217,6 +222,7 @@ pick-prophet weekly validate-slate PATH [--as-of AS_OF]
 pick-prophet weekly recommend --slate SLATE [--market MARKET] --as-of AS_OF [--output-dir OUTPUT_DIR]
 pick-prophet weekly fetch-signals --slate SLATE [--snapshot SNAPSHOT]
 pick-prophet weekly tiebreaker --slate SLATE --market MARKET --game-id GAME_ID --as-of AS_OF --output-dir OUTPUT_DIR
+pick-prophet weekly record-submission --week-dir DIR --submitted-at TIMESTAMP --tiebreaker N [--operator NAME] [--final-picks PATH] [--submitted-picks PATH] [--confirmation-file PATH] [--confirmation-sha256 HASH] [--notes TEXT] [--output PATH]
 ```
 
 Related research CLIs (not weekly contest modes): `ingest`, `build`, `analyze`,

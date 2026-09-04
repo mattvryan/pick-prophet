@@ -145,7 +145,9 @@ inputs is byte-stable except for an explicitly separated run manifest.
   game-week context review; weather and final availability refresh remain pending.
 - [ ] Refresh odds as close to contest lock as practical.
 - [ ] Generate a final versioned card and enter it in ESPN.
-- [ ] Save an entry-confirmation capture and checksum the final inputs/outputs.
+- [x] Save an entry-confirmation capture and checksum the final inputs/outputs
+  via `pick-prophet weekly record-submission` (writes immutable
+  `submission.json`).
 
 Manual judgment must not edit model probabilities. It creates a second
 `final_pick` column and an audit record. Confidence can be overridden, but the
@@ -272,6 +274,7 @@ missing-value behavior, calibration, limitations, and artifact hash.
 - [ ] `weekly recommend`: emit immutable model recommendations.
 - [ ] `weekly review`: apply separately logged qualitative changes.
 - [ ] `weekly finalize`: validate and checksum the entered card.
+- [x] `weekly record-submission`: immutable ESPN entry confirmation record.
 - [ ] `weekly grade`: capture results and metrics.
 - [ ] `weekly report`: append cumulative market/model/manual comparisons.
 
