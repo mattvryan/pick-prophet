@@ -8,10 +8,23 @@ size; it is held-out predictive performance.
 
 ## Validation
 
-Use expanding-window walk-forward validation by season. For test season `S`, fit
-only on seasons `< S`. Hyperparameters must be selected inside the training
-window. A single season cannot support this evaluation; 2025 validates the
-pipeline, while meaningful backtesting requires several prior seasons.
+Use expanding-window walk-forward validation by season under evaluation
+**protocol 1.0.0** (`src/pick_prophet/evaluation/protocol.py`). For test season
+`S` in `2018–2025`, fit only on seasons `< S`. Hyperparameters must be
+selected inside the training window. Report `2025` as the latest in-loop
+out-of-time fold; do not treat it as a pristine locked holdout. The prospective
+holdout is immutable **2026 weekly shadow** predictions—not scored inside the
+historical walk-forward. Changing the window or pairing rules requires a new
+`protocol_version`.
+
+Regenerate stamped artifacts with:
+
+```bash
+pick-prophet evaluate --input PATH --protocol 1.0.0 --output-dir DIR
+```
+
+A single season cannot support this evaluation; meaningful backtesting requires
+several prior seasons.
 
 ## Models
 

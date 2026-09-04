@@ -51,6 +51,7 @@ without unavailable rating sources; omissions must be explicit.
 
 ## M01 — Freeze the evaluation protocol
 
+**Status:** implemented (protocol 1.0.0)
 **Branch:** `modeling/m01-evaluation-protocol`
 **Dependencies:** none
 
@@ -58,23 +59,23 @@ Purpose: make statistical rules executable before adding features.
 
 Scope:
 
-- Add versioned configuration for training/test seasons, expanding folds,
+- [x] Add versioned configuration for training/test seasons, expanding folds,
   metrics, random seeds, and required slices.
-- Required slices: Week 1, Weeks 1–3, Week 4+, neutral site,
+- [x] Required slices: Week 1, Weeks 1–3, Week 4+, neutral site,
   favorite-strength bands, and sampling frame.
-- Centralize fold construction and paired-row selection in `evaluation/`.
-- Define stable row-level prediction and summary schemas.
-- Refactor existing baseline and early-season analysis onto those contracts
+- [x] Centralize fold construction and paired-row selection in `evaluation/`.
+- [x] Define stable row-level prediction and summary schemas.
+- [x] Refactor existing baseline and early-season analysis onto those contracts
   without changing expected results beyond documented tolerance.
-- Document that tuning and calibration must be nested within training folds.
+- [x] Document that tuning and calibration must be nested within training folds.
 
 Tests and acceptance:
 
-- Every training season precedes its test season.
-- Mutating a future outcome cannot alter an earlier fold.
-- Paired comparisons reject unequal test game-ID sets.
-- Repeated runs produce identical folds and predictions.
-- One command regenerates existing reports with protocol/schema versions.
+- [x] Every training season precedes its test season.
+- [x] Mutating a future outcome cannot alter an earlier fold.
+- [x] Paired comparisons reject unequal test game-ID sets.
+- [x] Repeated runs produce identical folds and predictions.
+- [x] One command regenerates existing reports with protocol/schema versions.
 
 Excludes new sources, features, models, and production changes.
 

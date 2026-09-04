@@ -6,6 +6,9 @@ import json
 from pathlib import Path
 from typing import Any
 
+from .folds import assert_train_precedes_test, expanding_folds
+from .protocol import DEFAULT_PROTOCOL
+
 
 def analyze_file(input_path: Path, output_path: Path | None = None) -> Path:
     try:
@@ -25,6 +28,8 @@ def analyze_file(input_path: Path, output_path: Path | None = None) -> Path:
     frame["fpi_diff"] = frame.fpi_home - frame.fpi_away
     frame["sp_diff"] = frame.sp_home - frame.sp_away
     seasons = sorted(int(value) for value in frame.season.unique())
+    folds = expanding_folds(seasons, DEFAULT_PROTOCOL)
+    assert_train_precedes_test(folds)
 
     def probability_metrics(rows: Any, probabilities: Any) -> dict[str, Any]:
         y = rows.home_win.astype(int)
@@ -37,6 +42,9 @@ def analyze_file(input_path: Path, output_path: Path | None = None) -> Path:
 
     results: dict[str, Any] = {
         "input": str(input_path),
+        "protocol_version": DEFAULT_PROTOCOL.protocol_version,
+        "latest_oot_fold": DEFAULT_PROTOCOL.latest_oot_fold,
+        "prospective_holdout": DEFAULT_PROTOCOL.prospective_holdout,
         "seasons": seasons,
         "rows": len(frame),
         "sampling_frame": "all games involving at least one FBS team; not confirmed ESPN slates",
@@ -104,15 +112,15 @@ def analyze_file(input_path: Path, output_path: Path | None = None) -> Path:
         "sp_plus_logistic": ["sp_diff"],
     }
     for name, columns in candidates.items():
-        folds = []
+        model_folds = []
         skipped = []
-        for test_season in seasons[1:]:
-            train = frame[frame.season < test_season].dropna(subset=columns)
-            test = frame[frame.season == test_season].dropna(subset=columns)
+        for fold in folds:
+            train = frame[frame.season.isin(fold.train_seasons)].dropna(subset=columns)
+            test = frame[frame.season == fold.test_season].dropna(subset=columns)
             if train.empty or test.empty:
                 skipped.append(
                     {
-                        "season": test_season,
+                        "season": fold.test_season,
                         "reason": "no complete training rows"
                         if train.empty
                         else "no complete test rows",
@@ -124,7 +132,7 @@ def analyze_file(input_path: Path, output_path: Path | None = None) -> Path:
             if train.home_win.nunique() < 2:
                 skipped.append(
                     {
-                        "season": test_season,
+                        "season": fold.test_season,
                         "reason": "training target has fewer than two classes",
                         "train_n": len(train),
                         "test_n": len(test),
@@ -136,16 +144,17 @@ def analyze_file(input_path: Path, output_path: Path | None = None) -> Path:
             )
             model.fit(train[columns], train.home_win.astype(int))
             probabilities = model.predict_proba(test[columns])[:, 1]
-            folds.append(
+            model_folds.append(
                 {
-                    "season": test_season,
+                    "season": fold.test_season,
+                    "fold_id": fold.fold_id,
                     "train_n": len(train),
                     **probability_metrics(test, probabilities),
                 }
             )
         results["walk_forward_models"][name] = {
             "features": columns,
-            "folds": folds,
+            "folds": model_folds,
             "skipped_folds": skipped,
         }
 

@@ -7,6 +7,9 @@ from collections.abc import Callable
 from pathlib import Path
 from typing import Any
 
+from .folds import assert_train_precedes_test, expanding_folds
+from .protocol import DEFAULT_PROTOCOL
+
 
 def analyze_early_season(
     input_path: Path, output_dir: Path | None = None
@@ -26,6 +29,8 @@ def analyze_early_season(
     ].copy()
     frame["elo_diff"] = frame.elo_home - frame.elo_away
     seasons = sorted(int(value) for value in frame.season.unique())
+    folds = expanding_folds(seasons, DEFAULT_PROTOCOL)
+    assert_train_precedes_test(folds)
     slices: dict[str, Callable[[Any], Any]] = {
         "week_1": lambda rows: rows.week == 1,
         "weeks_1_3": lambda rows: rows.week.between(1, 3),
@@ -37,16 +42,18 @@ def analyze_early_season(
     }
 
     predictions = []
-    folds = []
+    fold_rows = []
     for slice_name, selector in slices.items():
-        for test_season in seasons[1:]:
-            train = frame[(frame.season < test_season) & selector(frame)]
-            test = frame[(frame.season == test_season) & selector(frame)]
+        for fold in folds:
+            train = frame[frame.season.isin(fold.train_seasons) & selector(frame)]
+            test = frame[(frame.season == fold.test_season) & selector(frame)]
             if train.empty or test.empty or train.home_win.nunique() < 2:
                 continue
             fold_metrics: dict[str, Any] = {
                 "slice": slice_name,
-                "test_season": test_season,
+                "test_season": fold.test_season,
+                "fold_id": fold.fold_id,
+                "protocol_version": DEFAULT_PROTOCOL.protocol_version,
                 "train_n": len(train),
                 "test_n": len(test),
             }
@@ -62,11 +69,13 @@ def analyze_early_season(
                     "log_loss": float(log_loss(y, probability, labels=[0, 1])),
                     "brier": float(brier_score_loss(y, probability)),
                 }
-                for position, (index, row) in enumerate(test.iterrows()):
+                for position, (_index, row) in enumerate(test.iterrows()):
                     predictions.append(
                         {
+                            "protocol_version": DEFAULT_PROTOCOL.protocol_version,
                             "slice": slice_name,
-                            "test_season": test_season,
+                            "test_season": fold.test_season,
+                            "fold_id": fold.fold_id,
                             "game_id": int(row.game_id),
                             "week": int(row.week),
                             "home_win": int(row.home_win),
@@ -79,19 +88,24 @@ def analyze_early_season(
                 - fold_metrics["spread"][metric]
                 for metric in ("accuracy", "log_loss", "brier")
             }
-            folds.append(fold_metrics)
+            fold_rows.append(fold_metrics)
 
     summary: dict[str, Any] = {
         "input": str(input_path),
+        "protocol_version": DEFAULT_PROTOCOL.protocol_version,
+        "latest_oot_fold": DEFAULT_PROTOCOL.latest_oot_fold,
+        "prospective_holdout": DEFAULT_PROTOCOL.prospective_holdout,
         "design": (
-            "Expanding-window season folds. Within each slice, spread-only and "
-            "spread-plus-Elo train and score on identical complete rows."
+            "Expanding-window season folds under protocol 1.0.0. Within each "
+            "slice, spread-only and spread-plus-Elo train and score on identical "
+            "complete rows. 2025 is the latest in-loop OOT fold; 2026 weekly "
+            "shadow is the prospective holdout."
         ),
         "slices": {},
-        "folds": folds,
+        "folds": fold_rows,
     }
     for slice_name in slices:
-        selected = [fold for fold in folds if fold["slice"] == slice_name]
+        selected = [fold for fold in fold_rows if fold["slice"] == slice_name]
         total = sum(fold["test_n"] for fold in selected)
         aggregate: dict[str, Any] = {
             "folds": len(selected),
