@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import csv
 import json
+from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Any
 
@@ -14,6 +15,25 @@ POLL_NAMES = {
     "Coaches Poll": "coaches",
     "Playoff Committee Rankings": "cfp",
 }
+
+NAME_JOIN_AUDIT_COLUMNS = (
+    "game_id",
+    "season",
+    "week",
+    "side",
+    "feature",
+    "join_key_type",
+    "join_key_value",
+    "team_id",
+    "resolved",
+    "reason",
+)
+
+
+@dataclass
+class BuildResult:
+    rows: list[dict[str, Any]]
+    name_join_audit: list[dict[str, Any]] = field(default_factory=list)
 
 
 def _get(row: dict[str, Any], snake: str, camel: str | None = None) -> Any:
@@ -44,7 +64,36 @@ def _rating_index(
     return result
 
 
-def build_rows(snapshot_dir: Path) -> list[dict[str, Any]]:
+def _audit_name_join(
+    audit: list[dict[str, Any]],
+    *,
+    game_id: int,
+    season: Any,
+    week: int,
+    side: str,
+    feature: str,
+    team_name: Any,
+    team_id: Any,
+    resolved: bool,
+    reason: str,
+) -> None:
+    audit.append(
+        {
+            "game_id": game_id,
+            "season": season,
+            "week": week,
+            "side": side,
+            "feature": feature,
+            "join_key_type": "name",
+            "join_key_value": team_name,
+            "team_id": team_id,
+            "resolved": resolved,
+            "reason": reason,
+        }
+    )
+
+
+def build_rows(snapshot_dir: Path) -> BuildResult:
     def load(name: str) -> Any:
         return json.loads((snapshot_dir / f"{name}.json").read_text())
 
@@ -56,6 +105,7 @@ def build_rows(snapshot_dir: Path) -> list[dict[str, Any]]:
     ratings = {"elo": _rating_index(load("elo"), "elo")}
     lines_by_id = {int(row["id"]): row.get("lines", []) for row in lines}
     output = []
+    name_join_audit: list[dict[str, Any]] = []
     for game in games:
         # An FBS game includes at least one FBS program; this retains FBS-vs-FCS
         # games while excluding the thousands of lower-division-only matchups.
@@ -67,6 +117,8 @@ def build_rows(snapshot_dir: Path) -> list[dict[str, Any]]:
         week = int(game["week"])
         home = _get(game, "home_team", "homeTeam")
         away = _get(game, "away_team", "awayTeam")
+        home_id = _get(game, "home_id", "homeId")
+        away_id = _get(game, "away_id", "awayId")
         hp = _get(game, "home_points", "homePoints")
         ap = _get(game, "away_points", "awayPoints")
         row = {
@@ -77,8 +129,8 @@ def build_rows(snapshot_dir: Path) -> list[dict[str, Any]]:
             "kickoff_utc": _get(game, "start_date", "startDate"),
             "home_team": home,
             "away_team": away,
-            "home_team_id": _get(game, "home_id", "homeId"),
-            "away_team_id": _get(game, "away_id", "awayId"),
+            "home_team_id": home_id,
+            "away_team_id": away_id,
             "home_conference": _get(game, "home_conference", "homeConference"),
             "away_conference": _get(game, "away_conference", "awayConference"),
             "home_classification": home_classification,
@@ -102,16 +154,69 @@ def build_rows(snapshot_dir: Path) -> list[dict[str, Any]]:
         # Use the preceding week. This conservative join avoids post-game values.
         feature_week = max(week - 1, 0)
         for poll in POLL_NAMES.values():
-            row[f"{poll}_home_rank"] = ranks.get((feature_week, poll, home))
-            row[f"{poll}_away_rank"] = ranks.get((feature_week, poll, away))
+            # CFBD poll ranks are keyed by school name only — always audit.
+            home_rank = ranks.get((feature_week, poll, home))
+            away_rank = ranks.get((feature_week, poll, away))
+            row[f"{poll}_home_rank"] = home_rank
+            row[f"{poll}_away_rank"] = away_rank
+            _audit_name_join(
+                name_join_audit,
+                game_id=game_id,
+                season=row["season"],
+                week=week,
+                side="home",
+                feature=f"{poll}_rank",
+                team_name=home,
+                team_id=home_id,
+                resolved=home_rank is not None,
+                reason="poll ranks expose school name only",
+            )
+            _audit_name_join(
+                name_join_audit,
+                game_id=game_id,
+                season=row["season"],
+                week=week,
+                side="away",
+                feature=f"{poll}_rank",
+                team_name=away,
+                team_id=away_id,
+                resolved=away_rank is not None,
+                reason="poll ranks expose school name only",
+            )
         for name, index in ratings.items():
             if row.get(f"{name}_home") is None:
-                row[f"{name}_home"] = index.get((feature_week, home))
+                value = index.get((feature_week, home))
+                row[f"{name}_home"] = value
+                _audit_name_join(
+                    name_join_audit,
+                    game_id=game_id,
+                    season=row["season"],
+                    week=week,
+                    side="home",
+                    feature=name,
+                    team_name=home,
+                    team_id=home_id,
+                    resolved=value is not None,
+                    reason="weekly rating endpoint keyed by team name; no game-level ID",
+                )
             if row.get(f"{name}_away") is None:
-                row[f"{name}_away"] = index.get((feature_week, away))
+                value = index.get((feature_week, away))
+                row[f"{name}_away"] = value
+                _audit_name_join(
+                    name_join_audit,
+                    game_id=game_id,
+                    season=row["season"],
+                    week=week,
+                    side="away",
+                    feature=name,
+                    team_name=away,
+                    team_id=away_id,
+                    resolved=value is not None,
+                    reason="weekly rating endpoint keyed by team name; no game-level ID",
+                )
         output.append(row)
-    attach_history_features(output)
-    return output
+    attach_history_features(output, name_join_audit=name_join_audit)
+    return BuildResult(rows=output, name_join_audit=name_join_audit)
 
 
 def _history_team_key(season: Any, team_id: Any, team_name: Any) -> tuple[Any, str, Any]:
@@ -127,12 +232,17 @@ def _win_pct(wins: int, losses: int) -> float | None:
     return wins / total
 
 
-def attach_history_features(rows: list[dict[str, Any]]) -> None:
+def attach_history_features(
+    rows: list[dict[str, Any]],
+    *,
+    name_join_audit: list[dict[str, Any]] | None = None,
+) -> None:
     """Add entering W-L, previous result, and SOS using only prior completed games.
 
     Mutates rows in place. Games are ordered by kickoff then game_id so a later
     result cannot change an earlier row. Incomplete games and ties do not update
-    team records.
+    team records. Name-key fallbacks are appended to ``name_join_audit`` when
+    provided.
     """
 
     ordered = sorted(
@@ -148,8 +258,39 @@ def attach_history_features(rows: list[dict[str, Any]]) -> None:
 
     for row in ordered:
         season = row.get("season")
-        home_key = _history_team_key(season, row.get("home_team_id"), row.get("home_team"))
-        away_key = _history_team_key(season, row.get("away_team_id"), row.get("away_team"))
+        home_key = _history_team_key(
+            season, row.get("home_team_id"), row.get("home_team")
+        )
+        away_key = _history_team_key(
+            season, row.get("away_team_id"), row.get("away_team")
+        )
+        if name_join_audit is not None:
+            if home_key[1] == "name":
+                _audit_name_join(
+                    name_join_audit,
+                    game_id=int(row["game_id"]),
+                    season=season,
+                    week=int(row["week"]),
+                    side="home",
+                    feature="history_team_key",
+                    team_name=row.get("home_team"),
+                    team_id=row.get("home_team_id"),
+                    resolved=True,
+                    reason="missing team_id; history features keyed by team name",
+                )
+            if away_key[1] == "name":
+                _audit_name_join(
+                    name_join_audit,
+                    game_id=int(row["game_id"]),
+                    season=season,
+                    week=int(row["week"]),
+                    side="away",
+                    feature="history_team_key",
+                    team_name=row.get("away_team"),
+                    team_id=row.get("away_team_id"),
+                    resolved=True,
+                    reason="missing team_id; history features keyed by team name",
+                )
         home_w, home_l = record.get(home_key, (0, 0))
         away_w, away_l = record.get(away_key, (0, 0))
         row["home_entering_wins"] = home_w
@@ -202,7 +343,22 @@ def merge_pickem(rows: list[dict[str, Any]], path: Path) -> None:
                 row[field] = float(match[field]) if match.get(field) else None
 
 
-def write_dataset(rows: list[dict[str, Any]], output: Path) -> Path:
+def write_name_join_audit(audit: list[dict[str, Any]], path: Path) -> Path:
+    path.parent.mkdir(parents=True, exist_ok=True)
+    with path.open("w", newline="") as handle:
+        writer = csv.DictWriter(handle, fieldnames=list(NAME_JOIN_AUDIT_COLUMNS))
+        writer.writeheader()
+        for row in audit:
+            writer.writerow({key: row.get(key) for key in NAME_JOIN_AUDIT_COLUMNS})
+    return path
+
+
+def write_dataset(
+    rows: list[dict[str, Any]],
+    output: Path,
+    *,
+    name_join_audit: list[dict[str, Any]] | None = None,
+) -> Path:
     output.parent.mkdir(parents=True, exist_ok=True)
     if not rows:
         raise ValueError("cannot write an empty dataset")
@@ -217,7 +373,12 @@ def write_dataset(rows: list[dict[str, Any]], output: Path) -> Path:
         "missing_fraction": {
             key: sum(r[key] is None for r in rows) / len(rows) for key in rows[0]
         },
+        "name_join_audit_rows": len(name_join_audit or []),
     }
     report = output.with_suffix(".quality.json")
     report.write_text(json.dumps(quality, indent=2, sort_keys=True) + "\n")
+    if name_join_audit is not None:
+        write_name_join_audit(
+            name_join_audit, output.with_name(output.stem + ".name_join_audit.csv")
+        )
     return report

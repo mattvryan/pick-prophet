@@ -110,27 +110,31 @@ lines; provider *counts* are audited. FPI/SP+ are classified
 
 ## M03 — Harden historical ingestion
 
+**Status:** implemented (core in P1.1; M03 closes name-join audit + smoke docs)
 **Branch:** `data/m03-ingestion-hardening`
 **Dependencies:** M02
 
 Scope:
 
-- Add targeted season/week requests and resumable immutable snapshots.
-- Add bounded exponential backoff for retryable failures only.
-- Validate provider schemas before canonical transformation.
-- Record parameters, retrieval time, row counts, hashes, adapter version, and
+- [x] Add targeted season/week requests and resumable immutable snapshots.
+- [x] Add bounded exponential backoff for retryable failures only.
+- [x] Validate provider schemas before canonical transformation.
+- [x] Record parameters, retrieval time, row counts, hashes, adapter version, and
   errors in manifests.
-- Preserve bad responses and fail with actionable schema-drift errors.
-- Prefer stable IDs; emit an audit table for every name-based fallback.
-- Keep automated tests fixture-only; document live smoke tests separately.
+- [x] Preserve bad responses and fail with actionable schema-drift errors.
+- [x] Prefer stable IDs; emit an audit table for every name-based fallback.
+- [x] Keep automated tests fixture-only; document live smoke tests separately.
 
 Tests and acceptance:
 
-- Test retryable/permanent failures, resume, schema drift, and deterministic
+- [x] Test retryable/permanent failures, resume, schema drift, and deterministic
   manifests.
-- A targeted week capture does not request future weeks.
-- Re-running a completed snapshot cannot overwrite it.
-- Existing 2017–2025 snapshots still build.
+- [x] A targeted week capture does not request future weeks.
+- [x] Re-running a completed snapshot cannot overwrite it.
+- [x] Existing 2017–2025 snapshots still build.
+
+Live smoke steps: `docs/cfbd_live_smoke.md`. Name-based poll/Elo joins write
+`games_YYYY.name_join_audit.csv` beside the processed table.
 
 ## M04 — Historical market contract and market-logit baseline
 

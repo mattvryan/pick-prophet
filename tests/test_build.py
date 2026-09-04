@@ -37,10 +37,15 @@ class BuildTests(unittest.TestCase):
             }
             for name, rows in payloads.items():
                 (root / f"{name}.json").write_text(json.dumps(rows))
-            row = build_rows(root)[0]
+            result = build_rows(root)
+            row = result.rows[0]
             self.assertEqual(row["elo_home"], 1508)
             self.assertIsNone(row["fpi_home"])
             self.assertEqual(row["home_win"], 1)
+            elo_joins = [a for a in result.name_join_audit if a["feature"] == "elo"]
+            self.assertTrue(elo_joins)
+            self.assertTrue(any(a["resolved"] for a in elo_joins))
+            self.assertTrue(all(a["join_key_type"] == "name" for a in elo_joins))
 
 
 if __name__ == "__main__":
