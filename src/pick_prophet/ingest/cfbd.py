@@ -7,7 +7,7 @@ import json
 import os
 import time
 from dataclasses import dataclass
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any
 from urllib.error import HTTPError, URLError
@@ -77,7 +77,7 @@ def ingest_season(
 ) -> Path:
     """Download one season into a unique snapshot directory."""
     client = client or CFBDClient()
-    snapshot = snapshot or datetime.now(timezone.utc).strftime("%Y%m%dT%H%M%SZ")
+    snapshot = snapshot or datetime.now(UTC).strftime("%Y%m%dT%H%M%SZ")
     target = raw_root / "cfbd" / str(season) / snapshot
     if target.exists():
         raise FileExistsError(f"snapshot already exists: {target}")
@@ -85,7 +85,7 @@ def ingest_season(
     manifest: dict[str, Any] = {
         "source": BASE_URL,
         "season": season,
-        "retrieved_at": datetime.now(timezone.utc).isoformat(),
+        "retrieved_at": datetime.now(UTC).isoformat(),
         "files": {},
     }
     for endpoint in ENDPOINTS:

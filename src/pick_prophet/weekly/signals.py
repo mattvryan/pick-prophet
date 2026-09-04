@@ -14,11 +14,27 @@ from pick_prophet.weekly.validate import validate_slate
 
 SIGNALS_SCHEMA_VERSION = "weekly_signals.v1"
 SIGNAL_FIELDS = [
-    "display_order", "cfbd_game_id", "away_team", "home_team", "kickoff_utc",
-    "neutral_site", "venue", "venue_id", "away_conference", "home_conference",
-    "away_pregame_elo", "home_pregame_elo", "away_fpi", "home_fpi",
-    "away_sp", "home_sp", "away_sp_rank", "home_sp_rank", "away_ap_rank",
-    "home_ap_rank", "snapshot_at_utc",
+    "display_order",
+    "cfbd_game_id",
+    "away_team",
+    "home_team",
+    "kickoff_utc",
+    "neutral_site",
+    "venue",
+    "venue_id",
+    "away_conference",
+    "home_conference",
+    "away_pregame_elo",
+    "home_pregame_elo",
+    "away_fpi",
+    "home_fpi",
+    "away_sp",
+    "home_sp",
+    "away_sp_rank",
+    "home_sp_rank",
+    "away_ap_rank",
+    "home_ap_rank",
+    "snapshot_at_utc",
 ]
 
 
@@ -35,9 +51,12 @@ def _stamp_now() -> str:
 
 
 def _iso(stamp: str) -> str:
-    return datetime.strptime(stamp, "%Y%m%dT%H%M%SZ").replace(
-        tzinfo=UTC
-    ).isoformat().replace("+00:00", "Z")
+    return (
+        datetime.strptime(stamp, "%Y%m%dT%H%M%SZ")
+        .replace(tzinfo=UTC)
+        .isoformat()
+        .replace("+00:00", "Z")
+    )
 
 
 def _ap_ranks(rankings: list[dict[str, Any]]) -> dict[str, int]:
@@ -45,7 +64,9 @@ def _ap_ranks(rankings: list[dict[str, Any]]) -> dict[str, int]:
     for week in rankings:
         for poll in week.get("polls", []):
             if poll.get("poll") == "AP Top 25":
-                result.update({row["school"]: int(row["rank"]) for row in poll["ranks"]})
+                result.update(
+                    {row["school"]: int(row["rank"]) for row in poll["ranks"]}
+                )
     return result
 
 
@@ -67,17 +88,24 @@ def fetch_signals_snapshot(
     client = client or CFBDClient()
     requests = {
         "games": ("/games", {"year": season, "week": week, "seasonType": "regular"}),
-        "rankings": ("/rankings", {"year": season, "week": week, "seasonType": "regular"}),
+        "rankings": (
+            "/rankings",
+            {"year": season, "week": week, "seasonType": "regular"},
+        ),
         "fpi": ("/ratings/fpi", {"year": season}),
         "sp": ("/ratings/sp", {"year": season}),
     }
-    payloads = {name: client.get(path, params) for name, (path, params) in requests.items()}
+    payloads = {
+        name: client.get(path, params) for name, (path, params) in requests.items()
+    }
 
     wanted_ids = {int(row["cfbd_game_id"]) for row in validation.rows}
     wanted_teams = {
         team for row in validation.rows for team in (row["away_team"], row["home_team"])
     }
-    games = {int(row["id"]): row for row in payloads["games"] if int(row["id"]) in wanted_ids}
+    games = {
+        int(row["id"]): row for row in payloads["games"] if int(row["id"]) in wanted_ids
+    }
     fpi = {row["team"]: row for row in payloads["fpi"] if row["team"] in wanted_teams}
     sp = {row["team"]: row for row in payloads["sp"] if row["team"] in wanted_teams}
     ap = _ap_ranks(payloads["rankings"])
@@ -99,29 +127,31 @@ def fetch_signals_snapshot(
     for slate in validation.rows:
         game = games.get(int(slate["cfbd_game_id"]), {})
         away, home = slate["away_team"], slate["home_team"]
-        rows.append({
-            "display_order": slate["display_order"],
-            "cfbd_game_id": slate["cfbd_game_id"],
-            "away_team": away,
-            "home_team": home,
-            "kickoff_utc": game.get("startDate"),
-            "neutral_site": game.get("neutralSite"),
-            "venue": game.get("venue"),
-            "venue_id": game.get("venueId"),
-            "away_conference": game.get("awayConference"),
-            "home_conference": game.get("homeConference"),
-            "away_pregame_elo": game.get("awayPregameElo"),
-            "home_pregame_elo": game.get("homePregameElo"),
-            "away_fpi": fpi.get(away, {}).get("fpi"),
-            "home_fpi": fpi.get(home, {}).get("fpi"),
-            "away_sp": sp.get(away, {}).get("rating"),
-            "home_sp": sp.get(home, {}).get("rating"),
-            "away_sp_rank": sp.get(away, {}).get("ranking"),
-            "home_sp_rank": sp.get(home, {}).get("ranking"),
-            "away_ap_rank": ap.get(away),
-            "home_ap_rank": ap.get(home),
-            "snapshot_at_utc": snapshot_at,
-        })
+        rows.append(
+            {
+                "display_order": slate["display_order"],
+                "cfbd_game_id": slate["cfbd_game_id"],
+                "away_team": away,
+                "home_team": home,
+                "kickoff_utc": game.get("startDate"),
+                "neutral_site": game.get("neutralSite"),
+                "venue": game.get("venue"),
+                "venue_id": game.get("venueId"),
+                "away_conference": game.get("awayConference"),
+                "home_conference": game.get("homeConference"),
+                "away_pregame_elo": game.get("awayPregameElo"),
+                "home_pregame_elo": game.get("homePregameElo"),
+                "away_fpi": fpi.get(away, {}).get("fpi"),
+                "home_fpi": fpi.get(home, {}).get("fpi"),
+                "away_sp": sp.get(away, {}).get("rating"),
+                "home_sp": sp.get(home, {}).get("rating"),
+                "away_sp_rank": sp.get(away, {}).get("ranking"),
+                "home_sp_rank": sp.get(home, {}).get("ranking"),
+                "away_ap_rank": ap.get(away),
+                "home_ap_rank": ap.get(home),
+                "snapshot_at_utc": snapshot_at,
+            }
+        )
     signals_path = target / "signals.csv"
     with signals_path.open("w", newline="", encoding="utf-8") as handle:
         writer = csv.DictWriter(handle, fieldnames=SIGNAL_FIELDS)
@@ -129,8 +159,13 @@ def fetch_signals_snapshot(
         writer.writerows(rows)
 
     coverage_fields = [
-        "venue", "away_pregame_elo", "home_pregame_elo", "away_fpi", "home_fpi",
-        "away_sp", "home_sp",
+        "venue",
+        "away_pregame_elo",
+        "home_pregame_elo",
+        "away_fpi",
+        "home_fpi",
+        "away_sp",
+        "home_sp",
     ]
     manifest = {
         "schema_version": SIGNALS_SCHEMA_VERSION,
@@ -150,7 +185,10 @@ def fetch_signals_snapshot(
         ),
         "files": {
             "signals.csv": _sha256(signals_path),
-            **{f"raw/{name}.json": _sha256(raw_dir / f"{name}.json") for name in payloads},
+            **{
+                f"raw/{name}.json": _sha256(raw_dir / f"{name}.json")
+                for name in payloads
+            },
         },
     }
     (target / "manifest.json").write_text(

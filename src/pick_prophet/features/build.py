@@ -33,7 +33,9 @@ def _rank_index(rows: list[dict[str, Any]]) -> dict[tuple[int, str, str], int]:
     return result
 
 
-def _rating_index(rows: list[dict[str, Any]], value_key: str) -> dict[tuple[int, str], float]:
+def _rating_index(
+    rows: list[dict[str, Any]], value_key: str
+) -> dict[tuple[int, str], float]:
     result = {}
     for row in rows:
         value = row.get(value_key, row.get("rating"))
@@ -57,12 +59,8 @@ def build_rows(snapshot_dir: Path) -> list[dict[str, Any]]:
     for game in games:
         # An FBS game includes at least one FBS program; this retains FBS-vs-FCS
         # games while excluding the thousands of lower-division-only matchups.
-        home_classification = _get(
-            game, "home_classification", "homeClassification"
-        )
-        away_classification = _get(
-            game, "away_classification", "awayClassification"
-        )
+        home_classification = _get(game, "home_classification", "homeClassification")
+        away_classification = _get(game, "away_classification", "awayClassification")
         if "fbs" not in {home_classification, away_classification}:
             continue
         game_id = int(game["id"])

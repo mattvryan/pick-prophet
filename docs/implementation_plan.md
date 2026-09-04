@@ -51,9 +51,9 @@ pass and its checkbox is updated in this file.
 
 ### P0.1 — Environment and credentials
 
-- [ ] Create `.venv` and install `.[dev]`.
+- [x] Create `.venv` and install `.[dev]`.
 - [x] Configure `CFBD_API_KEY` locally; never commit the value.
-- [ ] Run `pytest` and the CLI help command.
+- [x] Run `pytest` and the CLI help command.
 
 Acceptance:
 
@@ -177,8 +177,8 @@ fail the build, and update the adapter plus fixture deliberately.
 
 ### P1.2 — Build the modeling window
 
-- [ ] Ingest 2017–2025, starting with 2025 as the end-to-end validation season.
-- [ ] Produce one canonical CSV/Parquet table and quality report per season.
+- [x] Ingest 2017–2025, starting with 2025 as the end-to-end validation season.
+- [x] Produce one canonical CSV table and quality report per season.
 - [ ] Validate game counts, duplicate IDs, completed outcomes, odds coverage,
   rating coverage, team identities, and neutral-site flags.
 - [ ] Create a cross-season coverage report before fitting any model.
@@ -235,6 +235,9 @@ Evaluate before building a full model:
 - SP+ only;
 - public picks only, where available;
 - expert consensus only, where available.
+
+- [x] Establish direct spread/moneyline and walk-forward spread/Elo baselines;
+  FPI, SP+, public picks, and experts remain blocked by point-in-time archives.
 
 Rank-based sources need an explicit unranked representation and missing indicator;
 never replace unranked with rank 26 without testing that modeling choice.

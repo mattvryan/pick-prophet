@@ -104,10 +104,20 @@ def build_recommendation_rows(rows: list[dict[str, Any]]) -> list[dict[str, Any]
 
         public_disagreement = None
         if baseline_pick is not None and baseline_prob is not None:
-            if baseline_pick == row["home_team"] and row.get("home_public_pick_pct") is not None:
-                public_disagreement = baseline_prob - (row["home_public_pick_pct"] / 100.0)
-            elif baseline_pick == row["away_team"] and row.get("away_public_pick_pct") is not None:
-                public_disagreement = baseline_prob - (row["away_public_pick_pct"] / 100.0)
+            if (
+                baseline_pick == row["home_team"]
+                and row.get("home_public_pick_pct") is not None
+            ):
+                public_disagreement = baseline_prob - (
+                    row["home_public_pick_pct"] / 100.0
+                )
+            elif (
+                baseline_pick == row["away_team"]
+                and row.get("away_public_pick_pct") is not None
+            ):
+                public_disagreement = baseline_prob - (
+                    row["away_public_pick_pct"] / 100.0
+                )
 
         output.append(
             {
@@ -170,7 +180,9 @@ def render_card(rows: list[dict[str, Any]], *, as_of: str) -> str:
                         f"   - public disagreement: {_fmt_prob(row['public_disagreement'])}"
                     )
         else:
-            lines.append(f"{order}. **NO PICK** — {matchup} ({row['recommendation_status']})")
+            lines.append(
+                f"{order}. **NO PICK** — {matchup} ({row['recommendation_status']})"
+            )
         if row.get("warning"):
             warnings.append(f"display_order={order}: {row['warning']}")
         lines.append("")
@@ -220,7 +232,9 @@ def recommend(
     """Validate a slate and write deterministic market-baseline artifacts."""
 
     slate_path = Path(slate_path)
-    output_dir = Path(output_dir) if output_dir else _default_output_dir(slate_path, as_of)
+    output_dir = (
+        Path(output_dir) if output_dir else _default_output_dir(slate_path, as_of)
+    )
 
     if (output_dir / FINALIZED_MARKER).exists():
         raise FileExistsError(
@@ -286,7 +300,9 @@ def recommend(
             "card.md": _sha256_file(card_path),
         },
     }
-    manifest_path.write_text(json.dumps(manifest, indent=2, sort_keys=True) + "\n", encoding="utf-8")
+    manifest_path.write_text(
+        json.dumps(manifest, indent=2, sort_keys=True) + "\n", encoding="utf-8"
+    )
     return {
         "recommendations": recommendations_path,
         "card": card_path,
