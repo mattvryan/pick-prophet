@@ -62,6 +62,7 @@ def parser() -> argparse.ArgumentParser:
         "recommend", help="emit market-baseline recommendations"
     )
     recommend_cmd.add_argument("--slate", type=Path, required=True)
+    recommend_cmd.add_argument("--market", type=Path)
     recommend_cmd.add_argument("--as-of", required=True)
     recommend_cmd.add_argument("--output-dir", type=Path)
 
@@ -114,6 +115,7 @@ def main(argv: list[str] | None = None) -> None:
                     args.slate,
                     as_of=args.as_of,
                     output_dir=args.output_dir,
+                    market_path=args.market,
                 )
             except (ValueError, FileExistsError) as exc:
                 print(f"ERROR: {exc}", file=sys.stderr)

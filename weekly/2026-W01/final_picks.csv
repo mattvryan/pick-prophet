@@ -1,0 +1,11 @@
+display_order,away_team,home_team,pick,market_win_probability,manual_override,review_note
+1,Tulane,Duke,Duke,0.7610,false,Market and all three rating systems favor Duke
+2,Boston College,Cincinnati,Cincinnati,0.7111,false,Market and all three rating systems favor Cincinnati
+3,Baylor,Auburn,Auburn,0.7091,false,Market and all three rating systems favor Auburn at the neutral indoor venue
+4,Wyoming,Colorado State,Colorado State,0.6020,false,Elo favors Wyoming but FPI and the market favor Colorado State; paired testing does not justify an Elo override
+5,Clemson,LSU,LSU,0.7728,false,FPI and SP+ agree with the market; Elo disagreement is not sufficient to override
+6,UNLV,Hawai'i,UNLV,0.5759,false,Market FPI SP+ and Elo favor UNLV
+7,Western Kentucky,Nevada,Western Kentucky,0.5363,false,Near coin flip but market FPI SP+ and Elo all lean Western Kentucky
+8,UCLA,California,UCLA,0.5427,false,Close market; SP+ favors UCLA while FPI and Elo are nearly even
+9,Louisville,Ole Miss,Ole Miss,0.7002,false,Market FPI SP+ and Elo favor Ole Miss at the neutral site
+10,SMU,Florida State,SMU,0.5893,false,Market FPI SP+ and Elo favor SMU; official preview presents Kevin Jennings as available

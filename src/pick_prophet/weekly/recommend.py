@@ -144,6 +144,45 @@ def build_recommendation_rows(rows: list[dict[str, Any]]) -> list[dict[str, Any]
     return output
 
 
+def apply_market_snapshot(
+    rows: list[dict[str, Any]], market_path: Path | str
+) -> list[dict[str, Any]]:
+    """Replace captured ESPN odds with a validated market snapshot."""
+
+    market_path = Path(market_path)
+    with market_path.open(newline="", encoding="utf-8") as handle:
+        market_rows = list(csv.DictReader(handle))
+    by_game = {str(row["cfbd_game_id"]): row for row in market_rows}
+    if len(by_game) != len(market_rows):
+        raise ValueError(f"duplicate cfbd_game_id in market snapshot: {market_path}")
+
+    merged: list[dict[str, Any]] = []
+    for slate_row in rows:
+        game_id = str(slate_row["cfbd_game_id"])
+        market_row = by_game.get(game_id)
+        if market_row is None:
+            raise ValueError(f"market snapshot missing cfbd_game_id={game_id}")
+        if (
+            market_row.get("away_team") != slate_row["away_team"]
+            or market_row.get("home_team") != slate_row["home_team"]
+        ):
+            raise ValueError(f"market/slate team mismatch for cfbd_game_id={game_id}")
+        if market_row.get("status") != "ok":
+            raise ValueError(
+                f"market snapshot status is not ok for cfbd_game_id={game_id}"
+            )
+        updated = dict(slate_row)
+        try:
+            updated["away_moneyline"] = float(market_row["away_moneyline"])
+            updated["home_moneyline"] = float(market_row["home_moneyline"])
+        except (KeyError, TypeError, ValueError) as exc:
+            raise ValueError(
+                f"invalid market moneyline for cfbd_game_id={game_id}"
+            ) from exc
+        merged.append(updated)
+    return merged
+
+
 def render_card(rows: list[dict[str, Any]], *, as_of: str) -> str:
     lines = [
         "# Market baseline card",
@@ -227,6 +266,7 @@ def recommend(
     *,
     as_of: str,
     output_dir: Path | str | None = None,
+    market_path: Path | str | None = None,
     generation_timestamp: str | None = None,
 ) -> dict[str, Path]:
     """Validate a slate and write deterministic market-baseline artifacts."""
@@ -246,7 +286,10 @@ def recommend(
         joined = "\n".join(result.errors)
         raise ValueError(f"slate validation failed:\n{joined}")
 
-    rows = build_recommendation_rows(result.rows)
+    input_rows = (
+        apply_market_snapshot(result.rows, market_path) if market_path else result.rows
+    )
+    rows = build_recommendation_rows(input_rows)
     output_dir.mkdir(parents=True, exist_ok=True)
 
     recommendations_path = output_dir / "recommendations.csv"
@@ -280,6 +323,7 @@ def recommend(
         "output_schema_version": OUTPUT_SCHEMA_VERSION,
         "command_arguments": {
             "slate": str(slate_path),
+            "market": str(market_path) if market_path else None,
             "as_of": as_of,
             "output_dir": str(output_dir),
         },

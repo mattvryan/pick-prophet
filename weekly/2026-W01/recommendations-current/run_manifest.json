@@ -1,0 +1,41 @@
+{
+  "as_of": "2026-09-04T16:01:38Z",
+  "capture_source_sha256": [
+    "cc0372e9084c76590ea0b3ba782588302246913b9fc09cb05bd0851c12a0bffc",
+    "206a3379cee3eb10fa2f58a77d7d0f52a2a2e52c6fe07fd044a5d05d2205adf0",
+    "20b8ecf7515bcb93cd699f6ca96ef8b795fa9e58aea9217553f72695aa7bcccf",
+    "e861a8e68345cd9d387764be124b296242bfdd9bbbfb48cd9dc070bc09eafda2",
+    "bfbb72a66023cc5f8e38d627b13cab931ac5480502a9d29c8b917e304a844efd"
+  ],
+  "command_arguments": {
+    "as_of": "2026-09-04T16:01:38Z",
+    "market": "weekly/2026-W01/market/20260904T144639Z/market.csv",
+    "output_dir": "weekly/2026-W01/recommendations-current",
+    "slate": "weekly/2026-W01/slate.csv"
+  },
+  "contest_mode": "standard",
+  "generation_timestamp": "2026-09-04T16:03:14.486043Z",
+  "input_path": "weekly/2026-W01/slate.csv",
+  "input_sha256": "d1099fa17a1eb70cec218879ceb9b05b606788c04d87d8fe6c5cb0affa65ffb0",
+  "notes": "recommendations.csv and card.md are deterministic for identical slate contents and --as-of. generation_timestamp is isolated here.",
+  "output_hashes": {
+    "card.md": "1ce4f93af184261c26ef0fb4e617fc6e4dacdd8e2c1772bfcbeacea8186040ea",
+    "recommendations.csv": "296d5ab2f6004d641f63b1532d0a48455e22682f37eb3df439345f2b1c500262"
+  },
+  "output_schema_version": "weekly_recommendations.v1",
+  "row_count": 10,
+  "valid_recommendation_count": 10,
+  "validation_warnings": [
+    "row 2 (display_order=1): espn_game_id is missing",
+    "row 3 (display_order=2): espn_game_id is missing",
+    "row 4 (display_order=3): espn_game_id is missing",
+    "row 5 (display_order=4): espn_game_id is missing",
+    "row 6 (display_order=5): espn_game_id is missing",
+    "row 7 (display_order=6): espn_game_id is missing",
+    "row 8 (display_order=7): espn_game_id is missing",
+    "row 9 (display_order=8): espn_game_id is missing",
+    "row 10 (display_order=9): espn_game_id is missing",
+    "row 11 (display_order=10): espn_game_id is missing"
+  ],
+  "warning_count": 10
+}

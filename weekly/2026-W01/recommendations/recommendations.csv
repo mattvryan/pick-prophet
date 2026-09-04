@@ -1,0 +1,11 @@
+display_order,cfbd_game_id,away_team,home_team,neutral_site,lock_at_utc,away_moneyline,home_moneyline,away_market_probability,home_market_probability,away_public_pick_pct,home_public_pick_pct,baseline_pick,baseline_pick_probability,public_disagreement,upset_candidate,recommendation_status,warning
+1,401858209,Tulane,Duke,false,2026-09-05T19:30:00Z,260.0,-325.0,0.2664576803,0.7335423197,8.0,92.0,Duke,0.7335423197,-0.1864576803,false,ok,
+2,401856777,Boston College,Cincinnati,false,2026-09-05T19:30:00Z,245.0,-305.0,0.2779207411,0.7220792589,5.0,95.0,Cincinnati,0.7220792589,-0.2279207411,false,ok,
+3,401856636,Baylor,Auburn,true,2026-09-05T19:30:00Z,240.0,-298.0,0.2820294785,0.7179705215,8.0,92.0,Auburn,0.7179705215,-0.2020294785,false,ok,
+4,401860878,Wyoming,Colorado State,false,2026-09-05T22:00:00Z,130.0,-155.0,0.417007359,0.582992641,22.0,78.0,Colorado State,0.582992641,-0.197007359,false,ok,
+5,401856660,Clemson,LSU,false,2026-09-05T23:30:00Z,295.0,-375.0,0.2428115016,0.7571884984,9.0,91.0,LSU,0.7571884984,-0.1528115016,false,ok,
+6,401864497,UNLV,Hawai'i,false,2026-09-06T02:00:00Z,-148.0,124.0,0.5720596356,0.4279403644,83.0,17.0,UNLV,0.5720596356,-0.2579403644,false,ok,
+7,401864432,Western Kentucky,Nevada,false,2026-09-06T02:30:00Z,-115.0,-105.0,0.5108342362,0.4891657638,57.0,43.0,Western Kentucky,0.5108342362,-0.0591657638,false,ok,
+8,401858210,UCLA,California,false,2026-09-06T02:30:00Z,-130.0,110.0,0.5427435388,0.4572564612,79.0,21.0,UCLA,0.5427435388,-0.2472564612,false,ok,
+9,401856661,Louisville,Ole Miss,true,2026-09-06T23:30:00Z,220.0,-270.0,0.2998379254,0.7001620746,6.0,94.0,Ole Miss,0.7001620746,-0.2398379254,false,ok,
+10,401858212,SMU,Florida State,false,2026-09-07T23:30:00Z,-148.0,124.0,0.5720596356,0.4279403644,57.0,43.0,SMU,0.5720596356,0.0020596356,false,ok,
