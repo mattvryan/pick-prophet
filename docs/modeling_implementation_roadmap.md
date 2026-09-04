@@ -44,6 +44,12 @@ M01 protocol -> M02 audit -> M03 ingestion -> M04 market history
 M01 + M02 + M04 (+ available M05/M06) -> M07 feature matrix
 M07 -> M08 residual logistic -> M09 inference/calibration -> M10 ablation
 M10 -> M11 boosted challenger -> M12 registry/promotion -> M13 shadow mode
+
+Post-M13 research cycle:
+
+M14 evidence plan -> M15 ESPN frame + M16 market depth + M17 ratings
+                                      + M18 team form + M19 personnel context
+M15–M19 approved outputs -> M20 matrix/evaluation -> M21 challenger/promotion
 ```
 
 M05 and M06 may proceed in parallel after their dependencies. M08 may proceed
@@ -415,6 +421,259 @@ Tests and acceptance:
 - [x] Test parity, incompatible schemas, missing-signal/ineligible tips, and
   immutable final artifacts.
 - [x] Process at least one slate end to end with output labelled experimental.
+
+## Post-M13 research cycle — earning improvement beyond the market
+
+M01–M13 produced a safe system and an evidence-based decision to retain the
+market baseline. The next cycle is not permission to search repeatedly until a
+feature appears favorable. Its purpose is to improve the historical evidence,
+add independently plausible point-in-time signals, and make one predeclared
+attempt to beat the same market baseline.
+
+The 2026 weekly predictions and outcomes are a prospective, locked evaluation
+stream. Do not use them to select features, thresholds, hyperparameters, or data
+sources during this cycle. Record them through the normal weekly workflow and
+reserve their eventual use for a later prospective assessment.
+
+### M14 — Evidence-gap analysis and research protocol 2.0
+
+**Status:** planned
+**Suggested branch:** `research/m14-evidence-plan`
+**Dependencies:** M13
+
+Purpose: decide what evidence would materially improve the chance of detecting
+incremental value before paying for data or expanding model complexity.
+
+Scope:
+
+- Audit why M10 promoted nothing: sample size, feature coverage, effect-size
+  uncertainty, market timestamp quality, sampling-frame mismatch, collinearity,
+  and season instability.
+- Compare the all-FBS training population with the verified ESPN Pick'em
+  population without treating an exploratory frame difference as confirmation.
+- Run power/minimum-detectable-effect analysis for paired log-loss and Brier
+  deltas using week/season dependence.
+- Rank candidate source families by independent pregame rationale, PIT and
+  licensing feasibility, expected coverage, cost, and testable sample size.
+- Freeze protocol `2.0.0`: development seasons, untouched evaluation seasons,
+  folds, primary metrics, uncertainty method, multiplicity policy, missingness
+  rules, source-family hypotheses, and promotion thresholds.
+- Create a machine-readable experiment ledger. Every later analysis must cite a
+  predeclared hypothesis or be labelled exploratory and ineligible for immediate
+  promotion.
+
+Acceptance:
+
+- The memo can recommend stopping or delaying a source; more data/features are
+  not automatically better.
+- No candidate is fit and no outcome-dependent source choice is made in M14.
+- Protocol and experiment-ledger hashes are recorded before M15–M19 results are
+  evaluated.
+
+### M15 — Expand the verified ESPN Pick'em history
+
+**Status:** planned
+**Suggested branch:** `data/m15-espn-history-expansion`
+**Dependencies:** M14
+
+Purpose: reduce sampling-frame uncertainty by evaluating the games the contest
+actually selected, not only all-FBS games.
+
+Scope:
+
+- Recover additional historical weekly slates from lawful, reproducible
+  screenshots, exports, archives, or user-provided evidence.
+- Preserve display order, contest week, canonical game ID, public pick
+  percentage and capture time, tiebreaker identity, source hash, transcription
+  method, and verification status.
+- Maintain unresolved/ambiguous evidence separately; never infer membership from
+  rankings, network, or matchup prominence.
+- Publish coverage by season/week and reconcile every imported game to canonical
+  results and market inputs.
+
+Acceptance:
+
+- Duplicate, ambiguous, and identity-mismatched imports fail closed.
+- Analysis reports verified-frame sample size and missing weeks explicitly.
+- Public percentages without a valid pre-lock capture time are audit labels, not
+  promotable model features.
+
+### M16 — Improve historical market depth and timing
+
+**Status:** planned
+**Suggested branch:** `data/m16-market-depth`
+**Dependencies:** M14; may run in parallel with M15/M17–M19
+
+Purpose: strengthen the baseline and test whether market dynamics—not a weaker
+or hindsight-contaminated market proxy—contain reproducible information.
+
+Scope:
+
+- Evaluate lawful sources for timestamped opening and latest-prelock moneyline,
+  spread, and total observations with provider identity.
+- Add only observations whose effective/retrieval semantics permit exact
+  pre-kickoff selection; do not label an undated observation “open” or “close.”
+- Rebuild provider consensus, vig-free probabilities, dispersion, movement, and
+  staleness/coverage measures under the existing market contract.
+- Compare the strengthened market-only baseline with the current baseline before
+  judging any non-market candidate.
+
+Acceptance:
+
+- Post-kick observations and inferred ordering fail closed.
+- Provider and timestamp coverage are reported by season/week.
+- Any purchased or restricted source has documented license, cost, cache, and
+  redistribution rules before implementation.
+
+### M17 — Reopen point-in-time team-strength ratings
+
+**Status:** planned
+**Suggested branch:** `data/m17-pit-ratings`
+**Dependencies:** M14 and M06 feasibility memo; may run in parallel
+
+Purpose: test ratings only when genuine weekly historical snapshots can be
+joined as information available before each game.
+
+Scope:
+
+- Resolve the M06 Elo canonical-source decision with measured coverage and
+  temporal semantics.
+- Reassess weekly historical FPI/SP+ or other ratings only if licensing, stable
+  identifiers, revision behavior, and reproducible archives are clear.
+- Preserve rating publication/effective time, source version, retrieval time,
+  team ID, week, and missingness reason.
+- Predeclare residual signals such as rating-minus-market disagreement; do not
+  treat correlated ratings as independent votes or average them arbitrarily.
+
+Acceptance:
+
+- End-of-season/current ratings cannot enter historical pregame rows.
+- Each adapter passes sampled PIT leakage and team-identity audits.
+- A failed source review ends with an explicit omission, not a substitute.
+
+### M18 — Point-in-time team form and efficiency
+
+**Status:** planned
+**Suggested branch:** `features/m18-team-form-efficiency`
+**Dependencies:** M14; may run in parallel
+
+Purpose: derive reproducible on-field signals that may explain information not
+fully represented by the available market snapshot.
+
+Scope:
+
+- Build chronological, opponent-adjusted candidates from games strictly before
+  kickoff: efficiency, explosiveness, success/finishing measures, turnovers with
+  regression-to-mean treatment, pace, and special-teams indicators where source
+  coverage supports them.
+- Use training-fold-only estimation for opponent adjustment, shrinkage,
+  normalization, and missing-value parameters.
+- Separate preseason priors from in-season observations and expose sample size /
+  uncertainty, especially in Weeks 1–3.
+- Predeclare compact feature families; do not add large undifferentiated stat
+  dumps.
+
+Acceptance:
+
+- Future-game mutation tests prove earlier rows are unchanged.
+- Every rolling feature exposes its observation cutoff and games included.
+- Source coverage, rule changes, and season comparability are documented.
+
+### M19 — Preseason personnel and program context
+
+**Status:** planned
+**Suggested branches:** one PR per viable family under `features/m19-*`
+**Dependencies:** M14; may run in parallel
+
+Purpose: improve early-season estimates, where current-season team history is
+sparse, using only consistently dated historical information.
+
+Candidate families:
+
+- returning/changed quarterback and prior-start experience
+- returning production and transfer/roster continuity
+- head-coach/coordinator continuity and years at school
+- preseason ratings or priors with archived publication dates
+- reproducible rest, travel, venue, and rivalry registries
+
+Each family first receives a source/timing/licensing memo. Implement it only if
+definitions can remain stable across seasons and coverage is sufficient under
+M14. Injuries, depth-chart changes, weather forecasts, and qualitative news stay
+manual/review-only until comparable timestamped historical archives exist.
+
+Acceptance:
+
+- One source family per PR with stable IDs, PIT tests, coverage report, and data
+  dictionary.
+- Missing and unknown remain distinct; absence is never interpreted as “no
+  change,” “healthy,” or “returning.”
+- No family enters modeling merely because collection work was completed.
+
+### M20 — Feature matrix 2.0 and predeclared incremental-value study
+
+**Status:** planned
+**Suggested branch:** `modeling/m20-matrix-v2-ablation`
+**Dependencies:** M14 and whichever M15–M19 source families pass their gates
+
+Scope:
+
+- Publish matrix schema `2.0.0` with explicit baseline, candidate, audit, target,
+  timing, and sampling-frame roles.
+- Re-run market-only, single-family additions, leave-family-out ablations, and a
+  small predeclared combined residual model on identical held-out IDs.
+- Estimate incremental value conditional on the strengthened market baseline;
+  never compare only against winner accuracy or a stale/weaker baseline.
+- Report paired log-loss/Brier deltas, calibration, coverage, season stability,
+  coefficient/importance stability, missingness sensitivity, and verified-ESPN
+  results where adequately powered.
+- Apply the frozen multiplicity and disposition rules. Human dispositions remain
+  required and are recorded in a new approved-feature-set artifact.
+
+Acceptance:
+
+- Fold-nested preprocessing and PIT tests pass for every included source.
+- Confirmatory and exploratory results are visibly separated.
+- The valid outcome may again be `no_features_promoted`.
+
+### M21 — Challenger, calibration, and registry promotion attempt
+
+**Status:** planned; blocked unless M20 promotes at least one feature
+**Suggested branch:** `modeling/m21-challenger-promotion`
+**Dependencies:** M20
+
+Scope when unblocked:
+
+- Refit the interpretable fixed-market-offset logistic candidate first.
+- Compare at most one justified nonlinear challenger using the identical folds,
+  rows, promoted feature set, and a small training-only search space.
+- Evaluate training-fold-only calibration only when predeclared diagnostics
+  justify it.
+- Package the best eligible candidate in the safe M13 serving format, register it
+  as `candidate`, run the M12 promotion evaluator, and request a separate human
+  decision for `shadow` designation or approval.
+- Run eligible models in weekly shadow mode before any production replacement;
+  never edit submitted picks automatically.
+
+Acceptance:
+
+- Complexity is rejected unless proper-score improvement is stable, meaningful,
+  calibrated, and sufficiently covered under protocol 2.0.0.
+- Automated tooling may produce only `eligible_for_human_review`; it cannot
+  designate shadow or approve production use.
+- If M20 promotes nothing or all candidates fail, write a hashed no-challenger
+  decision and retain `market_only`.
+
+### Ongoing prospective capture
+
+This is an operational track, not a feature-selection milestone:
+
+- Continue saving each weekly slate, market snapshot, public percentages,
+  recommendations, manual rationale, submission confirmation, tiebreaker, shadow
+  output, results, and grading artifacts with capture timestamps and hashes.
+- Freeze every pregame artifact at lock. Corrections are additive and audited.
+- Do not inspect 2026 outcomes to tune this research cycle. When enough weeks or
+  seasons accumulate, evaluate the frozen candidate exactly once under a
+  separately versioned prospective protocol.
 
 ## Deferred feature-family PRs
 
