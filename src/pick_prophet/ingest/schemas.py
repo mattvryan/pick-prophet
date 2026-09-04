@@ -16,10 +16,12 @@ ENDPOINT_REQUIRED_FIELDS: dict[str, tuple[str, ...]] = {
 
 
 def validate_endpoint_payload(name: str, payload: Any) -> None:
-    """Raise ValueError with an actionable message when a payload is malformed."""
+    """Raise TypeError/ValueError with an actionable message when malformed."""
 
     if not isinstance(payload, list):
-        raise ValueError(f"CFBD {name}: expected a JSON array, got {type(payload).__name__}")
+        raise TypeError(
+            f"CFBD {name}: expected a JSON array, got {type(payload).__name__}"
+        )
     required = ENDPOINT_REQUIRED_FIELDS.get(name)
     if required is None:
         raise ValueError(f"CFBD {name}: unknown endpoint contract")
@@ -27,7 +29,9 @@ def validate_endpoint_payload(name: str, payload: Any) -> None:
         return
     row = payload[0]
     if not isinstance(row, dict):
-        raise ValueError(f"CFBD {name}: expected object rows, got {type(row).__name__}")
+        raise TypeError(
+            f"CFBD {name}: expected object rows, got {type(row).__name__}"
+        )
     missing = [key for key in required if key not in row]
     if missing:
         raise ValueError(

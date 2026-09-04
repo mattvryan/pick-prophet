@@ -5,7 +5,7 @@ from __future__ import annotations
 import json
 from io import BytesIO
 from pathlib import Path
-from typing import Any
+from typing import Any, Self
 from urllib.error import HTTPError
 
 import pytest
@@ -26,7 +26,7 @@ class FakeResponse:
             return bytes(self._payload)
         return json.dumps(self._payload).encode()
 
-    def __enter__(self) -> FakeResponse:
+    def __enter__(self) -> Self:
         return self
 
     def __exit__(self, *args: object) -> None:
