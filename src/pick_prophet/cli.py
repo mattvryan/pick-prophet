@@ -5,6 +5,7 @@ import sys
 from pathlib import Path
 
 from .evaluation.analyze import analyze_file
+from .evaluation.early_season import analyze_early_season
 from .features.build import build_rows, merge_pickem, write_dataset
 from .ingest.cfbd import ingest_season
 from .weekly.recommend import recommend
@@ -38,6 +39,12 @@ def parser() -> argparse.ArgumentParser:
     analyze = commands.add_parser("analyze", help="score baselines walk-forward")
     analyze.add_argument("--input", type=Path, required=True)
     analyze.add_argument("--output", type=Path)
+
+    early = commands.add_parser(
+        "analyze-early-season", help="run paired early-season walk-forward tests"
+    )
+    early.add_argument("--input", type=Path, required=True)
+    early.add_argument("--output-dir", type=Path)
 
     weekly = commands.add_parser("weekly", help="weekly Pick'em operations")
     weekly_commands = weekly.add_subparsers(dest="weekly_command", required=True)
@@ -85,6 +92,10 @@ def main(argv: list[str] | None = None) -> None:
         print(f"wrote {output} and {report}")
     elif args.command == "analyze":
         print(analyze_file(args.input, args.output))
+    elif args.command == "analyze-early-season":
+        artifacts = analyze_early_season(args.input, args.output_dir)
+        print(artifacts["summary"])
+        print(artifacts["predictions"])
     elif args.command == "weekly":
         if args.weekly_command == "validate-slate":
             result = validate_slate(args.path, as_of=args.as_of)

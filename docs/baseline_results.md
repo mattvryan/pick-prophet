@@ -11,7 +11,8 @@ confirmed historical ESPN Pick'em slate
 - Point-spread coverage is at least 98.3% in every season.
 - Two-way moneylines are unavailable before 2021 in this pull; coverage rises
   from 79.7% in 2022 to 92.5% in 2025.
-- Pregame Elo differential coverage is 73.5%–77.6% by season.
+- Pregame Elo differential coverage uses CFBD's game-specific pregame fields,
+  with weekly ratings as fallback.
 - Historical FPI and SP+ are deliberately null: CFBD's current season-level
   endpoints cannot establish which value was available before each old game.
 
@@ -35,13 +36,13 @@ Metrics below are row-weighted across the 2018–2025 test folds.
 | Model | Test folds | Test rows | Accuracy | Log loss | Brier |
 |---|---:|---:|---:|---:|---:|
 | Spread logistic | 8 | 6,841 | 75.81% | 0.4750 | 0.1586 |
-| Pregame Elo logistic | 8 | 5,192 | 71.86% | 0.5454 | 0.1844 |
-| Spread + Elo logistic | 8 | 5,192 | 73.40% | 0.5176 | 0.1735 |
+| Pregame Elo logistic | 8 | 6,034 | 71.35% | 0.5500 | 0.1864 |
+| Spread + Elo logistic | 8 | 6,034 | 73.22% | 0.5190 | 0.1745 |
 
 The combined model and spread-only aggregate above use different row sets, so
 this table does not yet prove whether Elo adds or destroys market information.
-That requires a paired evaluation in which both models train and score on the
-same complete rows. It is the next statistical experiment.
+The dedicated early-season experiment performs that paired evaluation on
+identical rows; see `docs/early_season_results.md`.
 
 ## What is safe to conclude
 
