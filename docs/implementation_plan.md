@@ -238,12 +238,17 @@ The branch-by-branch implementation sequence for this phase is maintained in
 
 ### P2.1 — Freeze the evaluation protocol
 
-- [ ] Choose first training and test seasons after reviewing coverage.
-- [ ] Use expanding-window season folds; prohibit random splits.
-- [ ] Fit preprocessing independently inside every training fold.
-- [ ] Measure accuracy, log loss, Brier score, calibration, and coverage.
-- [ ] Bootstrap uncertainty by week.
-- [ ] Save predictions for every model/fold, not only aggregate scores.
+- [x] Choose first training and test seasons after reviewing coverage.
+- [x] Use expanding-window season folds; prohibit random splits.
+- [x] Fit preprocessing independently inside every training fold.
+- [x] Measure accuracy, log loss, Brier score, calibration, and coverage.
+- [x] Bootstrap uncertainty by week.
+- [x] Save predictions for every model/fold, not only aggregate scores.
+
+Notes (2026-09-04): protocol **1.0.0** freezes test seasons `2018–2025`
+(train on prior seasons only). `2025` is the latest in-loop OOT fold;
+prospective holdout is `2026_weekly_shadow`. Use
+`pick-prophet evaluate --protocol 1.0.0`.
 
 ### P2.2 — Baselines
 
@@ -349,6 +354,7 @@ Every implementation handoff should state:
 | 2026-09-04 | Require regenerable cross-season coverage gates before modeling | Seasons with thin coverage stay labelled, never silently dropped |
 | 2026-09-04 | Pickem recovery is tooling-first until real archives exist | No in-repo historical ESPN slates; do not invent membership |
 | 2026-09-04 | Ship entering W-L / previous result / SOS; defer FPI archives, Massey/Sagarin, QB, rivalry, coaches | Enough leakage-safe history for provisional all-FBS P2; blocked sources stay explicit |
+| 2026-09-04 | Freeze evaluation protocol 1.0.0 with test seasons 2018–2025; 2025 latest OOT; 2026 weekly shadow prospective holdout | 2025 already inspected so it cannot be pristine; limit further adaptation to the historical window |
 
 ## Immediate human inputs needed
 

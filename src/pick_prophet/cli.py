@@ -6,6 +6,7 @@ from pathlib import Path
 
 from .evaluation.analyze import analyze_file
 from .evaluation.early_season import analyze_early_season
+from .evaluation.evaluate import evaluate
 from .features.build import build_rows, merge_pickem, write_dataset
 from .features.coverage import run_coverage
 from .features.pickem import (
@@ -71,6 +72,17 @@ def parser() -> argparse.ArgumentParser:
     )
     early.add_argument("--input", type=Path, required=True)
     early.add_argument("--output-dir", type=Path)
+
+    evaluate_cmd = commands.add_parser(
+        "evaluate", help="run protocol-stamped walk-forward evaluation"
+    )
+    evaluate_cmd.add_argument("--input", type=Path, required=True)
+    evaluate_cmd.add_argument("--output-dir", type=Path)
+    evaluate_cmd.add_argument(
+        "--protocol",
+        default="1.0.0",
+        help="evaluation protocol version (default: 1.0.0)",
+    )
 
     coverage = commands.add_parser(
         "coverage", help="audit processed season CSVs and write coverage report"
@@ -237,6 +249,18 @@ def main(argv: list[str] | None = None) -> None:
         print(analyze_file(args.input, args.output))
     elif args.command == "analyze-early-season":
         artifacts = analyze_early_season(args.input, args.output_dir)
+        print(artifacts["summary"])
+        print(artifacts["predictions"])
+    elif args.command == "evaluate":
+        try:
+            artifacts = evaluate(
+                args.input,
+                args.output_dir,
+                protocol_version=args.protocol,
+            )
+        except ValueError as exc:
+            print(f"ERROR: {exc}", file=sys.stderr)
+            raise SystemExit(1) from exc
         print(artifacts["summary"])
         print(artifacts["predictions"])
     elif args.command == "coverage":

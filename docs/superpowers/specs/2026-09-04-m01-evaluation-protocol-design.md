@@ -1,10 +1,10 @@
 # M01 evaluation protocol design
 
 Date: 2026-09-04
-Status: draft for review
+Status: approved / implemented as protocol 1.0.0
 Roadmap: `docs/modeling_implementation_roadmap.md` § M01
 Plan: `docs/implementation_plan.md` § P2.1
-Branch (planned): `modeling/m01-evaluation-protocol`
+Branch: `modeling/m01-evaluation-protocol`
 
 ## Problem
 
