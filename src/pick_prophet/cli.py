@@ -10,6 +10,7 @@ from .features.build import build_rows, merge_pickem, write_dataset
 from .ingest.cfbd import ingest_season
 from .weekly.recommend import recommend
 from .weekly.signals import fetch_signals_snapshot
+from .weekly.tiebreaker import recommend_tiebreaker
 from .weekly.validate import validate_slate
 
 
@@ -72,6 +73,15 @@ def parser() -> argparse.ArgumentParser:
     fetch_signals.add_argument("--slate", type=Path, required=True)
     fetch_signals.add_argument("--snapshot")
 
+    tiebreaker = weekly_commands.add_parser(
+        "tiebreaker", help="recommend a whole-number total for the designated game"
+    )
+    tiebreaker.add_argument("--slate", type=Path, required=True)
+    tiebreaker.add_argument("--market", type=Path, required=True)
+    tiebreaker.add_argument("--game-id", required=True)
+    tiebreaker.add_argument("--as-of", required=True)
+    tiebreaker.add_argument("--output-dir", type=Path, required=True)
+
     return root
 
 
@@ -130,6 +140,20 @@ def main(argv: list[str] | None = None) -> None:
             except (ValueError, FileExistsError) as exc:
                 print(f"ERROR: {exc}", file=sys.stderr)
                 raise SystemExit(1) from exc
+        elif args.weekly_command == "tiebreaker":
+            try:
+                artifacts = recommend_tiebreaker(
+                    args.slate,
+                    args.market,
+                    game_id=args.game_id,
+                    as_of=args.as_of,
+                    output_dir=args.output_dir,
+                )
+            except (ValueError, FileExistsError) as exc:
+                print(f"ERROR: {exc}", file=sys.stderr)
+                raise SystemExit(1) from exc
+            print(artifacts["json"])
+            print(artifacts["card"])
 
 
 if __name__ == "__main__":
