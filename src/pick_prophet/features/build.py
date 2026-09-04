@@ -139,7 +139,10 @@ def build_rows(snapshot_dir: Path) -> BuildResult:
             "home_points": hp,
             "away_points": ap,
             "home_win": None if hp is None or ap is None or hp == ap else int(hp > ap),
-            **consensus_line(lines_by_id.get(game_id, [])),
+            **consensus_line(
+                lines_by_id.get(game_id, []),
+                kickoff_utc=_get(game, "start_date", "startDate"),
+            ),
             "is_pickem_game": None,
             "espn_home_pick_pct": None,
             "espn_expert_home_pct": None,

@@ -37,7 +37,9 @@ verifiers). Track archive search progress in `docs/pickem_inventory.md`.
 
 - A final closing line is a legitimate benchmark for a contest locked near
   kickoff, but is leakage for picks locked earlier. Store both observation and
-  kickoff timestamps when odds snapshots are available.
+  kickoff timestamps when odds snapshots are available. See
+  `docs/market_contract.md` for the M04 historical market contract (vig-free
+  probabilities, bounded logits, open-field movement, post-kick rejection).
 - CFBD's consensus providers and coverage vary by game and season. The builder
   records provider counts and never treats missing odds as pick'em lines.
 - Ratings joined to week *w* must be published before the game. CFBD's current

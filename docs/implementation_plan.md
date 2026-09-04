@@ -357,6 +357,7 @@ Every implementation handoff should state:
 | 2026-09-04 | Freeze evaluation protocol 1.0.0 with test seasons 2018–2025; 2025 latest OOT; 2026 weekly shadow prospective holdout | 2025 already inspected so it cannot be pristine; limit further adaptation to the historical window |
 | 2026-09-04 | Extend coverage auditor with week tables, structural vs join missingness, and usable-window recommendations | P1.2 gates were thin; M02 must label FPI/SP+ as structurally blocked without dropping seasons |
 | 2026-09-04 | Close M03 on top of P1.1 ingest harden: name-join audit CSV + live smoke doc + overwrite refusal test | Roadmap required ID-preferring joins with an audit trail and fixture-only CI |
+| 2026-09-04 | Ship M04 market contract with vig-free logit, open-field movement, and post-kick rejection when timestamped | CFBD historical lines lack observation times; do not invent open/close order |
 
 ## Immediate human inputs needed
 
