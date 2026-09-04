@@ -1,0 +1,58 @@
+{
+  "all_discovered_seasons": [
+    2017,
+    2018,
+    2019,
+    2020,
+    2021,
+    2022,
+    2023,
+    2024,
+    2025
+  ],
+  "elo_model_seasons": [
+    2017,
+    2018,
+    2019,
+    2020,
+    2021,
+    2022,
+    2023,
+    2024,
+    2025
+  ],
+  "fpi_model_seasons": [],
+  "integrity_blocked_seasons": [],
+  "market_baseline_seasons": [
+    2017,
+    2018,
+    2019,
+    2020,
+    2021,
+    2022,
+    2023,
+    2024,
+    2025
+  ],
+  "never_silently_dropped": true,
+  "notes": [
+    "FPI/SP+ remain structurally blocked until dated weekly archives exist.",
+    "Thin-coverage seasons stay in the window but should be labelled in reports.",
+    "Protocol 1.0.0 test seasons remain 2018\u20132025 regardless of thin coverage."
+  ],
+  "protocol_1_0_0_research_window": [
+    2017,
+    2018,
+    2019,
+    2020,
+    2021,
+    2022,
+    2023,
+    2024,
+    2025
+  ],
+  "sp_model_seasons": [],
+  "warn_seasons": [
+    2024
+  ]
+}

@@ -1,0 +1,1548 @@
+{
+  "audited_at": "2026-09-04T18:03:14.443034+00:00",
+  "evaluation_windows": {
+    "all_discovered_seasons": [
+      2017,
+      2018,
+      2019,
+      2020,
+      2021,
+      2022,
+      2023,
+      2024,
+      2025
+    ],
+    "elo_model_seasons": [
+      2017,
+      2018,
+      2019,
+      2020,
+      2021,
+      2022,
+      2023,
+      2024,
+      2025
+    ],
+    "fpi_model_seasons": [],
+    "integrity_blocked_seasons": [],
+    "market_baseline_seasons": [
+      2017,
+      2018,
+      2019,
+      2020,
+      2021,
+      2022,
+      2023,
+      2024,
+      2025
+    ],
+    "never_silently_dropped": true,
+    "notes": [
+      "FPI/SP+ remain structurally blocked until dated weekly archives exist.",
+      "Thin-coverage seasons stay in the window but should be labelled in reports.",
+      "Protocol 1.0.0 test seasons remain 2018\u20132025 regardless of thin coverage."
+    ],
+    "protocol_1_0_0_research_window": [
+      2017,
+      2018,
+      2019,
+      2020,
+      2021,
+      2022,
+      2023,
+      2024,
+      2025
+    ],
+    "sp_model_seasons": [],
+    "warn_seasons": [
+      2024
+    ]
+  },
+  "seasons": [
+    {
+      "checks": [
+        {
+          "detail": "874 unique game_id values",
+          "name": "unique_game_id",
+          "status": "pass",
+          "value": 874
+        },
+        {
+          "detail": "874 completed games with consistent outcomes",
+          "name": "outcome_consistency",
+          "status": "pass",
+          "value": 874
+        },
+        {
+          "detail": "all rows have final scores",
+          "name": "completed_outcomes",
+          "status": "pass",
+          "value": 874
+        },
+        {
+          "detail": "873/874 rows have spread or implied prob (99.9%)",
+          "name": "odds_coverage",
+          "status": "pass",
+          "value": {
+            "fraction": 0.9988558352402745,
+            "rows_with_odds": 873
+          }
+        },
+        {
+          "detail": "829/874 rows have Elo (94.9%)",
+          "name": "elo_coverage",
+          "status": "pass",
+          "value": {
+            "fraction": 0.948512585812357,
+            "rows_with_elo": 829
+          }
+        },
+        {
+          "detail": "829/874 rows have both odds and Elo (94.9%)",
+          "name": "odds_rating_joint_coverage",
+          "status": "pass",
+          "value": {
+            "fraction": 0.948512585812357,
+            "rows_with_both": 829
+          }
+        },
+        {
+          "detail": "all rows have home/away team names and IDs",
+          "name": "team_identity",
+          "status": "pass",
+          "value": 0
+        },
+        {
+          "detail": "neutral_site true=63 false=811",
+          "name": "neutral_site",
+          "status": "pass",
+          "value": {
+            "false": 811,
+            "missing": 0,
+            "true": 63
+          }
+        },
+        {
+          "detail": "weeks 1\u201315 present with no interior gaps",
+          "name": "week_continuity",
+          "status": "pass",
+          "value": {
+            "max": 15,
+            "min": 1
+          }
+        },
+        {
+          "detail": "874/874 rows have line_provider_count > 0 (100.0%)",
+          "name": "line_provider_coverage",
+          "status": "pass",
+          "value": {
+            "fraction": 1.0,
+            "rows_with_providers": 874
+          }
+        },
+        {
+          "detail": "FPI columns are entirely null (season-level CFBD pulls deliberately unjoined until dated weekly archives exist)",
+          "name": "fpi_missingness",
+          "status": "pass",
+          "value": {
+            "class": "structural_unjoined"
+          }
+        },
+        {
+          "detail": "SP+ columns are entirely null (season-level CFBD pulls deliberately unjoined until dated weekly archives exist)",
+          "name": "sp_missingness",
+          "status": "pass",
+          "value": {
+            "class": "structural_unjoined"
+          }
+        },
+        {
+          "detail": "AP non-null cells=290, coaches=289, CFP=85 (sparse ranks are structural for unranked teams)",
+          "name": "rank_coverage",
+          "status": "pass",
+          "value": {
+            "ap_fraction_of_cells": 0.16590389016018306,
+            "ap_non_null": 290,
+            "cfp_non_null": 85,
+            "class": "structural_sparse",
+            "coaches_non_null": 289
+          }
+        }
+      ],
+      "counts": {
+        "completed_games": 874,
+        "incomplete_games": 0,
+        "missing_team_identity": 0,
+        "neutral_site_false": 811,
+        "neutral_site_missing": 0,
+        "neutral_site_true": 63,
+        "rows": 874,
+        "rows_with_elo": 829,
+        "rows_with_odds": 873,
+        "rows_with_odds_and_elo": 829
+      },
+      "missingness": {
+        "ap_rank": {
+          "class": "structural_sparse",
+          "non_null_cells": 290
+        },
+        "cfp_rank": {
+          "class": "structural_sparse",
+          "non_null_cells": 85
+        },
+        "coaches_rank": {
+          "class": "structural_sparse",
+          "non_null_cells": 289
+        },
+        "elo": {
+          "class": "partial_coverage",
+          "fraction": 0.948512585812357
+        },
+        "fpi": {
+          "class": "structural_unjoined",
+          "non_null_cells": 0
+        },
+        "odds": {
+          "class": "partial_coverage",
+          "fraction": 0.9988558352402745
+        },
+        "sp": {
+          "class": "structural_unjoined",
+          "non_null_cells": 0
+        }
+      },
+      "path": "data/processed/games_2017.csv",
+      "rows": 874,
+      "season": 2017,
+      "status": "pass",
+      "usable_for": {
+        "elo_models": "yes",
+        "fpi_models": "blocked_structural",
+        "market_baseline": "yes",
+        "protocol_1_0_0_fold": "yes",
+        "rank_features": "yes_with_missing_indicators",
+        "sp_models": "blocked_structural"
+      }
+    },
+    {
+      "checks": [
+        {
+          "detail": "884 unique game_id values",
+          "name": "unique_game_id",
+          "status": "pass",
+          "value": 884
+        },
+        {
+          "detail": "884 completed games with consistent outcomes",
+          "name": "outcome_consistency",
+          "status": "pass",
+          "value": 884
+        },
+        {
+          "detail": "all rows have final scores",
+          "name": "completed_outcomes",
+          "status": "pass",
+          "value": 884
+        },
+        {
+          "detail": "869/884 rows have spread or implied prob (98.3%)",
+          "name": "odds_coverage",
+          "status": "pass",
+          "value": {
+            "fraction": 0.9830316742081447,
+            "rows_with_odds": 869
+          }
+        },
+        {
+          "detail": "841/884 rows have Elo (95.1%)",
+          "name": "elo_coverage",
+          "status": "pass",
+          "value": {
+            "fraction": 0.9513574660633484,
+            "rows_with_elo": 841
+          }
+        },
+        {
+          "detail": "830/884 rows have both odds and Elo (93.9%)",
+          "name": "odds_rating_joint_coverage",
+          "status": "pass",
+          "value": {
+            "fraction": 0.9389140271493213,
+            "rows_with_both": 830
+          }
+        },
+        {
+          "detail": "all rows have home/away team names and IDs",
+          "name": "team_identity",
+          "status": "pass",
+          "value": 0
+        },
+        {
+          "detail": "neutral_site true=62 false=822",
+          "name": "neutral_site",
+          "status": "pass",
+          "value": {
+            "false": 822,
+            "missing": 0,
+            "true": 62
+          }
+        },
+        {
+          "detail": "weeks 1\u201315 present with no interior gaps",
+          "name": "week_continuity",
+          "status": "pass",
+          "value": {
+            "max": 15,
+            "min": 1
+          }
+        },
+        {
+          "detail": "869/884 rows have line_provider_count > 0 (98.3%)",
+          "name": "line_provider_coverage",
+          "status": "pass",
+          "value": {
+            "fraction": 0.9830316742081447,
+            "rows_with_providers": 869
+          }
+        },
+        {
+          "detail": "FPI columns are entirely null (season-level CFBD pulls deliberately unjoined until dated weekly archives exist)",
+          "name": "fpi_missingness",
+          "status": "pass",
+          "value": {
+            "class": "structural_unjoined"
+          }
+        },
+        {
+          "detail": "SP+ columns are entirely null (season-level CFBD pulls deliberately unjoined until dated weekly archives exist)",
+          "name": "sp_missingness",
+          "status": "pass",
+          "value": {
+            "class": "structural_unjoined"
+          }
+        },
+        {
+          "detail": "AP non-null cells=297, coaches=296, CFP=88 (sparse ranks are structural for unranked teams)",
+          "name": "rank_coverage",
+          "status": "pass",
+          "value": {
+            "ap_fraction_of_cells": 0.16798642533936653,
+            "ap_non_null": 297,
+            "cfp_non_null": 88,
+            "class": "structural_sparse",
+            "coaches_non_null": 296
+          }
+        }
+      ],
+      "counts": {
+        "completed_games": 884,
+        "incomplete_games": 0,
+        "missing_team_identity": 0,
+        "neutral_site_false": 822,
+        "neutral_site_missing": 0,
+        "neutral_site_true": 62,
+        "rows": 884,
+        "rows_with_elo": 841,
+        "rows_with_odds": 869,
+        "rows_with_odds_and_elo": 830
+      },
+      "missingness": {
+        "ap_rank": {
+          "class": "structural_sparse",
+          "non_null_cells": 297
+        },
+        "cfp_rank": {
+          "class": "structural_sparse",
+          "non_null_cells": 88
+        },
+        "coaches_rank": {
+          "class": "structural_sparse",
+          "non_null_cells": 296
+        },
+        "elo": {
+          "class": "partial_coverage",
+          "fraction": 0.9513574660633484
+        },
+        "fpi": {
+          "class": "structural_unjoined",
+          "non_null_cells": 0
+        },
+        "odds": {
+          "class": "partial_coverage",
+          "fraction": 0.9830316742081447
+        },
+        "sp": {
+          "class": "structural_unjoined",
+          "non_null_cells": 0
+        }
+      },
+      "path": "data/processed/games_2018.csv",
+      "rows": 884,
+      "season": 2018,
+      "status": "pass",
+      "usable_for": {
+        "elo_models": "yes",
+        "fpi_models": "blocked_structural",
+        "market_baseline": "yes",
+        "protocol_1_0_0_fold": "yes",
+        "rank_features": "yes_with_missing_indicators",
+        "sp_models": "blocked_structural"
+      }
+    },
+    {
+      "checks": [
+        {
+          "detail": "888 unique game_id values",
+          "name": "unique_game_id",
+          "status": "pass",
+          "value": 888
+        },
+        {
+          "detail": "888 completed games with consistent outcomes",
+          "name": "outcome_consistency",
+          "status": "pass",
+          "value": 888
+        },
+        {
+          "detail": "all rows have final scores",
+          "name": "completed_outcomes",
+          "status": "pass",
+          "value": 888
+        },
+        {
+          "detail": "881/888 rows have spread or implied prob (99.2%)",
+          "name": "odds_coverage",
+          "status": "pass",
+          "value": {
+            "fraction": 0.9921171171171171,
+            "rows_with_odds": 881
+          }
+        },
+        {
+          "detail": "849/888 rows have Elo (95.6%)",
+          "name": "elo_coverage",
+          "status": "pass",
+          "value": {
+            "fraction": 0.956081081081081,
+            "rows_with_elo": 849
+          }
+        },
+        {
+          "detail": "843/888 rows have both odds and Elo (94.9%)",
+          "name": "odds_rating_joint_coverage",
+          "status": "pass",
+          "value": {
+            "fraction": 0.9493243243243243,
+            "rows_with_both": 843
+          }
+        },
+        {
+          "detail": "all rows have home/away team names and IDs",
+          "name": "team_identity",
+          "status": "pass",
+          "value": 0
+        },
+        {
+          "detail": "neutral_site true=59 false=829",
+          "name": "neutral_site",
+          "status": "pass",
+          "value": {
+            "false": 829,
+            "missing": 0,
+            "true": 59
+          }
+        },
+        {
+          "detail": "weeks 1\u201315 present with no interior gaps",
+          "name": "week_continuity",
+          "status": "pass",
+          "value": {
+            "max": 15,
+            "min": 1
+          }
+        },
+        {
+          "detail": "881/888 rows have line_provider_count > 0 (99.2%)",
+          "name": "line_provider_coverage",
+          "status": "pass",
+          "value": {
+            "fraction": 0.9921171171171171,
+            "rows_with_providers": 881
+          }
+        },
+        {
+          "detail": "FPI columns are entirely null (season-level CFBD pulls deliberately unjoined until dated weekly archives exist)",
+          "name": "fpi_missingness",
+          "status": "pass",
+          "value": {
+            "class": "structural_unjoined"
+          }
+        },
+        {
+          "detail": "SP+ columns are entirely null (season-level CFBD pulls deliberately unjoined until dated weekly archives exist)",
+          "name": "sp_missingness",
+          "status": "pass",
+          "value": {
+            "class": "structural_unjoined"
+          }
+        },
+        {
+          "detail": "AP non-null cells=297, coaches=296, CFP=71 (sparse ranks are structural for unranked teams)",
+          "name": "rank_coverage",
+          "status": "pass",
+          "value": {
+            "ap_fraction_of_cells": 0.16722972972972974,
+            "ap_non_null": 297,
+            "cfp_non_null": 71,
+            "class": "structural_sparse",
+            "coaches_non_null": 296
+          }
+        }
+      ],
+      "counts": {
+        "completed_games": 888,
+        "incomplete_games": 0,
+        "missing_team_identity": 0,
+        "neutral_site_false": 829,
+        "neutral_site_missing": 0,
+        "neutral_site_true": 59,
+        "rows": 888,
+        "rows_with_elo": 849,
+        "rows_with_odds": 881,
+        "rows_with_odds_and_elo": 843
+      },
+      "missingness": {
+        "ap_rank": {
+          "class": "structural_sparse",
+          "non_null_cells": 297
+        },
+        "cfp_rank": {
+          "class": "structural_sparse",
+          "non_null_cells": 71
+        },
+        "coaches_rank": {
+          "class": "structural_sparse",
+          "non_null_cells": 296
+        },
+        "elo": {
+          "class": "partial_coverage",
+          "fraction": 0.956081081081081
+        },
+        "fpi": {
+          "class": "structural_unjoined",
+          "non_null_cells": 0
+        },
+        "odds": {
+          "class": "partial_coverage",
+          "fraction": 0.9921171171171171
+        },
+        "sp": {
+          "class": "structural_unjoined",
+          "non_null_cells": 0
+        }
+      },
+      "path": "data/processed/games_2019.csv",
+      "rows": 888,
+      "season": 2019,
+      "status": "pass",
+      "usable_for": {
+        "elo_models": "yes",
+        "fpi_models": "blocked_structural",
+        "market_baseline": "yes",
+        "protocol_1_0_0_fold": "yes",
+        "rank_features": "yes_with_missing_indicators",
+        "sp_models": "blocked_structural"
+      }
+    },
+    {
+      "checks": [
+        {
+          "detail": "570 unique game_id values",
+          "name": "unique_game_id",
+          "status": "pass",
+          "value": 570
+        },
+        {
+          "detail": "570 completed games with consistent outcomes",
+          "name": "outcome_consistency",
+          "status": "pass",
+          "value": 570
+        },
+        {
+          "detail": "all rows have final scores",
+          "name": "completed_outcomes",
+          "status": "pass",
+          "value": 570
+        },
+        {
+          "detail": "567/570 rows have spread or implied prob (99.5%)",
+          "name": "odds_coverage",
+          "status": "pass",
+          "value": {
+            "fraction": 0.9947368421052631,
+            "rows_with_odds": 567
+          }
+        },
+        {
+          "detail": "557/570 rows have Elo (97.7%)",
+          "name": "elo_coverage",
+          "status": "pass",
+          "value": {
+            "fraction": 0.9771929824561404,
+            "rows_with_elo": 557
+          }
+        },
+        {
+          "detail": "556/570 rows have both odds and Elo (97.5%)",
+          "name": "odds_rating_joint_coverage",
+          "status": "pass",
+          "value": {
+            "fraction": 0.9754385964912281,
+            "rows_with_both": 556
+          }
+        },
+        {
+          "detail": "all rows have home/away team names and IDs",
+          "name": "team_identity",
+          "status": "pass",
+          "value": 0
+        },
+        {
+          "detail": "neutral_site true=37 false=533",
+          "name": "neutral_site",
+          "status": "pass",
+          "value": {
+            "false": 533,
+            "missing": 0,
+            "true": 37
+          }
+        },
+        {
+          "detail": "weeks 1\u201316 present with no interior gaps",
+          "name": "week_continuity",
+          "status": "pass",
+          "value": {
+            "max": 16,
+            "min": 1
+          }
+        },
+        {
+          "detail": "567/570 rows have line_provider_count > 0 (99.5%)",
+          "name": "line_provider_coverage",
+          "status": "pass",
+          "value": {
+            "fraction": 0.9947368421052631,
+            "rows_with_providers": 567
+          }
+        },
+        {
+          "detail": "FPI columns are entirely null (season-level CFBD pulls deliberately unjoined until dated weekly archives exist)",
+          "name": "fpi_missingness",
+          "status": "pass",
+          "value": {
+            "class": "structural_unjoined"
+          }
+        },
+        {
+          "detail": "SP+ columns are entirely null (season-level CFBD pulls deliberately unjoined until dated weekly archives exist)",
+          "name": "sp_missingness",
+          "status": "pass",
+          "value": {
+            "class": "structural_unjoined"
+          }
+        },
+        {
+          "detail": "AP non-null cells=234, coaches=234, CFP=56 (sparse ranks are structural for unranked teams)",
+          "name": "rank_coverage",
+          "status": "pass",
+          "value": {
+            "ap_fraction_of_cells": 0.20526315789473684,
+            "ap_non_null": 234,
+            "cfp_non_null": 56,
+            "class": "structural_sparse",
+            "coaches_non_null": 234
+          }
+        }
+      ],
+      "counts": {
+        "completed_games": 570,
+        "incomplete_games": 0,
+        "missing_team_identity": 0,
+        "neutral_site_false": 533,
+        "neutral_site_missing": 0,
+        "neutral_site_true": 37,
+        "rows": 570,
+        "rows_with_elo": 557,
+        "rows_with_odds": 567,
+        "rows_with_odds_and_elo": 556
+      },
+      "missingness": {
+        "ap_rank": {
+          "class": "structural_sparse",
+          "non_null_cells": 234
+        },
+        "cfp_rank": {
+          "class": "structural_sparse",
+          "non_null_cells": 56
+        },
+        "coaches_rank": {
+          "class": "structural_sparse",
+          "non_null_cells": 234
+        },
+        "elo": {
+          "class": "partial_coverage",
+          "fraction": 0.9771929824561404
+        },
+        "fpi": {
+          "class": "structural_unjoined",
+          "non_null_cells": 0
+        },
+        "odds": {
+          "class": "partial_coverage",
+          "fraction": 0.9947368421052631
+        },
+        "sp": {
+          "class": "structural_unjoined",
+          "non_null_cells": 0
+        }
+      },
+      "path": "data/processed/games_2020.csv",
+      "rows": 570,
+      "season": 2020,
+      "status": "pass",
+      "usable_for": {
+        "elo_models": "yes",
+        "fpi_models": "blocked_structural",
+        "market_baseline": "yes",
+        "protocol_1_0_0_fold": "yes",
+        "rank_features": "yes_with_missing_indicators",
+        "sp_models": "blocked_structural"
+      }
+    },
+    {
+      "checks": [
+        {
+          "detail": "887 unique game_id values",
+          "name": "unique_game_id",
+          "status": "pass",
+          "value": 887
+        },
+        {
+          "detail": "887 completed games with consistent outcomes",
+          "name": "outcome_consistency",
+          "status": "pass",
+          "value": 887
+        },
+        {
+          "detail": "all rows have final scores",
+          "name": "completed_outcomes",
+          "status": "pass",
+          "value": 887
+        },
+        {
+          "detail": "887/887 rows have spread or implied prob (100.0%)",
+          "name": "odds_coverage",
+          "status": "pass",
+          "value": {
+            "fraction": 1.0,
+            "rows_with_odds": 887
+          }
+        },
+        {
+          "detail": "848/887 rows have Elo (95.6%)",
+          "name": "elo_coverage",
+          "status": "pass",
+          "value": {
+            "fraction": 0.9560315670800451,
+            "rows_with_elo": 848
+          }
+        },
+        {
+          "detail": "848/887 rows have both odds and Elo (95.6%)",
+          "name": "odds_rating_joint_coverage",
+          "status": "pass",
+          "value": {
+            "fraction": 0.9560315670800451,
+            "rows_with_both": 848
+          }
+        },
+        {
+          "detail": "all rows have home/away team names and IDs",
+          "name": "team_identity",
+          "status": "pass",
+          "value": 0
+        },
+        {
+          "detail": "neutral_site true=59 false=828",
+          "name": "neutral_site",
+          "status": "pass",
+          "value": {
+            "false": 828,
+            "missing": 0,
+            "true": 59
+          }
+        },
+        {
+          "detail": "weeks 1\u201315 present with no interior gaps",
+          "name": "week_continuity",
+          "status": "pass",
+          "value": {
+            "max": 15,
+            "min": 1
+          }
+        },
+        {
+          "detail": "887/887 rows have line_provider_count > 0 (100.0%)",
+          "name": "line_provider_coverage",
+          "status": "pass",
+          "value": {
+            "fraction": 1.0,
+            "rows_with_providers": 887
+          }
+        },
+        {
+          "detail": "FPI columns are entirely null (season-level CFBD pulls deliberately unjoined until dated weekly archives exist)",
+          "name": "fpi_missingness",
+          "status": "pass",
+          "value": {
+            "class": "structural_unjoined"
+          }
+        },
+        {
+          "detail": "SP+ columns are entirely null (season-level CFBD pulls deliberately unjoined until dated weekly archives exist)",
+          "name": "sp_missingness",
+          "status": "pass",
+          "value": {
+            "class": "structural_unjoined"
+          }
+        },
+        {
+          "detail": "AP non-null cells=302, coaches=302, CFP=88 (sparse ranks are structural for unranked teams)",
+          "name": "rank_coverage",
+          "status": "pass",
+          "value": {
+            "ap_fraction_of_cells": 0.17023675310033823,
+            "ap_non_null": 302,
+            "cfp_non_null": 88,
+            "class": "structural_sparse",
+            "coaches_non_null": 302
+          }
+        }
+      ],
+      "counts": {
+        "completed_games": 887,
+        "incomplete_games": 0,
+        "missing_team_identity": 0,
+        "neutral_site_false": 828,
+        "neutral_site_missing": 0,
+        "neutral_site_true": 59,
+        "rows": 887,
+        "rows_with_elo": 848,
+        "rows_with_odds": 887,
+        "rows_with_odds_and_elo": 848
+      },
+      "missingness": {
+        "ap_rank": {
+          "class": "structural_sparse",
+          "non_null_cells": 302
+        },
+        "cfp_rank": {
+          "class": "structural_sparse",
+          "non_null_cells": 88
+        },
+        "coaches_rank": {
+          "class": "structural_sparse",
+          "non_null_cells": 302
+        },
+        "elo": {
+          "class": "partial_coverage",
+          "fraction": 0.9560315670800451
+        },
+        "fpi": {
+          "class": "structural_unjoined",
+          "non_null_cells": 0
+        },
+        "odds": {
+          "class": "complete",
+          "fraction": 1.0
+        },
+        "sp": {
+          "class": "structural_unjoined",
+          "non_null_cells": 0
+        }
+      },
+      "path": "data/processed/games_2021.csv",
+      "rows": 887,
+      "season": 2021,
+      "status": "pass",
+      "usable_for": {
+        "elo_models": "yes",
+        "fpi_models": "blocked_structural",
+        "market_baseline": "yes",
+        "protocol_1_0_0_fold": "yes",
+        "rank_features": "yes_with_missing_indicators",
+        "sp_models": "blocked_structural"
+      }
+    },
+    {
+      "checks": [
+        {
+          "detail": "896 unique game_id values",
+          "name": "unique_game_id",
+          "status": "pass",
+          "value": 896
+        },
+        {
+          "detail": "896 completed games with consistent outcomes",
+          "name": "outcome_consistency",
+          "status": "pass",
+          "value": 896
+        },
+        {
+          "detail": "all rows have final scores",
+          "name": "completed_outcomes",
+          "status": "pass",
+          "value": 896
+        },
+        {
+          "detail": "892/896 rows have spread or implied prob (99.6%)",
+          "name": "odds_coverage",
+          "status": "pass",
+          "value": {
+            "fraction": 0.9955357142857143,
+            "rows_with_odds": 892
+          }
+        },
+        {
+          "detail": "896/896 rows have Elo (100.0%)",
+          "name": "elo_coverage",
+          "status": "pass",
+          "value": {
+            "fraction": 1.0,
+            "rows_with_elo": 896
+          }
+        },
+        {
+          "detail": "892/896 rows have both odds and Elo (99.6%)",
+          "name": "odds_rating_joint_coverage",
+          "status": "pass",
+          "value": {
+            "fraction": 0.9955357142857143,
+            "rows_with_both": 892
+          }
+        },
+        {
+          "detail": "all rows have home/away team names and IDs",
+          "name": "team_identity",
+          "status": "pass",
+          "value": 0
+        },
+        {
+          "detail": "neutral_site true=62 false=834",
+          "name": "neutral_site",
+          "status": "pass",
+          "value": {
+            "false": 834,
+            "missing": 0,
+            "true": 62
+          }
+        },
+        {
+          "detail": "weeks 1\u201315 present with no interior gaps",
+          "name": "week_continuity",
+          "status": "pass",
+          "value": {
+            "max": 15,
+            "min": 1
+          }
+        },
+        {
+          "detail": "892/896 rows have line_provider_count > 0 (99.6%)",
+          "name": "line_provider_coverage",
+          "status": "pass",
+          "value": {
+            "fraction": 0.9955357142857143,
+            "rows_with_providers": 892
+          }
+        },
+        {
+          "detail": "FPI columns are entirely null (season-level CFBD pulls deliberately unjoined until dated weekly archives exist)",
+          "name": "fpi_missingness",
+          "status": "pass",
+          "value": {
+            "class": "structural_unjoined"
+          }
+        },
+        {
+          "detail": "SP+ columns are entirely null (season-level CFBD pulls deliberately unjoined until dated weekly archives exist)",
+          "name": "sp_missingness",
+          "status": "pass",
+          "value": {
+            "class": "structural_unjoined"
+          }
+        },
+        {
+          "detail": "AP non-null cells=301, coaches=300, CFP=86 (sparse ranks are structural for unranked teams)",
+          "name": "rank_coverage",
+          "status": "pass",
+          "value": {
+            "ap_fraction_of_cells": 0.16796875,
+            "ap_non_null": 301,
+            "cfp_non_null": 86,
+            "class": "structural_sparse",
+            "coaches_non_null": 300
+          }
+        }
+      ],
+      "counts": {
+        "completed_games": 896,
+        "incomplete_games": 0,
+        "missing_team_identity": 0,
+        "neutral_site_false": 834,
+        "neutral_site_missing": 0,
+        "neutral_site_true": 62,
+        "rows": 896,
+        "rows_with_elo": 896,
+        "rows_with_odds": 892,
+        "rows_with_odds_and_elo": 892
+      },
+      "missingness": {
+        "ap_rank": {
+          "class": "structural_sparse",
+          "non_null_cells": 301
+        },
+        "cfp_rank": {
+          "class": "structural_sparse",
+          "non_null_cells": 86
+        },
+        "coaches_rank": {
+          "class": "structural_sparse",
+          "non_null_cells": 300
+        },
+        "elo": {
+          "class": "complete",
+          "fraction": 1.0
+        },
+        "fpi": {
+          "class": "structural_unjoined",
+          "non_null_cells": 0
+        },
+        "odds": {
+          "class": "partial_coverage",
+          "fraction": 0.9955357142857143
+        },
+        "sp": {
+          "class": "structural_unjoined",
+          "non_null_cells": 0
+        }
+      },
+      "path": "data/processed/games_2022.csv",
+      "rows": 896,
+      "season": 2022,
+      "status": "pass",
+      "usable_for": {
+        "elo_models": "yes",
+        "fpi_models": "blocked_structural",
+        "market_baseline": "yes",
+        "protocol_1_0_0_fold": "yes",
+        "rank_features": "yes_with_missing_indicators",
+        "sp_models": "blocked_structural"
+      }
+    },
+    {
+      "checks": [
+        {
+          "detail": "910 unique game_id values",
+          "name": "unique_game_id",
+          "status": "pass",
+          "value": 910
+        },
+        {
+          "detail": "910 completed games with consistent outcomes",
+          "name": "outcome_consistency",
+          "status": "pass",
+          "value": 910
+        },
+        {
+          "detail": "all rows have final scores",
+          "name": "completed_outcomes",
+          "status": "pass",
+          "value": 910
+        },
+        {
+          "detail": "907/910 rows have spread or implied prob (99.7%)",
+          "name": "odds_coverage",
+          "status": "pass",
+          "value": {
+            "fraction": 0.9967032967032967,
+            "rows_with_odds": 907
+          }
+        },
+        {
+          "detail": "910/910 rows have Elo (100.0%)",
+          "name": "elo_coverage",
+          "status": "pass",
+          "value": {
+            "fraction": 1.0,
+            "rows_with_elo": 910
+          }
+        },
+        {
+          "detail": "907/910 rows have both odds and Elo (99.7%)",
+          "name": "odds_rating_joint_coverage",
+          "status": "pass",
+          "value": {
+            "fraction": 0.9967032967032967,
+            "rows_with_both": 907
+          }
+        },
+        {
+          "detail": "all rows have home/away team names and IDs",
+          "name": "team_identity",
+          "status": "pass",
+          "value": 0
+        },
+        {
+          "detail": "neutral_site true=63 false=847",
+          "name": "neutral_site",
+          "status": "pass",
+          "value": {
+            "false": 847,
+            "missing": 0,
+            "true": 63
+          }
+        },
+        {
+          "detail": "weeks 1\u201315 present with no interior gaps",
+          "name": "week_continuity",
+          "status": "pass",
+          "value": {
+            "max": 15,
+            "min": 1
+          }
+        },
+        {
+          "detail": "907/910 rows have line_provider_count > 0 (99.7%)",
+          "name": "line_provider_coverage",
+          "status": "pass",
+          "value": {
+            "fraction": 0.9967032967032967,
+            "rows_with_providers": 907
+          }
+        },
+        {
+          "detail": "FPI columns are entirely null (season-level CFBD pulls deliberately unjoined until dated weekly archives exist)",
+          "name": "fpi_missingness",
+          "status": "pass",
+          "value": {
+            "class": "structural_unjoined"
+          }
+        },
+        {
+          "detail": "SP+ columns are entirely null (season-level CFBD pulls deliberately unjoined until dated weekly archives exist)",
+          "name": "sp_missingness",
+          "status": "pass",
+          "value": {
+            "class": "structural_unjoined"
+          }
+        },
+        {
+          "detail": "AP non-null cells=294, coaches=294, CFP=111 (sparse ranks are structural for unranked teams)",
+          "name": "rank_coverage",
+          "status": "pass",
+          "value": {
+            "ap_fraction_of_cells": 0.16153846153846155,
+            "ap_non_null": 294,
+            "cfp_non_null": 111,
+            "class": "structural_sparse",
+            "coaches_non_null": 294
+          }
+        }
+      ],
+      "counts": {
+        "completed_games": 910,
+        "incomplete_games": 0,
+        "missing_team_identity": 0,
+        "neutral_site_false": 847,
+        "neutral_site_missing": 0,
+        "neutral_site_true": 63,
+        "rows": 910,
+        "rows_with_elo": 910,
+        "rows_with_odds": 907,
+        "rows_with_odds_and_elo": 907
+      },
+      "missingness": {
+        "ap_rank": {
+          "class": "structural_sparse",
+          "non_null_cells": 294
+        },
+        "cfp_rank": {
+          "class": "structural_sparse",
+          "non_null_cells": 111
+        },
+        "coaches_rank": {
+          "class": "structural_sparse",
+          "non_null_cells": 294
+        },
+        "elo": {
+          "class": "complete",
+          "fraction": 1.0
+        },
+        "fpi": {
+          "class": "structural_unjoined",
+          "non_null_cells": 0
+        },
+        "odds": {
+          "class": "partial_coverage",
+          "fraction": 0.9967032967032967
+        },
+        "sp": {
+          "class": "structural_unjoined",
+          "non_null_cells": 0
+        }
+      },
+      "path": "data/processed/games_2023.csv",
+      "rows": 910,
+      "season": 2023,
+      "status": "pass",
+      "usable_for": {
+        "elo_models": "yes",
+        "fpi_models": "blocked_structural",
+        "market_baseline": "yes",
+        "protocol_1_0_0_fold": "yes",
+        "rank_features": "yes_with_missing_indicators",
+        "sp_models": "blocked_structural"
+      }
+    },
+    {
+      "checks": [
+        {
+          "detail": "920 unique game_id values",
+          "name": "unique_game_id",
+          "status": "pass",
+          "value": 920
+        },
+        {
+          "detail": "919 completed games with consistent outcomes",
+          "name": "outcome_consistency",
+          "status": "pass",
+          "value": 919
+        },
+        {
+          "detail": "1 rows missing final scores",
+          "name": "completed_outcomes",
+          "status": "warn",
+          "value": 1
+        },
+        {
+          "detail": "904/920 rows have spread or implied prob (98.3%)",
+          "name": "odds_coverage",
+          "status": "pass",
+          "value": {
+            "fraction": 0.9826086956521739,
+            "rows_with_odds": 904
+          }
+        },
+        {
+          "detail": "920/920 rows have Elo (100.0%)",
+          "name": "elo_coverage",
+          "status": "pass",
+          "value": {
+            "fraction": 1.0,
+            "rows_with_elo": 920
+          }
+        },
+        {
+          "detail": "904/920 rows have both odds and Elo (98.3%)",
+          "name": "odds_rating_joint_coverage",
+          "status": "pass",
+          "value": {
+            "fraction": 0.9826086956521739,
+            "rows_with_both": 904
+          }
+        },
+        {
+          "detail": "all rows have home/away team names and IDs",
+          "name": "team_identity",
+          "status": "pass",
+          "value": 0
+        },
+        {
+          "detail": "neutral_site true=80 false=840",
+          "name": "neutral_site",
+          "status": "pass",
+          "value": {
+            "false": 840,
+            "missing": 0,
+            "true": 80
+          }
+        },
+        {
+          "detail": "weeks 1\u201316 present with no interior gaps",
+          "name": "week_continuity",
+          "status": "pass",
+          "value": {
+            "max": 16,
+            "min": 1
+          }
+        },
+        {
+          "detail": "904/920 rows have line_provider_count > 0 (98.3%)",
+          "name": "line_provider_coverage",
+          "status": "pass",
+          "value": {
+            "fraction": 0.9826086956521739,
+            "rows_with_providers": 904
+          }
+        },
+        {
+          "detail": "FPI columns are entirely null (season-level CFBD pulls deliberately unjoined until dated weekly archives exist)",
+          "name": "fpi_missingness",
+          "status": "pass",
+          "value": {
+            "class": "structural_unjoined"
+          }
+        },
+        {
+          "detail": "SP+ columns are entirely null (season-level CFBD pulls deliberately unjoined until dated weekly archives exist)",
+          "name": "sp_missingness",
+          "status": "pass",
+          "value": {
+            "class": "structural_unjoined"
+          }
+        },
+        {
+          "detail": "AP non-null cells=301, coaches=301, CFP=81 (sparse ranks are structural for unranked teams)",
+          "name": "rank_coverage",
+          "status": "pass",
+          "value": {
+            "ap_fraction_of_cells": 0.16358695652173913,
+            "ap_non_null": 301,
+            "cfp_non_null": 81,
+            "class": "structural_sparse",
+            "coaches_non_null": 301
+          }
+        }
+      ],
+      "counts": {
+        "completed_games": 919,
+        "incomplete_games": 1,
+        "missing_team_identity": 0,
+        "neutral_site_false": 840,
+        "neutral_site_missing": 0,
+        "neutral_site_true": 80,
+        "rows": 920,
+        "rows_with_elo": 920,
+        "rows_with_odds": 904,
+        "rows_with_odds_and_elo": 904
+      },
+      "missingness": {
+        "ap_rank": {
+          "class": "structural_sparse",
+          "non_null_cells": 301
+        },
+        "cfp_rank": {
+          "class": "structural_sparse",
+          "non_null_cells": 81
+        },
+        "coaches_rank": {
+          "class": "structural_sparse",
+          "non_null_cells": 301
+        },
+        "elo": {
+          "class": "complete",
+          "fraction": 1.0
+        },
+        "fpi": {
+          "class": "structural_unjoined",
+          "non_null_cells": 0
+        },
+        "odds": {
+          "class": "partial_coverage",
+          "fraction": 0.9826086956521739
+        },
+        "sp": {
+          "class": "structural_unjoined",
+          "non_null_cells": 0
+        }
+      },
+      "path": "data/processed/games_2024.csv",
+      "rows": 920,
+      "season": 2024,
+      "status": "warn",
+      "usable_for": {
+        "elo_models": "yes",
+        "fpi_models": "blocked_structural",
+        "market_baseline": "yes",
+        "protocol_1_0_0_fold": "yes",
+        "rank_features": "yes_with_missing_indicators",
+        "sp_models": "blocked_structural"
+      }
+    },
+    {
+      "checks": [
+        {
+          "detail": "934 unique game_id values",
+          "name": "unique_game_id",
+          "status": "pass",
+          "value": 934
+        },
+        {
+          "detail": "934 completed games with consistent outcomes",
+          "name": "outcome_consistency",
+          "status": "pass",
+          "value": 934
+        },
+        {
+          "detail": "all rows have final scores",
+          "name": "completed_outcomes",
+          "status": "pass",
+          "value": 934
+        },
+        {
+          "detail": "934/934 rows have spread or implied prob (100.0%)",
+          "name": "odds_coverage",
+          "status": "pass",
+          "value": {
+            "fraction": 1.0,
+            "rows_with_odds": 934
+          }
+        },
+        {
+          "detail": "933/934 rows have Elo (99.9%)",
+          "name": "elo_coverage",
+          "status": "pass",
+          "value": {
+            "fraction": 0.9989293361884368,
+            "rows_with_elo": 933
+          }
+        },
+        {
+          "detail": "933/934 rows have both odds and Elo (99.9%)",
+          "name": "odds_rating_joint_coverage",
+          "status": "pass",
+          "value": {
+            "fraction": 0.9989293361884368,
+            "rows_with_both": 933
+          }
+        },
+        {
+          "detail": "all rows have home/away team names and IDs",
+          "name": "team_identity",
+          "status": "pass",
+          "value": 0
+        },
+        {
+          "detail": "neutral_site true=64 false=870",
+          "name": "neutral_site",
+          "status": "pass",
+          "value": {
+            "false": 870,
+            "missing": 0,
+            "true": 64
+          }
+        },
+        {
+          "detail": "weeks 1\u201316 present with no interior gaps",
+          "name": "week_continuity",
+          "status": "pass",
+          "value": {
+            "max": 16,
+            "min": 1
+          }
+        },
+        {
+          "detail": "934/934 rows have line_provider_count > 0 (100.0%)",
+          "name": "line_provider_coverage",
+          "status": "pass",
+          "value": {
+            "fraction": 1.0,
+            "rows_with_providers": 934
+          }
+        },
+        {
+          "detail": "FPI columns are entirely null (season-level CFBD pulls deliberately unjoined until dated weekly archives exist)",
+          "name": "fpi_missingness",
+          "status": "pass",
+          "value": {
+            "class": "structural_unjoined"
+          }
+        },
+        {
+          "detail": "SP+ columns are entirely null (season-level CFBD pulls deliberately unjoined until dated weekly archives exist)",
+          "name": "sp_missingness",
+          "status": "pass",
+          "value": {
+            "class": "structural_unjoined"
+          }
+        },
+        {
+          "detail": "AP non-null cells=298, coaches=298, CFP=78 (sparse ranks are structural for unranked teams)",
+          "name": "rank_coverage",
+          "status": "pass",
+          "value": {
+            "ap_fraction_of_cells": 0.15952890792291222,
+            "ap_non_null": 298,
+            "cfp_non_null": 78,
+            "class": "structural_sparse",
+            "coaches_non_null": 298
+          }
+        }
+      ],
+      "counts": {
+        "completed_games": 934,
+        "incomplete_games": 0,
+        "missing_team_identity": 0,
+        "neutral_site_false": 870,
+        "neutral_site_missing": 0,
+        "neutral_site_true": 64,
+        "rows": 934,
+        "rows_with_elo": 933,
+        "rows_with_odds": 934,
+        "rows_with_odds_and_elo": 933
+      },
+      "missingness": {
+        "ap_rank": {
+          "class": "structural_sparse",
+          "non_null_cells": 298
+        },
+        "cfp_rank": {
+          "class": "structural_sparse",
+          "non_null_cells": 78
+        },
+        "coaches_rank": {
+          "class": "structural_sparse",
+          "non_null_cells": 298
+        },
+        "elo": {
+          "class": "partial_coverage",
+          "fraction": 0.9989293361884368
+        },
+        "fpi": {
+          "class": "structural_unjoined",
+          "non_null_cells": 0
+        },
+        "odds": {
+          "class": "complete",
+          "fraction": 1.0
+        },
+        "sp": {
+          "class": "structural_unjoined",
+          "non_null_cells": 0
+        }
+      },
+      "path": "data/processed/games_2025.csv",
+      "rows": 934,
+      "season": 2025,
+      "status": "pass",
+      "usable_for": {
+        "elo_models": "yes",
+        "fpi_models": "blocked_structural",
+        "market_baseline": "yes",
+        "protocol_1_0_0_fold": "yes",
+        "rank_features": "yes_with_missing_indicators",
+        "sp_models": "blocked_structural"
+      }
+    }
+  ]
+}

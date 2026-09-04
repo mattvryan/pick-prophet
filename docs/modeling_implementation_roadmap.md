@@ -81,27 +81,32 @@ Excludes new sources, features, models, and production changes.
 
 ## M02 — Cross-season coverage and quality audit
 
+**Status:** implemented (extends P1.2 auditor)
 **Branch:** `modeling/m02-coverage-audit`
 **Dependencies:** M01
 
 Scope:
 
-- Audit 2017–2025 by season and week: games, outcomes, duplicate/missing IDs,
+- [x] Audit 2017–2025 by season and week: games, outcomes, duplicate/missing IDs,
   home/away, neutral sites, odds, providers/timestamps, ratings, rankings, and
   join failures.
-- Distinguish structural missingness from adapter or join failure.
-- Emit machine-readable CSV/JSON and `docs/data_coverage_report.md`.
-- Define programmatic pass/warn/fail gates for later builds.
-- Recommend usable evaluation windows without silently changing them.
+- [x] Distinguish structural missingness from adapter or join failure.
+- [x] Emit machine-readable CSV/JSON and `docs/data_coverage_report.md`.
+- [x] Define programmatic pass/warn/fail gates for later builds.
+- [x] Recommend usable evaluation windows without silently changing them.
 
 Tests and acceptance:
 
-- Fixtures cover duplicates, invalid outcomes/odds, zero ratings, missing weeks,
+- [x] Fixtures cover duplicates, invalid outcomes/odds, zero ratings, missing weeks,
   and failed identity joins.
-- Counts reconcile to canonical inputs; no silent row removal occurs.
-- The report identifies usable seasons for each source.
+- [x] Counts reconcile to canonical inputs; no silent row removal occurs.
+- [x] The report identifies usable seasons for each source.
 
 Excludes imputation, feature engineering, and fitting.
+
+Notes: Provider observation timestamps remain unavailable in CFBD historical
+lines; provider *counts* are audited. FPI/SP+ are classified
+`structural_unjoined` until dated weekly archives exist.
 
 ## M03 — Harden historical ingestion
 
