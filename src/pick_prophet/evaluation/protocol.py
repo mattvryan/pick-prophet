@@ -6,6 +6,7 @@ from dataclasses import asdict, dataclass
 from typing import Any
 
 PROTOCOL_VERSION = "1.0.0"
+PROTOCOL_V2_VERSION = "2.0.0"
 BOOTSTRAP_SEED = 20260904
 DEFAULT_N_BOOT = 500
 LATEST_OOT_FOLD = 2025
@@ -60,12 +61,27 @@ class ProtocolConfig:
 
 DEFAULT_PROTOCOL = ProtocolConfig()
 
+PROTOCOL_V2 = ProtocolConfig(
+    protocol_version=PROTOCOL_V2_VERSION,
+    # Historical outcomes through 2025 are available for predeclared
+    # walk-forward research. 2026 remains a prospective-only stream.
+    research_seasons=tuple(range(2017, 2026)),
+    test_seasons=tuple(range(2018, 2026)),
+    latest_oot_fold=2025,
+    prospective_holdout="2026_weekly_shadow_locked",
+    bootstrap_seed=20260904,
+    n_boot=2000,
+)
+
 
 def load_protocol(version: str | None = None) -> ProtocolConfig:
     """Return a known protocol config. Unknown versions fail loudly."""
 
     if version is None or version == PROTOCOL_VERSION or version == "1.0.0":
         return DEFAULT_PROTOCOL
+    if version == PROTOCOL_V2_VERSION:
+        return PROTOCOL_V2
     raise ValueError(
-        f"unknown protocol version {version!r}; only {PROTOCOL_VERSION!r} is registered"
+        f"unknown protocol version {version!r}; registered versions are "
+        f"{PROTOCOL_VERSION!r} and {PROTOCOL_V2_VERSION!r}"
     )

@@ -1,0 +1,45 @@
+{
+  "created_before_source_evaluation": true,
+  "families": [
+    {
+      "confirmatory_hypothesis": "Verified ESPN slate performance may differ from all-FBS performance; membership and public percentages require source-hashed pre-lock evidence.",
+      "family_id": "espn_sampling_frame",
+      "milestone": "M15",
+      "model_eligible_if": "verification, PIT, and minimum-sample gates pass",
+      "primary_role": "sampling_frame_and_optional_public_sentiment"
+    },
+    {
+      "confirmatory_hypothesis": "Timestamped market movement, dispersion, or staleness may improve a model conditional on the latest-prelock vig-free market probability.",
+      "family_id": "market_depth",
+      "milestone": "M16",
+      "model_eligible_if": "both-sided timestamped observations and coverage gates pass",
+      "primary_role": "baseline_strengthening_then_residual_features"
+    },
+    {
+      "confirmatory_hypothesis": "A genuinely pregame weekly rating disagreement with market probability may contain incremental team-strength information.",
+      "family_id": "pit_ratings",
+      "milestone": "M17",
+      "model_eligible_if": "publication timing, licensing, stable IDs, and coverage pass",
+      "primary_role": "rating_minus_market_residual"
+    },
+    {
+      "confirmatory_hypothesis": "Fold-nested opponent-adjusted prior-game efficiency may add form information beyond market probability.",
+      "family_id": "team_form_efficiency",
+      "milestone": "M18",
+      "model_eligible_if": "chronology, coverage, and future-mutation tests pass",
+      "primary_role": "compact_team_differentials"
+    },
+    {
+      "confirmatory_hypothesis": "Archived preseason personnel and continuity information may improve Weeks 1-3 estimates beyond market probability.",
+      "family_id": "personnel_program_context",
+      "milestone": "M19",
+      "model_eligible_if": "dated definitions are stable and early-season sample gates pass",
+      "primary_role": "preseason_prior_interactions"
+    }
+  ],
+  "outcome_dependent_changes_forbidden": true,
+  "prospective_holdout": "2026_weekly_shadow_locked",
+  "protocol_version": "2.0.0",
+  "status": "frozen",
+  "unregistered_analysis_disposition": "exploratory_not_eligible_for_immediate_promotion"
+}

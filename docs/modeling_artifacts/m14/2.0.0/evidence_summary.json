@@ -1,0 +1,36 @@
+{
+  "artifact_version": "2.0.0",
+  "historical_research_seasons": [
+    2017,
+    2018,
+    2019,
+    2020,
+    2021,
+    2022,
+    2023,
+    2024,
+    2025
+  ],
+  "m10_outcome": "no_features_promoted",
+  "observed_diagnosis": [
+    "all tested family-level log-loss confidence intervals crossed zero",
+    "market-context aggregate direction was favorable but season-unstable",
+    "historical Pick'em target-frame evidence is absent",
+    "opening and movement fields were unavailable for evidence",
+    "2020 anomalous-season sensitivity was unavailable"
+  ],
+  "power_analysis_limitation": "MDE values approximate scale from M10 week-cluster bootstrap CI widths; they are planning diagnostics, not promotion evidence or guarantees.",
+  "proper_score_games": 3195,
+  "proper_score_inference_seasons_available": [
+    2022,
+    2023,
+    2024,
+    2025
+  ],
+  "prospective_holdout": "2026_weekly_shadow_locked",
+  "prospective_use": "operations_and_one_time_future_assessment_only",
+  "protocol_version": "2.0.0",
+  "status": "protocol_frozen_sources_not_yet_evaluated",
+  "verified_historical_espn_slates": 0,
+  "week_clusters": 66
+}

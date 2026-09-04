@@ -4,8 +4,9 @@ from __future__ import annotations
 
 import hashlib
 import json
+from collections.abc import Mapping, Sequence
 from pathlib import Path
-from typing import Any, Mapping, Sequence
+from typing import Any
 
 from pick_prophet.models.approved_feature_set import (
     EmptyPromotedFeaturesError,
@@ -42,7 +43,7 @@ def sha256_file(path: str | Path) -> str:
 def load_m11_decision(path: str | Path) -> dict[str, Any]:
     payload = json.loads(Path(path).read_text())
     if not isinstance(payload, dict):
-        raise ValueError(f"M11 decision must be an object: {path}")
+        raise TypeError(f"M11 decision must be an object: {path}")
     return payload
 
 
@@ -60,7 +61,9 @@ def validate_m10_approved_artifact(
             f"M10 approved feature set hash mismatch for {path}: "
             f"expected {expected_sha256}, got {actual}"
         )
-    payload = dict(approved) if approved is not None else load_approved_feature_set(path)
+    payload = (
+        dict(approved) if approved is not None else load_approved_feature_set(path)
+    )
     if "promoted_features" not in payload:
         raise ValueError(f"approved feature set missing promoted_features: {path}")
     return payload

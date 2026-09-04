@@ -1,1 +1,1 @@
-"""Research-only comparison and feasibility tools."""
+"""Reproducible research-only analyses that do not enter serving paths."""

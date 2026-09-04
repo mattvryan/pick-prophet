@@ -437,7 +437,7 @@ reserve their eventual use for a later prospective assessment.
 
 ### M14 — Evidence-gap analysis and research protocol 2.0
 
-**Status:** planned
+**Status:** implemented (protocol 2.0.0 frozen; no model fit)
 **Suggested branch:** `research/m14-evidence-plan`
 **Dependencies:** M13
 
@@ -469,6 +469,10 @@ Acceptance:
 - No candidate is fit and no outcome-dependent source choice is made in M14.
 - Protocol and experiment-ledger hashes are recorded before M15–M19 results are
   evaluated.
+
+Artifacts: `docs/modeling_artifacts/m14/2.0.0/`. Protocol:
+`docs/research_protocol_2.md`. Experiment ledger:
+`docs/experiment_ledger_2.json`.
 
 ### M15 — Expand the verified ESPN Pick'em history
 
