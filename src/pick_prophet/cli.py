@@ -25,6 +25,7 @@ from .features.pickem_registry import (
     write_registry,
 )
 from .ingest.cfbd import ingest_season
+from .models.residual_fit import fit_residual_walkforward
 from .weekly.grade import grade_week
 from .weekly.recommend import recommend
 from .weekly.results import fetch_results
@@ -111,6 +112,19 @@ def parser() -> argparse.ArgumentParser:
         "--output-dir",
         type=Path,
         default=Path("data/processed/matrix"),
+    )
+
+    residual = commands.add_parser(
+        "fit-residual",
+        help="fit M08 market-residual logistic variants on a matrix",
+    )
+    residual.add_argument("--matrix", type=Path, required=True)
+    residual.add_argument("--protocol", default="1.0.0")
+    residual.add_argument("--matrix-schema", default="1.0.0")
+    residual.add_argument(
+        "--output-dir",
+        type=Path,
+        default=Path("data/processed/residual"),
     )
 
     coverage = commands.add_parser(
@@ -365,6 +379,16 @@ def main(argv: list[str] | None = None) -> None:
             f"retained={len(result.rows)} excluded={len(result.exclusions)} "
             f"input={result.input_rows}"
         )
+    elif args.command == "fit-residual":
+        summary = fit_residual_walkforward(
+            args.matrix,
+            args.output_dir,
+            protocol_version=args.protocol,
+            matrix_schema_version=args.matrix_schema,
+        )
+        print(args.output_dir / "predictions.csv")
+        print(args.output_dir / "summary.json")
+        print(f"folds={len(summary.get('folds', []))}")
     elif args.command == "coverage":
         kwargs = {
             "report_path": args.report,

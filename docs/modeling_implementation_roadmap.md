@@ -238,46 +238,36 @@ approved PIT contracts / schema bumps.
 
 ## M08 — Market-residual logistic model
 
+**Status:** implemented (matrix schema 1.0.0; ratings variants deferred)
 **Branch:** `modeling/m08-market-residual-logit`
 **Dependencies:** M07
 
-Implement the interpretable candidate:
+Model card: `docs/market_residual_model.md`.
+Rebuild: `pick-prophet fit-residual --matrix … --output-dir data/processed/residual`.
+
+Implemented the interpretable candidate:
 
 ```text
 logit(P(win)) = logit(P_market) + adjustment(features)
 ```
 
-Use a tested fixed-offset implementation or its mathematically equivalent
-residual formulation; simply including market probability as an ordinary feature
-does not satisfy this contract.
+- [x] Fixed-offset L-BFGS-B objective (`λ=1.0`); market logit never a free coefficient
+- [x] Variants: `market_only`, `site_temporal`, `history`, `market_context`, `combined`
+- [x] Fold-nested preprocess (median+missing indicators, scale, drop-one categoricals)
+- [x] Canonical shared eligibility; protocol predictions + residual details + JSON bundles
+- [x] Tests for offset identity, leakage, prohibited columns, determinism
 
-M08 must import `BASELINE_INPUT_COLUMNS` and `MODEL_FEATURE_COLUMNS` from
-`matrix_schema` (schema 1.0.0). Rating-disagreement and rating-combined variants
-are **conditional on a later approved matrix schema** that adds rating features.
-With 1.0.0, compare the market baseline against approved site, schedule,
-history, temporal, and market-context adjustments only.
+M08 must import baseline/predictor roles from `matrix_schema` (schema 1.0.0).
+Rating-disagreement variants remain conditional on a later approved matrix schema.
 
-Scope:
+Scope completed for 1.0.0:
 
-- Compare market only; market + basic temporal/site/history/market-context
-  adjustments from the M07 predictor allowlist.
-- (Later schema) market + each rating disagreement; market + approved combined
-  ratings — only after ratings enter an approved matrix version.
-- Fit imputation, missing indicators, scaling, regularization, and selection
-  within each fold.
-- Save coefficients, offset behavior, feature list, model hash, and row-level
-  probability adjustment.
-- Use probability clipping only for numerical scoring.
+- Compare market only vs approved site/temporal, history, market-context, and combined adjustments.
+- Fixed L2 (`λ=1.0`); no held-out hyperparameter search.
+- Save coefficients, offset behavior, feature lists, hashes, row-level adjustments.
+- Probability clipping only in residual-detail scoring field.
 
-Tests and acceptance:
-
-- Zero adjustment reproduces the market baseline.
-- Public percentages cannot affect predictions.
-- Preprocessing cannot see held-out rows.
-- Serialization round-trips without drift.
-- All variants run under M01 on identical paired rows.
-
-Excludes boosting, production promotion, and qualitative news features.
+Excludes boosting, production promotion, qualitative news, and M09 calibration.
 
 ## M09 — Inference and calibration diagnostics
 
