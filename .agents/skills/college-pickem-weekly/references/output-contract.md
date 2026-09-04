@@ -136,18 +136,23 @@ Typical files:
 - **Regenerate?** No overwrite of an existing path
 - **CLI:** `pick-prophet weekly record-submission`
 
-### `results/` grading pack (proposed)
+### `results/<stamp>/results.csv` + `manifest.json`
 
-This remains a **proposed** contract until `weekly grade` ships.
+- **Kind:** postgame result capture (`weekly_results.v1`)
+- **Immutable:** yes; new stamp for new pulls
+- **Required:** scores, winner, total points, completion flags, capture timestamp
+- **Regenerate?** New directory only
+- **CLI:** `pick-prophet weekly fetch-results`
 
-- **Kind:** postgame result
-- **Immutable:** yes once graded for a frozen week
-- **Required:** final scores, correctness per game, accuracy, baseline vs
-  override delta, actual tiebreaker total, absolute tiebreaker error,
-  grading timestamp
-- **Regenerate?** Only if scoring inputs were wrong; preserve prior grade files
-- **Gap:** `pick-prophet weekly grade` is planned in
-  `docs/implementation_plan.md` but not implemented
+### `results/grade/results.json` + `grade.md`
+
+- **Kind:** postgame grade (`weekly_grade.v1`)
+- **Immutable:** yes for a given output directory
+- **Required:** per-game correctness, accuracy, baseline vs override stats,
+  optional probability metrics, tiebreaker actual total and absolute error,
+  grading timestamp and input hashes
+- **Regenerate?** Only into a new `--output-dir` if a correction is needed
+- **CLI:** `pick-prophet weekly grade`
 
 ### `manual_adjustments.csv` (proposed / planned)
 
@@ -163,7 +168,7 @@ override columns plus `context.md`.
 | Review signals | `signals.csv`, `context.md`, public % on slate | No automatic selection |
 | Final decision | `final_picks.csv`, `final_card.md` | Yes, after authorization |
 | Submission proof | `submission.json` via `weekly record-submission` | Records what was entered |
-| Grade | proposed `results/` | Evaluates frozen decisions |
+| Grade | `results/grade/*` via `weekly grade` | Evaluates frozen decisions |
 
 Never rewrite baseline files to match an override. Record the override beside
 the preserved baseline.

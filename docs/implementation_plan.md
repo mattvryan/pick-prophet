@@ -160,6 +160,9 @@ accuracy, confidence points earned/possible, Brier score and log loss where
 probabilities exist, market baseline result, manual-adjustment delta, and closing
 line value when comparable timestamps are available.
 
+- [x] Implement `weekly fetch-results` and `weekly grade` for completed slates.
+  Closing-line value comparison remains future work when timed CLV snapshots exist.
+
 Never train on the current week until results are final and the raw weekly
 directory has been frozen.
 
@@ -275,7 +278,7 @@ missing-value behavior, calibration, limitations, and artifact hash.
 - [ ] `weekly review`: apply separately logged qualitative changes.
 - [ ] `weekly finalize`: validate and checksum the entered card.
 - [x] `weekly record-submission`: immutable ESPN entry confirmation record.
-- [ ] `weekly grade`: capture results and metrics.
+- [x] `weekly fetch-results` / `weekly grade`: capture scores and grade the card.
 - [ ] `weekly report`: append cumulative market/model/manual comparisons.
 
 The production model must refuse to run when required columns, feature versions,

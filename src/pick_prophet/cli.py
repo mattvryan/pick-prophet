@@ -8,7 +8,9 @@ from .evaluation.analyze import analyze_file
 from .evaluation.early_season import analyze_early_season
 from .features.build import build_rows, merge_pickem, write_dataset
 from .ingest.cfbd import ingest_season
+from .weekly.grade import grade_week
 from .weekly.recommend import recommend
+from .weekly.results import fetch_results
 from .weekly.signals import fetch_signals_snapshot
 from .weekly.submission import record_submission
 from .weekly.tiebreaker import recommend_tiebreaker
@@ -106,6 +108,28 @@ def parser() -> argparse.ArgumentParser:
         help="defaults to week-dir/submission.json; use a new path for revisions",
     )
 
+    fetch_results_cmd = weekly_commands.add_parser(
+        "fetch-results", help="capture completed CFBD scores for a weekly slate"
+    )
+    fetch_results_cmd.add_argument("--week-dir", type=Path, required=True)
+    fetch_results_cmd.add_argument("--slate", type=Path)
+    fetch_results_cmd.add_argument("--snapshot")
+    fetch_results_cmd.add_argument(
+        "--allow-incomplete",
+        action="store_true",
+        help="write a snapshot even if some games are unfinished",
+    )
+
+    grade_cmd = weekly_commands.add_parser(
+        "grade", help="grade a submitted weekly card against final results"
+    )
+    grade_cmd.add_argument("--week-dir", type=Path, required=True)
+    grade_cmd.add_argument("--results", type=Path, required=True)
+    grade_cmd.add_argument("--submission", type=Path)
+    grade_cmd.add_argument("--recommendations", type=Path)
+    grade_cmd.add_argument("--tiebreaker-json", type=Path)
+    grade_cmd.add_argument("--output-dir", type=Path)
+
     return root
 
 
@@ -197,6 +221,35 @@ def main(argv: list[str] | None = None) -> None:
             except (ValueError, FileExistsError, FileNotFoundError) as exc:
                 print(f"ERROR: {exc}", file=sys.stderr)
                 raise SystemExit(1) from exc
+        elif args.weekly_command == "fetch-results":
+            try:
+                print(
+                    fetch_results(
+                        week_dir=args.week_dir,
+                        slate_path=args.slate,
+                        snapshot=args.snapshot,
+                        allow_incomplete=args.allow_incomplete,
+                    )
+                )
+            except (ValueError, FileExistsError, FileNotFoundError) as exc:
+                print(f"ERROR: {exc}", file=sys.stderr)
+                raise SystemExit(1) from exc
+        elif args.weekly_command == "grade":
+            try:
+                artifacts = grade_week(
+                    week_dir=args.week_dir,
+                    results_path=args.results,
+                    submission_path=args.submission,
+                    recommendations_path=args.recommendations,
+                    tiebreaker_path=args.tiebreaker_json,
+                    output_dir=args.output_dir,
+                )
+            except (ValueError, FileExistsError, FileNotFoundError) as exc:
+                print(f"ERROR: {exc}", file=sys.stderr)
+                raise SystemExit(1) from exc
+            print(artifacts["output_dir"])
+            print(artifacts["json"])
+            print(artifacts["markdown"])
 
 
 if __name__ == "__main__":

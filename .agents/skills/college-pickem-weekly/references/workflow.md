@@ -202,18 +202,28 @@ of overwriting. Do not claim submission occurred without confirmation.
 
 ## 7. Postgame grading
 
-**Capability gap:** `pick-prophet weekly grade` is planned in
-`docs/implementation_plan.md` but not implemented.
+After games are final:
 
-Until that command exists, capture results manually into proposed artifacts
-under `weekly/YYYY-WNN/results/` and compute:
+```bash
+pick-prophet weekly fetch-results --week-dir weekly/YYYY-WNN
+```
 
-- correct picks / total accuracy
-- baseline versus override performance
-- tiebreaker actual total and absolute error
+Writes an immutable `weekly/YYYY-WNN/results/<stamp>/results.csv` (and manifest).
+Fails if any slate game is incomplete unless `--allow-incomplete` is set.
 
-Do not alter historical slate, market, signal, or recommendation inputs when
-feeding findings into later analysis.
+Then grade the submitted card:
+
+```bash
+pick-prophet weekly grade \
+  --week-dir weekly/YYYY-WNN \
+  --results weekly/YYYY-WNN/results/<stamp>/results.csv
+```
+
+Writes `results/grade/results.json` and `results/grade/grade.md` by default,
+including accuracy, baseline versus override performance, pick-probability
+metrics when available, and tiebreaker absolute error. Do not alter historical
+slate, market, signal, or recommendation inputs when feeding findings into later
+analysis.
 
 ## Command index (verified)
 
@@ -223,6 +233,8 @@ pick-prophet weekly recommend --slate SLATE [--market MARKET] --as-of AS_OF [--o
 pick-prophet weekly fetch-signals --slate SLATE [--snapshot SNAPSHOT]
 pick-prophet weekly tiebreaker --slate SLATE --market MARKET --game-id GAME_ID --as-of AS_OF --output-dir OUTPUT_DIR
 pick-prophet weekly record-submission --week-dir DIR --submitted-at TIMESTAMP --tiebreaker N [--operator NAME] [--final-picks PATH] [--submitted-picks PATH] [--confirmation-file PATH] [--confirmation-sha256 HASH] [--notes TEXT] [--output PATH]
+pick-prophet weekly fetch-results --week-dir DIR [--slate PATH] [--snapshot STAMP] [--allow-incomplete]
+pick-prophet weekly grade --week-dir DIR --results PATH [--submission PATH] [--recommendations PATH] [--tiebreaker-json PATH] [--output-dir PATH]
 ```
 
 Related research CLIs (not weekly contest modes): `ingest`, `build`, `analyze`,
