@@ -27,6 +27,13 @@ def test_unknown_protocol_fails() -> None:
         load_protocol("9.9.9")
 
 
+def test_protocol_2_is_registered_without_changing_default() -> None:
+    assert load_protocol().protocol_version == "1.0.0"
+    protocol = load_protocol("2.0.0")
+    assert protocol.protocol_version == "2.0.0"
+    assert 2026 not in protocol.research_seasons
+
+
 def test_expanding_folds_train_precedes_test() -> None:
     folds = expanding_folds(list(range(2017, 2026)), DEFAULT_PROTOCOL)
     assert [f.test_season for f in folds] == list(range(2018, 2026))

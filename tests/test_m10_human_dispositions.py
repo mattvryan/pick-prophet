@@ -41,10 +41,7 @@ def _sha256(path: Path) -> str:
 
 def _worksheet_decisions() -> dict[str, str]:
     with WORKSHEET.open(newline="") as handle:
-        return {
-            row["unit_id"]: row["recommendation"]
-            for row in csv.DictReader(handle)
-        }
+        return {row["unit_id"]: row["recommendation"] for row in csv.DictReader(handle)}
 
 
 def _markdown_decisions() -> dict[str, str]:
@@ -85,7 +82,7 @@ def test_approved_feature_set_matches_worksheet_and_hashes() -> None:
         if uid.startswith("lof__")
     )
     assert all(
-        decisions[uid] == "reject"
+        status == "reject"
         for uid, status in decisions.items()
         if uid.startswith("single__") and uid != "single__home_sos"
     )

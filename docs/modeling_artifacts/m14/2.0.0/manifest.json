@@ -1,0 +1,21 @@
+{
+  "artifact_set": "m14_evidence_plan",
+  "artifact_version": "2.0.0",
+  "artifacts_sha256": {
+    "evidence_gaps.csv": "6cf4c4a0e596d6d8f2fb550304eebfe067266ec9858e291f579e0c660a142f50",
+    "evidence_summary.json": "368e34527f1a3fb5bf1334f35bcf4bffe9a154a6d06378ad8411a94c3b1df660",
+    "power_analysis.csv": "6daa1d037f8a2448c8e61c7c0b468031e87ca4f1c19dd5aa8b051f8785cb0207"
+  },
+  "contains_2026_outcomes": false,
+  "generated_by": "pick_prophet.research.m14_evidence_plan",
+  "protocol_version": "2.0.0",
+  "source_sha256": {
+    "docs/experiment_ledger_2.json": "709730ec67af5e10ade5377b599e7cc903b06d8aec2dfdf49376490e5220e921",
+    "docs/modeling_artifacts/m10/1.0.0/approved_feature_set.json": "c984bac1c7fd7e0a71cb63a3acbcbbb42f17a7602c068e18d6e63b0e92a44ad0",
+    "docs/modeling_artifacts/m10/1.0.0/manifest.json": "c62b1a134a98c727109788dee7c930a61678f6a9bac899b8f5415dae26e7c6cf",
+    "docs/modeling_artifacts/m10/1.0.0/paired_bootstrap.csv": "0601c31674ba49340ac247ee958e6c706b636bd06e7b9c6195c648efa286ee3d",
+    "docs/pickem_inventory.md": "55523c008d4b27a428015b07a95772f7efc2286f6330e1bafb1e01d17e8cc44e",
+    "docs/ratings_feasibility.md": "a74c2133205e53a4998a98124bfa0380e117fce51536b478f145a3a1b7d71ac2",
+    "docs/research_protocol_2.md": "37d5dd9958e8e298e3a84041414d5a54eb55b38548fa283a5237878f848057dd"
+  }
+}

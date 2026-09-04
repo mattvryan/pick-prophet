@@ -36,6 +36,7 @@ from .registry.transitions import (
     register_candidate,
     retire,
 )
+from .research.m14_evidence_plan import generate_m14_artifacts
 from .weekly.grade import grade_week
 from .weekly.recommend import recommend
 from .weekly.results import fetch_results
@@ -174,9 +175,7 @@ def parser() -> argparse.ArgumentParser:
     registry = commands.add_parser(
         "registry", help="M12 model registry and promotion gate"
     )
-    registry_commands = registry.add_subparsers(
-        dest="registry_command", required=True
-    )
+    registry_commands = registry.add_subparsers(dest="registry_command", required=True)
     registry_root = Path("docs/modeling_artifacts/m12/1.0.0")
 
     reg_validate = registry_commands.add_parser(
@@ -257,9 +256,7 @@ def parser() -> argparse.ArgumentParser:
     coverage = commands.add_parser(
         "coverage", help="audit processed season CSVs and write coverage report"
     )
-    coverage.add_argument(
-        "--processed-root", type=Path, default=Path("data/processed")
-    )
+    coverage.add_argument("--processed-root", type=Path, default=Path("data/processed"))
     coverage.add_argument(
         "--report",
         type=Path,
@@ -467,6 +464,16 @@ def parser() -> argparse.ArgumentParser:
         help="optional JSON list of per-game feature rows for ML shadow scoring",
     )
 
+    m14_cmd = commands.add_parser(
+        "m14-plan", help="generate frozen protocol-2.0 evidence planning artifacts"
+    )
+    m14_cmd.add_argument("--repo-root", type=Path, default=Path("."))
+    m14_cmd.add_argument(
+        "--output-dir",
+        type=Path,
+        default=Path("docs/modeling_artifacts/m14/2.0.0"),
+    )
+
     return root
 
 
@@ -475,7 +482,9 @@ def main(argv: list[str] | None = None) -> None:
     if args.command == "ingest":
         weeks = None
         if getattr(args, "weeks", None):
-            weeks = [int(part.strip()) for part in args.weeks.split(",") if part.strip()]
+            weeks = [
+                int(part.strip()) for part in args.weeks.split(",") if part.strip()
+            ]
         print(
             ingest_season(
                 args.season,
@@ -496,9 +505,7 @@ def main(argv: list[str] | None = None) -> None:
         if args.pickem_csv:
             merge_pickem(rows.rows, args.pickem_csv)
         output = args.output or Path(f"data/processed/games_{args.season}.csv")
-        report = write_dataset(
-            rows.rows, output, name_join_audit=rows.name_join_audit
-        )
+        report = write_dataset(rows.rows, output, name_join_audit=rows.name_join_audit)
         print(f"wrote {output} and {report}")
         audit_path = output.with_name(output.stem + ".name_join_audit.csv")
         if audit_path.exists():
@@ -571,6 +578,10 @@ def main(argv: list[str] | None = None) -> None:
             raise SystemExit(1) from exc
         print(artifacts["decision_worksheet"])
         print(artifacts["report"])
+    elif args.command == "m14-plan":
+        artifacts = generate_m14_artifacts(args.repo_root, args.output_dir)
+        for path in artifacts.values():
+            print(path)
     elif args.command == "registry":
         store = RegistryStore(
             root=args.root.resolve(),
@@ -840,7 +851,9 @@ def main(argv: list[str] | None = None) -> None:
             if args.feature_frame_json is not None:
                 feature_frame = json.loads(args.feature_frame_json.read_text())
                 if not isinstance(feature_frame, list):
-                    print("ERROR: feature-frame-json must be a JSON list", file=sys.stderr)
+                    print(
+                        "ERROR: feature-frame-json must be a JSON list", file=sys.stderr
+                    )
                     raise SystemExit(1)
             try:
                 artifacts = run_weekly_shadow(
