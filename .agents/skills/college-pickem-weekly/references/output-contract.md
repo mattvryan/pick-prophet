@@ -124,22 +124,21 @@ Typical files:
 - **Baseline vs manual:** must distinguish review notes from baseline agreement
 - **CLI gap:** not emitted by current CLI
 
-## Proposed artifacts (implementation gaps)
+## Additional artifacts
 
-These are **proposed** contracts. Do not pretend CLI support exists.
+### `submission.json`
 
-### `submission.json` (proposed)
-
-- **Kind:** submission record
-- **Immutable:** yes after write
-- **Required:** `submitted_at_utc`, submitted picks, submitted tiebreaker,
-  hashes of `final_picks.csv` / entry confirmation if available, operator
-- **Regenerate?** No; corrections are new versioned files
-- **Gap:** no `weekly finalize` / submission command
+- **Kind:** submission record (`weekly_submission.v1`)
+- **Immutable:** yes after write; revisions use a new versioned filename
+- **Required:** `submitted_at_utc`, submitted picks, `tiebreaker_total`,
+  hashes of `final_picks.csv` (and `final_card.md` / confirmation when present),
+  `matches_final_picks`, optional operator/notes
+- **Regenerate?** No overwrite of an existing path
+- **CLI:** `pick-prophet weekly record-submission`
 
 ### `results/` grading pack (proposed)
 
-Suggested files: `results.json`, `grade.md` (exact names left to the future grading CLI).
+This remains a **proposed** contract until `weekly grade` ships.
 
 - **Kind:** postgame result
 - **Immutable:** yes once graded for a frozen week
@@ -163,7 +162,7 @@ override columns plus `context.md`.
 | Market baseline | `recommendations.csv`, recommend `card.md`, `tiebreaker.*` | Baseline only |
 | Review signals | `signals.csv`, `context.md`, public % on slate | No automatic selection |
 | Final decision | `final_picks.csv`, `final_card.md` | Yes, after authorization |
-| Submission proof | proposed `submission.json` | Records what was entered |
+| Submission proof | `submission.json` via `weekly record-submission` | Records what was entered |
 | Grade | proposed `results/` | Evaluates frozen decisions |
 
 Never rewrite baseline files to match an override. Record the override beside
