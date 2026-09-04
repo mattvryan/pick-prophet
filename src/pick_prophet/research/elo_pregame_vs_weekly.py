@@ -2,13 +2,16 @@
 
 from __future__ import annotations
 
+import argparse
 import csv
 import hashlib
 import json
 import math
+import subprocess
 from collections import defaultdict
 from collections.abc import Iterator, Mapping
 from dataclasses import dataclass
+from datetime import UTC, datetime
 from pathlib import Path
 from statistics import fmean, median
 from typing import Any, Literal
@@ -16,6 +19,7 @@ from typing import Any, Literal
 DEFAULT_TOLERANCE = 1.0
 DEFAULT_SEASON_TYPE = "regular"
 PERCENTILE_METHOD = "sorted_index"
+SNAPSHOT_SELECTION_RULE = "lexicographic_max_subdir_with_games_and_elo_json"
 
 AGGREGATE_COLUMNS = (
     "season",
@@ -378,3 +382,204 @@ def sha256_file(path: Path) -> str:
         for chunk in iter(lambda: handle.read(1024 * 1024), b""):
             digest.update(chunk)
     return digest.hexdigest()
+
+
+def _repository_revision(helper_path: Path) -> str | None:
+    try:
+        root = subprocess.run(
+            [
+                "git",
+                "-C",
+                str(helper_path.resolve().parent),
+                "rev-parse",
+                "--show-toplevel",
+            ],
+            check=True,
+            capture_output=True,
+            text=True,
+        ).stdout.strip()
+        return subprocess.run(
+            ["git", "rev-parse", "HEAD"],
+            cwd=root,
+            check=True,
+            capture_output=True,
+            text=True,
+        ).stdout.strip()
+    except (OSError, subprocess.CalledProcessError):
+        return None
+
+
+def build_provenance(
+    *,
+    snapshot_paths: list[Path],
+    seasons: list[int],
+    season_types: list[str],
+    tolerance: float,
+    helper_path: Path,
+    rows_in: int,
+    rows_out: int,
+    exclusions: dict[str, int],
+    identical_duplicate_count: int,
+    conflicting_duplicate_count: int,
+    parameters: dict[str, Any],
+) -> dict[str, Any]:
+    """Build the machine-readable provenance document for an acceptance run."""
+
+    if len(snapshot_paths) != len(seasons):
+        raise ValueError("snapshot_paths and seasons must have the same length")
+
+    snapshots = [
+        {
+            "season": season,
+            "path": str(snapshot),
+            "games_sha256": sha256_file(snapshot / "games.json"),
+            "elo_sha256": sha256_file(snapshot / "elo.json"),
+        }
+        for season, snapshot in zip(seasons, snapshot_paths, strict=True)
+    ]
+    return {
+        "generated_at_utc": datetime.now(UTC).isoformat().replace("+00:00", "Z"),
+        "repository_revision": _repository_revision(helper_path),
+        "helper_module": str(helper_path),
+        "helper_sha256": sha256_file(helper_path),
+        "tolerance": tolerance,
+        "percentile_method": PERCENTILE_METHOD,
+        "snapshot_selection_rule": SNAPSHOT_SELECTION_RULE,
+        "snapshots": snapshots,
+        "seasons": list(seasons),
+        "season_types": list(season_types),
+        "parameters": parameters,
+        "input_game_rows": rows_in,
+        "input_side_rows": rows_in * 2,
+        "output_aggregate_rows": rows_out,
+        "exclusions": exclusions,
+        "identical_duplicate_count": identical_duplicate_count,
+        "conflicting_duplicate_count": conflicting_duplicate_count,
+        "notes": [
+            (
+                "conflicting_duplicate_count is 0 because conflicting weekly Elo "
+                "duplicates raise ConflictError"
+            ),
+            "Numeric agreement does not prove publication time relative to kickoff",
+        ],
+    }
+
+
+def write_provenance(doc: dict[str, Any], path: Path) -> None:
+    """Write a stable, human-readable provenance JSON document."""
+
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text(json.dumps(doc, indent=2, sort_keys=True) + "\n")
+
+
+def select_latest_snapshots(raw_cfbd_root: Path, seasons: list[int]) -> dict[int, Path]:
+    """Select each season's lexicographically latest complete snapshot."""
+
+    selected: dict[int, Path] = {}
+    for season in seasons:
+        season_root = raw_cfbd_root / str(season)
+        candidates = (
+            sorted(
+                (
+                    child
+                    for child in season_root.iterdir()
+                    if child.is_dir()
+                    and (child / "games.json").is_file()
+                    and (child / "elo.json").is_file()
+                ),
+                key=lambda child: child.name,
+            )
+            if season_root.is_dir()
+            else []
+        )
+        if not candidates:
+            raise FileNotFoundError(
+                f"No complete games.json + elo.json snapshot for season {season}"
+            )
+        selected[season] = candidates[-1]
+    return selected
+
+
+def run_acceptance(
+    raw_root: Path,
+    seasons: list[int],
+    out_csv: Path,
+    out_prov: Path,
+    tolerance: float,
+) -> None:
+    """Regenerate aggregate Elo comparison artifacts from local snapshots."""
+
+    selected = select_latest_snapshots(raw_root, seasons)
+    sides: list[SideCompare] = []
+    input_game_rows = 0
+    raw_game_rows = 0
+    identical_duplicate_count = 0
+
+    for season in seasons:
+        snapshot = selected[season]
+        raw_game_rows += len(_read_json_rows(snapshot / "games.json"))
+        games = load_games(snapshot / "games.json")
+        weekly = load_weekly_elo(snapshot / "elo.json")
+        input_game_rows += len(games)
+        identical_duplicate_count += weekly.identical_duplicate_count
+        sides.extend(compare_snapshot(games, weekly, tolerance=tolerance))
+
+    rows = aggregate_sides(sides)
+    season_types = sorted({side.season_type for side in sides})
+    parameters = {
+        "raw_root": str(raw_root),
+        "seasons": list(seasons),
+        "output_csv": str(out_csv),
+        "output_provenance": str(out_prov),
+        "tolerance": tolerance,
+    }
+    provenance = build_provenance(
+        snapshot_paths=[selected[season] for season in seasons],
+        seasons=seasons,
+        season_types=season_types,
+        tolerance=tolerance,
+        helper_path=Path(__file__),
+        rows_in=input_game_rows,
+        rows_out=len(rows),
+        exclusions={"non_fbs_games": raw_game_rows - input_game_rows},
+        identical_duplicate_count=identical_duplicate_count,
+        conflicting_duplicate_count=0,
+        parameters=parameters,
+    )
+    write_aggregate_csv(rows, out_csv)
+    write_provenance(provenance, out_prov)
+
+
+def _parse_seasons(value: str) -> list[int]:
+    try:
+        seasons = [int(part.strip()) for part in value.split(",") if part.strip()]
+    except ValueError as exc:
+        raise argparse.ArgumentTypeError(
+            "seasons must be comma-separated integers"
+        ) from exc
+    if not seasons:
+        raise argparse.ArgumentTypeError("at least one season is required")
+    return seasons
+
+
+def main(argv: list[str] | None = None) -> None:
+    parser = argparse.ArgumentParser(
+        description="Compare CFBD game pregame Elo with prior-week Elo snapshots"
+    )
+    parser.add_argument("--raw-root", type=Path, required=True)
+    parser.add_argument("--seasons", type=_parse_seasons, required=True)
+    parser.add_argument("--output-csv", type=Path, required=True)
+    parser.add_argument("--output-provenance", type=Path, required=True)
+    parser.add_argument("--tolerance", type=float, default=DEFAULT_TOLERANCE)
+    args = parser.parse_args(argv)
+    run_acceptance(
+        args.raw_root,
+        args.seasons,
+        args.output_csv,
+        args.output_provenance,
+        args.tolerance,
+    )
+
+
+if __name__ == "__main__":
+    main()

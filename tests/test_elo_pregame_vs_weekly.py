@@ -1,4 +1,8 @@
 import csv
+import json
+import shutil
+import subprocess
+import sys
 from pathlib import Path
 
 import pytest
@@ -10,11 +14,15 @@ from pick_prophet.research.elo_pregame_vs_weekly import (
     ConflictError,
     EloKey,
     aggregate_sides,
+    build_provenance,
     compare_snapshot,
     load_games,
     load_weekly_elo,
+    run_acceptance,
+    select_latest_snapshots,
     sha256_file,
     write_aggregate_csv,
+    write_provenance,
 )
 
 FIX = Path(__file__).parent / "fixtures" / "ratings_elo_compare"
@@ -159,3 +167,157 @@ def test_write_aggregate_csv_uses_exact_header_and_hashes_output(tmp_path):
         assert reader.fieldnames == list(AGGREGATE_COLUMNS)
         assert len(list(reader)) == 4
     assert len(sha256_file(output)) == 64
+
+
+def test_provenance_contains_required_keys_and_snapshot_hashes(tmp_path):
+    snapshot = tmp_path / "2099" / "newer"
+    snapshot.mkdir(parents=True)
+    shutil.copy(FIX / "games.json", snapshot / "games.json")
+    shutil.copy(FIX / "elo.json", snapshot / "elo.json")
+    helper = tmp_path / "helper.py"
+    helper.write_text("# research helper\n")
+
+    doc = build_provenance(
+        snapshot_paths=[snapshot],
+        seasons=[2099],
+        season_types=["regular", "postseason"],
+        tolerance=DEFAULT_TOLERANCE,
+        helper_path=helper,
+        rows_in=4,
+        rows_out=3,
+        exclusions={"non_fbs_games": 1},
+        identical_duplicate_count=1,
+        conflicting_duplicate_count=0,
+        parameters={"seasons": [2099]},
+    )
+
+    required = {
+        "generated_at_utc",
+        "repository_revision",
+        "helper_module",
+        "helper_sha256",
+        "tolerance",
+        "percentile_method",
+        "snapshot_selection_rule",
+        "snapshots",
+        "seasons",
+        "season_types",
+        "parameters",
+        "input_game_rows",
+        "input_side_rows",
+        "output_aggregate_rows",
+        "exclusions",
+        "identical_duplicate_count",
+        "conflicting_duplicate_count",
+        "notes",
+    }
+    assert required <= doc.keys()
+    assert doc["input_game_rows"] == 4
+    assert doc["input_side_rows"] == 8
+    assert doc["snapshots"] == [
+        {
+            "season": 2099,
+            "path": str(snapshot),
+            "games_sha256": sha256_file(snapshot / "games.json"),
+            "elo_sha256": sha256_file(snapshot / "elo.json"),
+        }
+    ]
+    assert doc["snapshot_selection_rule"] == (
+        "lexicographic_max_subdir_with_games_and_elo_json"
+    )
+    assert any("conflicting_duplicate_count" in note for note in doc["notes"])
+
+
+def test_write_provenance_roundtrip(tmp_path):
+    output = tmp_path / "nested" / "provenance.json"
+    doc = {"seasons": [2099], "notes": ["test"]}
+
+    write_provenance(doc, output)
+
+    assert json.loads(output.read_text()) == doc
+    assert output.read_text().endswith("\n")
+
+
+def test_select_latest_snapshots_picks_max_complete_dirname(tmp_path):
+    season_root = tmp_path / "2099"
+    for name in ("20260101T000000Z", "20260201T000000Z"):
+        snapshot = season_root / name
+        snapshot.mkdir(parents=True)
+        (snapshot / "games.json").write_text("[]")
+        (snapshot / "elo.json").write_text("[]")
+    incomplete = season_root / "zz-incomplete"
+    incomplete.mkdir()
+    (incomplete / "games.json").write_text("[]")
+
+    selected = select_latest_snapshots(tmp_path, [2099])
+
+    assert selected == {2099: season_root / "20260201T000000Z"}
+
+
+def test_select_latest_snapshots_fails_for_missing_season(tmp_path):
+    with pytest.raises(FileNotFoundError, match="2099"):
+        select_latest_snapshots(tmp_path, [2099])
+
+
+def test_run_acceptance_writes_aggregate_and_provenance(tmp_path):
+    snapshot = tmp_path / "raw" / "2099" / "snapshot"
+    snapshot.mkdir(parents=True)
+    games = json.loads((FIX / "games.json").read_text())
+    (snapshot / "games.json").write_text(
+        json.dumps([row for row in games if row["season"] == 2099])
+    )
+    shutil.copy(FIX / "elo.json", snapshot / "elo.json")
+    output_csv = tmp_path / "out" / "aggregate.csv"
+    output_provenance = tmp_path / "out" / "provenance.json"
+
+    run_acceptance(
+        tmp_path / "raw",
+        [2099],
+        output_csv,
+        output_provenance,
+        DEFAULT_TOLERANCE,
+    )
+
+    with output_csv.open(newline="") as handle:
+        assert len(list(csv.DictReader(handle))) == 3
+    provenance = json.loads(output_provenance.read_text())
+    assert provenance["seasons"] == [2099]
+    assert provenance["input_game_rows"] == 3
+    assert provenance["input_side_rows"] == 6
+    assert provenance["output_aggregate_rows"] == 3
+    assert provenance["exclusions"] == {"non_fbs_games": 1}
+    assert provenance["identical_duplicate_count"] == 1
+
+
+def test_module_cli_runs_acceptance_with_documented_shape(tmp_path):
+    snapshot = tmp_path / "raw" / "2099" / "snapshot"
+    snapshot.mkdir(parents=True)
+    shutil.copy(FIX / "games.json", snapshot / "games.json")
+    shutil.copy(FIX / "elo.json", snapshot / "elo.json")
+    output_csv = tmp_path / "aggregate.csv"
+    output_provenance = tmp_path / "provenance.json"
+
+    result = subprocess.run(
+        [
+            sys.executable,
+            "-m",
+            "pick_prophet.research.elo_pregame_vs_weekly",
+            "--raw-root",
+            str(tmp_path / "raw"),
+            "--seasons",
+            "2099",
+            "--output-csv",
+            str(output_csv),
+            "--output-provenance",
+            str(output_provenance),
+            "--tolerance",
+            "1.0",
+        ],
+        capture_output=True,
+        check=False,
+        text=True,
+    )
+
+    assert result.returncode == 0, result.stderr
+    assert output_csv.is_file()
+    assert output_provenance.is_file()
