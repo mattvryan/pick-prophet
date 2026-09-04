@@ -67,10 +67,10 @@ continue with manual odds import rather than blocking the card.
 
 ### P0.2 — Capture the exact ESPN slate
 
-- [ ] Create `weekly/2026-WNN/slate.csv` from the contest page.
-- [ ] Record ESPN game ID if visible, teams, kickoff, display order, lock time,
+- [x] Create `weekly/2026-WNN/slate.csv` from the contest page.
+- [x] Record ESPN game ID if visible, teams, kickoff, display order, lock time,
   confidence-mode status, source URL, and `captured_at_utc`.
-- [ ] Save a screenshot or exported payload beside the CSV when permitted.
+- [x] Record screenshot filenames and hashes in a capture manifest.
 - [ ] Match every row to a CFBD game ID; unresolved matches remain explicit.
 
 Implement `pick-prophet weekly validate-slate PATH`. It must reject duplicate game
@@ -307,11 +307,12 @@ Every implementation handoff should state:
 | 2026-09-04 | Use 2017–2025 as the initial research window | It provides multiple walk-forward folds while keeping source coverage plausibly modern; retain only after coverage audit |
 | 2026-09-04 | Keep all-FBS and confirmed ESPN-slate evaluation separate | ESPN's selection process changes the game distribution and may bias results |
 | 2026-09-04 | Preserve manual picks separately from model output | Required to measure whether qualitative intervention helps or hurts |
+| 2026-09-04 | Treat the screenshot's left team as away and lock times as America/Denver | All ten pairings are consistent with that orientation; retain as an explicit assumption pending user confirmation |
 
 ## Immediate human inputs needed
 
 - A local CFBD API key, or permission to proceed with manual odds input.
-- The exact current ESPN slate and contest lock rules.
+- Confirmation that screenshot times are Mountain and the left team is the visitor.
 - Whether this pool uses confidence points and, if so, the point convention.
 - Any historical screenshots, exports, or emails that can establish prior ESPN
   slate membership and public-pick percentages.
