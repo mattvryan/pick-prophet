@@ -7,6 +7,7 @@ from pathlib import Path
 from .evaluation.analyze import analyze_file
 from .evaluation.early_season import analyze_early_season
 from .features.build import build_rows, merge_pickem, write_dataset
+from .features.coverage import run_coverage
 from .ingest.cfbd import ingest_season
 from .weekly.grade import grade_week
 from .weekly.recommend import recommend
@@ -63,6 +64,23 @@ def parser() -> argparse.ArgumentParser:
     )
     early.add_argument("--input", type=Path, required=True)
     early.add_argument("--output-dir", type=Path)
+
+    coverage = commands.add_parser(
+        "coverage", help="audit processed season CSVs and write coverage report"
+    )
+    coverage.add_argument(
+        "--processed-root", type=Path, default=Path("data/processed")
+    )
+    coverage.add_argument(
+        "--report",
+        type=Path,
+        default=Path("docs/data_coverage_report.md"),
+    )
+    coverage.add_argument(
+        "--no-write-quality",
+        action="store_true",
+        help="skip rewriting per-season .quality.json files",
+    )
 
     weekly = commands.add_parser("weekly", help="weekly Pick'em operations")
     weekly_commands = weekly.add_subparsers(dest="weekly_command", required=True)
@@ -181,6 +199,17 @@ def main(argv: list[str] | None = None) -> None:
         artifacts = analyze_early_season(args.input, args.output_dir)
         print(artifacts["summary"])
         print(artifacts["predictions"])
+    elif args.command == "coverage":
+        audits, _markdown = run_coverage(
+            args.processed_root,
+            report_path=args.report,
+            write_quality=not args.no_write_quality,
+        )
+        for audit in sorted(audits, key=lambda a: a.season):
+            print(f"{audit.season}: {audit.status} ({audit.rows} rows)")
+        print(args.report)
+        if any(a.status == "fail" for a in audits) or not audits:
+            raise SystemExit(1)
     elif args.command == "weekly":
         if args.weekly_command == "validate-slate":
             result = validate_slate(args.path, as_of=args.as_of)
