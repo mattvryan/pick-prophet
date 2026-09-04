@@ -8,6 +8,13 @@ from .evaluation.analyze import analyze_file
 from .evaluation.early_season import analyze_early_season
 from .features.build import build_rows, merge_pickem, write_dataset
 from .features.coverage import run_coverage
+from .features.pickem import (
+    import_pickem_file,
+    load_known_game_ids,
+    slate_to_template_rows,
+    validate_pickem_import,
+    write_template_csv,
+)
 from .ingest.cfbd import ingest_season
 from .weekly.grade import grade_week
 from .weekly.recommend import recommend
@@ -81,6 +88,39 @@ def parser() -> argparse.ArgumentParser:
         action="store_true",
         help="skip rewriting per-season .quality.json files",
     )
+
+    pickem = commands.add_parser("pickem", help="ESPN Pick'em import tooling")
+    pickem_commands = pickem.add_subparsers(dest="pickem_command", required=True)
+
+    validate_import = pickem_commands.add_parser(
+        "validate-import", help="validate a template-shaped Pick'em CSV"
+    )
+    validate_import.add_argument("path", type=Path)
+    validate_import.add_argument(
+        "--known-games",
+        type=Path,
+        help="optional processed games CSV used only to warn on unmatched IDs",
+    )
+
+    import_cmd = pickem_commands.add_parser(
+        "import",
+        help="validate then copy into data/external/ without overwriting",
+    )
+    import_cmd.add_argument("path", type=Path)
+    import_cmd.add_argument(
+        "--destination",
+        type=Path,
+        required=True,
+        help="target path under data/external/",
+    )
+    import_cmd.add_argument("--known-games", type=Path)
+
+    from_slate = pickem_commands.add_parser(
+        "from-slate",
+        help="convert weekly slate.csv into template rows (forward capture)",
+    )
+    from_slate.add_argument("path", type=Path)
+    from_slate.add_argument("--output", type=Path, required=True)
 
     weekly = commands.add_parser("weekly", help="weekly Pick'em operations")
     weekly_commands = weekly.add_subparsers(dest="weekly_command", required=True)
@@ -210,6 +250,43 @@ def main(argv: list[str] | None = None) -> None:
         print(args.report)
         if any(a.status == "fail" for a in audits) or not audits:
             raise SystemExit(1)
+    elif args.command == "pickem":
+        known = None
+        if getattr(args, "known_games", None):
+            known = load_known_game_ids(args.known_games)
+        if args.pickem_command == "validate-import":
+            result = validate_pickem_import(args.path, known_game_ids=known)
+            for warning in result.warnings:
+                print(f"WARNING: {warning}", file=sys.stderr)
+            for error in result.errors:
+                print(f"ERROR: {error}", file=sys.stderr)
+            if result.ok:
+                print(f"import ok: {len(result.rows)} rows")
+            else:
+                print(
+                    f"import invalid: {len(result.errors)} error(s)",
+                    file=sys.stderr,
+                )
+                raise SystemExit(1)
+        elif args.pickem_command == "import":
+            try:
+                result = validate_pickem_import(args.path, known_game_ids=known)
+                for warning in result.warnings:
+                    print(f"WARNING: {warning}", file=sys.stderr)
+                dest = import_pickem_file(
+                    args.path, args.destination, known_game_ids=known
+                )
+            except (ValueError, FileExistsError) as exc:
+                print(f"ERROR: {exc}", file=sys.stderr)
+                raise SystemExit(1) from exc
+            print(dest)
+        elif args.pickem_command == "from-slate":
+            try:
+                rows = slate_to_template_rows(args.path)
+                print(write_template_csv(rows, args.output))
+            except (ValueError, OSError) as exc:
+                print(f"ERROR: {exc}", file=sys.stderr)
+                raise SystemExit(1) from exc
     elif args.command == "weekly":
         if args.weekly_command == "validate-slate":
             result = validate_slate(args.path, as_of=args.as_of)

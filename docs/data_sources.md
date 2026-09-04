@@ -29,7 +29,9 @@ metrics, but limits and endpoint entitlements can change.
    creates selection bias.
 
 Use `data/external/pickem_slate_TEMPLATE.csv` as the import contract. Unknown
-public percentages stay null.
+public percentages stay null. Validate with
+`pick-prophet pickem validate-import PATH` (confirmed rows require two distinct
+verifiers). Track archive search progress in `docs/pickem_inventory.md`.
 
 ## Important limitations
 

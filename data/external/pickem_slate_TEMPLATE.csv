@@ -1,2 +1,2 @@
-game_id,season,week,is_pickem_game,espn_home_pick_pct,espn_expert_home_pct,captured_at,source_url
-401000001,2025,1,true,,,2025-08-25T12:00:00Z,
+game_id,season,week,is_pickem_game,espn_home_pick_pct,espn_expert_home_pct,captured_at,source_url,verification_status,verifier_1,verifier_2
+401000001,2025,1,true,,,2025-08-25T12:00:00Z,https://example.invalid/espn-pickem,unverified,,

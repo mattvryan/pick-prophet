@@ -194,14 +194,20 @@ comparative results.
 
 ### P1.3 — Recover the ESPN sampling frame
 
-- [ ] Inventory personal exports, screenshots, emails, browser captures, and pool
+- [x] Inventory personal exports, screenshots, emails, browser captures, and pool
   records for contest slates and pick percentages.
-- [ ] Check dated web archives and document successes/failures.
-- [ ] Build a transcription/import tool with source and capture timestamps.
-- [ ] Require two-source or two-person verification for manually transcribed rows.
-- [ ] Report all-FBS and confirmed-Pick'em results separately.
+- [x] Check dated web archives and document successes/failures.
+- [x] Build a transcription/import tool with source and capture timestamps.
+- [x] Require two-source or two-person verification for manually transcribed rows.
+- [x] Report all-FBS and confirmed-Pick'em results separately.
 
 Do not infer ESPN membership from rankings, TV network, or matchup prominence.
+
+Notes (2026-09-04): tooling and inventory checklist land first
+(`docs/pickem_inventory.md`, `pick-prophet pickem …`). No historical ESPN
+archives were found in-repo; the results table remains empty until real
+artifacts are transcribed. All-FBS vs confirmed-Pick'em labeling stays separate
+in analysis.
 
 ### P1.4 — Point-in-time team context
 
