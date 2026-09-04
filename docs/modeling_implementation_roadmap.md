@@ -476,7 +476,7 @@ Artifacts: `docs/modeling_artifacts/m14/2.0.0/`. Protocol:
 
 ### M15 — Expand the verified ESPN Pick'em history
 
-**Status:** planned
+**Status:** complete with stop condition (no dual-verified historical weeks added)
 **Suggested branch:** `data/m15-espn-history-expansion`
 **Dependencies:** M14
 
@@ -501,6 +501,10 @@ Acceptance:
 - Analysis reports verified-frame sample size and missing weeks explicitly.
 - Public percentages without a valid pre-lock capture time are audit labels, not
   promotable model features.
+
+Result: two single-source 2024 candidates were catalogued but not imported.
+Historical `verified_espn_pickem` remains unavailable; see
+`docs/espn_history_expansion.md`.
 
 ### M16 — Improve historical market depth and timing
 

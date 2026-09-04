@@ -1,0 +1,14 @@
+{
+  "artifact_set": "m15_espn_history_expansion",
+  "artifact_version": "1.0.0",
+  "artifacts_sha256": {
+    "source_inventory.json": "b25e078913fccbadd39de1e648f96afd45bb565d9b29734c982972839db939bf"
+  },
+  "confirmed_historical_weeks_added": 0,
+  "contains_copyrighted_page_content": false,
+  "experiment_ledger_sha256": "709730ec67af5e10ade5377b599e7cc903b06d8aec2dfdf49376490e5220e921",
+  "protocol_version": "2.0.0",
+  "report_sha256": "2916cc2a8c236873122e944540ed59dcf3632e07d857918dc24396dfbd9f71c0",
+  "spec_sha256": "3c4b2a96c413b74a9ead825dac162800089730d25f4f0562da8e2df61e8fe77e",
+  "status": "completed_no_dual_verified_archives"
+}

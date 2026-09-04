@@ -1,0 +1,40 @@
+{
+  "artifact_version": "1.0.0",
+  "confirmed_historical_weeks_added": 0,
+  "protocol_version": "2.0.0",
+  "status": "completed_no_dual_verified_archives",
+  "week_candidates": [
+    {
+      "canonical_game_ids_verified": 0,
+      "notes": "Dated third-party article enumerates ten ESPN contest matchups, but no independent source or ESPN row-level archive was recovered.",
+      "pre_lock_provenance_verified": false,
+      "season": 2024,
+      "sources": [
+        {
+          "published_date": "2024-09-11",
+          "source_id": "rotoballer_2024_w03",
+          "source_type": "dated_third_party_article",
+          "url": "https://www.rotoballer.com/college-football-pick-em-pool-picks-week-3-2024-targets-avoids-predictions-for-espn-pick-em-contests/1439887"
+        }
+      ],
+      "status": "candidate_single_source",
+      "week": 3
+    },
+    {
+      "canonical_game_ids_verified": 0,
+      "notes": "Dated third-party article enumerates ten ESPN contest matchups and some public percentages, but no independent source or ESPN row-level archive was recovered.",
+      "pre_lock_provenance_verified": false,
+      "season": 2024,
+      "sources": [
+        {
+          "published_date": "2024-11-14",
+          "source_id": "rotoballer_2024_w12",
+          "source_type": "dated_third_party_article",
+          "url": "https://www.rotoballer.com/college-football-pick-em-pool-picks-week-12-2024-targets-avoids-predictions-for-espn-pick-em-contests/1493024"
+        }
+      ],
+      "status": "candidate_single_source",
+      "week": 12
+    }
+  ]
+}
