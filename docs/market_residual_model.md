@@ -45,6 +45,19 @@ pick-prophet fit-residual \
 
 ## Deferred to later milestones
 
-- M09: calibration, CIs, flip analysis (no post-hoc calibration in M08)
 - M10: formal ablation / robustness
 - Hyperparameter search and automated feature selection
+
+## Diagnostics (M09)
+
+Inference/calibration diagnostics over raw residual `p_home`:
+
+```bash
+pick-prophet diagnose-residual \
+  --predictions-dir data/processed/residual \
+  --matrix data/processed/matrix/games_matrix_v1.csv \
+  --out-dir artifacts/residual_diagnostics/run
+```
+
+See `docs/residual_diagnostics.md`. No calibrated prediction candidate is
+produced in M09.

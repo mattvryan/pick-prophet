@@ -54,16 +54,16 @@ def test_bootstrap_deterministic_for_contrast() -> None:
     y = [1, 0, 1, 0, 1, 0]
     left = [0.5, 0.5, 0.5, 0.5, 0.5, 0.5]
     right = [0.8, 0.2, 0.7, 0.3, 0.9, 0.1]
-    kwargs = dict(
-        clusters=clusters,
-        y_true=y,
-        p_left=left,
-        p_right=right,
-        metric="brier",
-        n_boot=40,
-        seed=20260904,
-        contrast_id="cand|week_1|brier",
-    )
+    kwargs = {
+        "clusters": clusters,
+        "y_true": y,
+        "p_left": left,
+        "p_right": right,
+        "metric": "brier",
+        "n_boot": 40,
+        "seed": 20260904,
+        "contrast_id": "cand|week_1|brier",
+    }
     a = bootstrap_paired_delta_clusters(**kwargs)
     b = bootstrap_paired_delta_clusters(**kwargs)
     assert a == b
