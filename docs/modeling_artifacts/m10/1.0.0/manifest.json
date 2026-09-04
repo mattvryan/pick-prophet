@@ -8,12 +8,14 @@
     "coverage_missingness.csv": "04eafd1bbc7dc44d2d65e4098ecd92b83f4ce32264ac910f7eebe3c7591f19ce",
     "decision_worksheet.csv": "01ebce04ba6d68d7cfe5e94a8a8ad93e1278632eb5b1b1cc0f4a542bfbef020f",
     "fold_metrics.csv": "71875870222628cd6892a1681b32d6e960d6dd7de1c47e9ac79e464ee46a1cce",
+    "incremental_value_report_generated.md": "288a54220999a902b0357bd711799b3319da00cf262627bcd82c3e6f1a0d3781",
     "overall_metrics.csv": "ecbd34b1a39173f284283d0851504db68a27313be40ad7a5321727e10c3a5ad1",
     "paired_bootstrap.csv": "0601c31674ba49340ac247ee958e6c706b636bd06e7b9c6195c648efa286ee3d",
     "season_drop.csv": "b0c2d9d505dc749d8b19cb9467833dc0cc683d4a34517843614afe8b375e2050",
     "slice_metrics.csv": "1edd1c9ff5f5863d5f0aeab0ce1c633a9c9a68dd6f4a085fe6473de87beb703f"
   },
   "bootstrap_seed": 20260904,
+  "evidence_generated_at_utc": "2026-09-04T21:09:30Z",
   "excluded_from_tracking": [
     "row-level predictions.csv",
     "residual_details.csv",
@@ -22,10 +24,18 @@
     "fit/summary.json",
     "fit/run_manifest.json"
   ],
+  "inference_seasons": [
+    2022,
+    2023,
+    2024,
+    2025
+  ],
   "inference_window_note": "Proper-score evidence covers held-out seasons 2022\u20132025 only. 2020 anomalous-season sensitivity cannot be evaluated (status=not_available).",
   "m10_code_revision": "818b71adcbb3c0e1bf244b8ccee51ee71a760ae4",
   "matrix_schema_version": "1.0.0",
   "n_boot": 500,
+  "pr": "https://github.com/mattvryan/pick-prophet/pull/32",
+  "pr_merge_commit": "d003407feab30004624580578a62c2b94eceac91",
   "protocol_version": "1.0.0",
   "source_matrix_path": "data/processed/matrix/games_matrix_v1.csv",
   "source_matrix_sha256": "238865ccf9060c5a68563c2bd8873aabef0977bfb3a263f387e11f9fdd3a506d"
