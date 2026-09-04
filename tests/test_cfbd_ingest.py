@@ -3,10 +3,10 @@
 from __future__ import annotations
 
 import json
+from io import BytesIO
 from pathlib import Path
 from typing import Any
 from urllib.error import HTTPError
-from io import BytesIO
 
 import pytest
 
@@ -86,7 +86,7 @@ def test_client_retries_429_then_succeeds(monkeypatch: pytest.MonkeyPatch) -> No
     sleeps: list[float] = []
     attempts = {"n": 0}
 
-    def fake_urlopen(request, timeout=30):  # noqa: ANN001
+    def fake_urlopen(request, timeout=30):
         attempts["n"] += 1
         if attempts["n"] < 3:
             raise HTTPError(
@@ -106,7 +106,7 @@ def test_client_retries_429_then_succeeds(monkeypatch: pytest.MonkeyPatch) -> No
 
 
 def test_client_does_not_retry_401(monkeypatch: pytest.MonkeyPatch) -> None:
-    def fake_urlopen(request, timeout=30):  # noqa: ANN001
+    def fake_urlopen(request, timeout=30):
         raise HTTPError(
             request.full_url,
             401,
@@ -193,3 +193,16 @@ def test_targeted_weeks_only_fetch_requested(tmp_path: Path) -> None:
     )
     elo_weeks = [c[1]["week"] for c in client.calls if c[0] == "/ratings/elo"]
     assert elo_weeks == [3]
+
+
+def test_ingest_refuses_overwrite_without_resume(tmp_path: Path) -> None:
+    client = ScriptedClient(_season_responses())
+    target = ingest_season(
+        2025, tmp_path, max_week=1, weeks=[1], client=client, snapshot="locked"
+    )
+    before = (target / "games.json").read_text()
+    with pytest.raises(FileExistsError, match="snapshot already exists"):
+        ingest_season(
+            2025, tmp_path, max_week=1, weeks=[1], client=client, snapshot="locked"
+        )
+    assert (target / "games.json").read_text() == before

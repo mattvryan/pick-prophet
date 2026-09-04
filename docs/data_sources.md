@@ -45,6 +45,9 @@ verifiers). Track archive search progress in `docs/pickem_inventory.md`.
   dated weekly archives are available. Elo is requested weekly and joined from
   week *w - 1*. Entering W-L, previous result, and SOS are derived only from
   prior completed games in the same season (see `attach_history_features`).
+  Poll ranks and weekly Elo joins that must use team **names** emit
+  `*.name_join_audit.csv` beside the processed season table.
+- Live CFBD smoke checks are manual only; see `docs/cfbd_live_smoke.md`.
 - Returning-QB status, rivalry labels, and coach tenure need separately sourced,
   season-specific tables; current rosters must never be projected backward.
   Massey/Sagarin remain deferred pending licensing.

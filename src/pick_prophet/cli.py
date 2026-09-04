@@ -264,10 +264,15 @@ def main(argv: list[str] | None = None) -> None:
         )
         rows = build_rows(snapshot)
         if args.pickem_csv:
-            merge_pickem(rows, args.pickem_csv)
+            merge_pickem(rows.rows, args.pickem_csv)
         output = args.output or Path(f"data/processed/games_{args.season}.csv")
-        report = write_dataset(rows, output)
+        report = write_dataset(
+            rows.rows, output, name_join_audit=rows.name_join_audit
+        )
         print(f"wrote {output} and {report}")
+        audit_path = output.with_name(output.stem + ".name_join_audit.csv")
+        if audit_path.exists():
+            print(audit_path)
     elif args.command == "analyze":
         print(analyze_file(args.input, args.output))
     elif args.command == "analyze-early-season":
