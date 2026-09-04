@@ -221,6 +221,9 @@ result cannot alter an earlier row.
 
 ## P2: modeling and evaluation
 
+The branch-by-branch implementation sequence for this phase is maintained in
+`docs/modeling_implementation_roadmap.md`.
+
 ### P2.1 — Freeze the evaluation protocol
 
 - [ ] Choose first training and test seasons after reviewing coverage.
