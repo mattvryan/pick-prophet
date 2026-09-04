@@ -15,11 +15,17 @@ join key. Team names are display labels, never join keys when IDs are available.
 | `neutral_site` | boolean | Neutral venue flag |
 | `home_points`, `away_points` | integer | Outcome; null pre-game |
 | `home_win` | integer | Binary target; null pre-game/tie |
-| `spread_home` | float | Consensus closing spread from home perspective; negative means home favored |
-| `total` | float | Consensus closing total |
-| `home_moneyline`, `away_moneyline` | float | Consensus closing American odds |
-| `line_provider_count` | integer | Number of books contributing |
-| `home_implied_prob` | float | Vig-removed two-way moneyline probability |
+| `spread_home` | float | Consensus closing-like spread from home perspective; negative means home favored |
+| `total` | float | Consensus closing-like total |
+| `home_moneyline`, `away_moneyline` | float | Consensus closing-like American odds (median via implied probs) |
+| `line_provider_count` | integer | Number of books contributing after PIT filter |
+| `home_implied_prob` | float | Vig-removed two-way moneyline probability; null if either side missing; never fabricated from spread |
+| `home_market_logit` | float | Bounded logit of `home_implied_prob` |
+| `spread_home_open`, `total_open` | float | Provider-labeled opening values when present |
+| `spread_move_home`, `total_move` | float | Close − open when both labeled values exist |
+| `market_timing` | string | `cfbd_historical_closing_like_no_observation_timestamp` or `point_in_time_filtered_by_observed_at` |
+| `post_kick_provider_quotes_rejected` | integer | Quotes dropped for `observed_at` after kickoff |
+| `moneyline_fabricated_from_spread` | boolean | Always false; retained as an explicit audit flag |
 | `ap_home_rank`, `ap_away_rank` | integer | Latest pre-game AP ranks; unranked is null |
 | `coaches_home_rank`, `coaches_away_rank` | integer | Latest pre-game Coaches ranks |
 | `cfp_home_rank`, `cfp_away_rank` | integer | Latest pre-game CFP ranks |

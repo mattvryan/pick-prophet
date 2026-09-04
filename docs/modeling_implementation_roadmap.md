@@ -138,26 +138,29 @@ Live smoke steps: `docs/cfbd_live_smoke.md`. Name-based poll/Elo joins write
 
 ## M04 — Historical market contract and market-logit baseline
 
+**Status:** implemented
 **Branch:** `data/m04-market-history`
 **Dependencies:** M03
 
 Scope:
 
-- Define timestamped provider and consensus schemas.
-- Preserve opening, latest-prelock, and closing observations when available;
+- [x] Define timestamped provider and consensus schemas.
+- [x] Preserve opening, latest-prelock, and closing observations when available;
   document the operational meaning of each.
-- Aggregate moneylines through implied probabilities, never arithmetic American
+- [x] Aggregate moneylines through implied probabilities, never arithmetic American
   odds averages.
-- Calculate two-way vig-free probabilities and bounded market logits.
-- Retain spread/total; never fabricate primary moneyline probabilities from them.
-- Add timestamped line-movement candidates and provider/season/week coverage.
+- [x] Calculate two-way vig-free probabilities and bounded market logits.
+- [x] Retain spread/total; never fabricate primary moneyline probabilities from them.
+- [x] Add timestamped line-movement candidates and provider/season/week coverage.
 
 Tests and acceptance:
 
-- Cover American-odds discontinuity, vig removal, missing sides, aggregation,
+- [x] Cover American-odds discontinuity, vig removal, missing sides, aggregation,
   point-in-time snapshot selection, and rejection of post-kick observations.
-- Regenerate market-only row predictions under M01 with reconciled coverage.
-- Never infer opening/closing order without timestamps.
+- [x] Regenerate market-only row predictions under M01 with reconciled coverage.
+- [x] Never infer opening/closing order without timestamps.
+
+Contract doc: `docs/market_contract.md`.
 
 ## M05 — Verified ESPN Pick'em sampling-frame registry
 
