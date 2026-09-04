@@ -184,9 +184,9 @@ fail the build, and update the adapter plus fixture deliberately.
 
 - [x] Ingest 2017–2025, starting with 2025 as the end-to-end validation season.
 - [x] Produce one canonical CSV table and quality report per season.
-- [ ] Validate game counts, duplicate IDs, completed outcomes, odds coverage,
+- [x] Validate game counts, duplicate IDs, completed outcomes, odds coverage,
   rating coverage, team identities, and neutral-site flags.
-- [ ] Create a cross-season coverage report before fitting any model.
+- [x] Create a cross-season coverage report before fitting any model.
 
 The date range may be widened after coverage is known. A season with poor feature
 coverage can still serve the Vegas baseline but must not be silently dropped from
