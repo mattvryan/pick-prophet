@@ -1,0 +1,111 @@
+{
+  "confirmation_path": null,
+  "confirmation_sha256": null,
+  "final_card_path": "weekly/2026-W01/final_card.md",
+  "final_card_sha256": "19ef168f360f4330576b65b19c4e81cbda76643b27dfc0f54da994c7af43fde7",
+  "final_picks_path": "weekly/2026-W01/final_picks.csv",
+  "final_picks_sha256": "bbc93e6628a2fb5b944ce0cd7e0ce2a5f94f0f8f0e5d92f6ebb438deab022725",
+  "matches_final_picks": true,
+  "mismatches": [],
+  "notes": "User confirmed all ESPN selections were submitted; exact ESPN click time was not provided, so submitted_at_utc records the confirmation time.",
+  "operator": "user",
+  "picks": [
+    {
+      "away_team": "Tulane",
+      "display_order": 1,
+      "home_team": "Duke",
+      "manual_override": false,
+      "market_win_probability": "0.7610",
+      "pick": "Duke",
+      "review_note": "Market and all three rating systems favor Duke"
+    },
+    {
+      "away_team": "Boston College",
+      "display_order": 2,
+      "home_team": "Cincinnati",
+      "manual_override": false,
+      "market_win_probability": "0.7111",
+      "pick": "Cincinnati",
+      "review_note": "Market and all three rating systems favor Cincinnati"
+    },
+    {
+      "away_team": "Baylor",
+      "display_order": 3,
+      "home_team": "Auburn",
+      "manual_override": false,
+      "market_win_probability": "0.7091",
+      "pick": "Auburn",
+      "review_note": "Market and all three rating systems favor Auburn at the neutral indoor venue"
+    },
+    {
+      "away_team": "Wyoming",
+      "display_order": 4,
+      "home_team": "Colorado State",
+      "manual_override": false,
+      "market_win_probability": "0.6020",
+      "pick": "Colorado State",
+      "review_note": "Elo favors Wyoming but FPI and the market favor Colorado State; paired testing does not justify an Elo override"
+    },
+    {
+      "away_team": "Clemson",
+      "display_order": 5,
+      "home_team": "LSU",
+      "manual_override": false,
+      "market_win_probability": "0.7728",
+      "pick": "LSU",
+      "review_note": "FPI and SP+ agree with the market; Elo disagreement is not sufficient to override"
+    },
+    {
+      "away_team": "UNLV",
+      "display_order": 6,
+      "home_team": "Hawai'i",
+      "manual_override": false,
+      "market_win_probability": "0.5759",
+      "pick": "UNLV",
+      "review_note": "Market FPI SP+ and Elo favor UNLV"
+    },
+    {
+      "away_team": "Western Kentucky",
+      "display_order": 7,
+      "home_team": "Nevada",
+      "manual_override": false,
+      "market_win_probability": "0.5363",
+      "pick": "Western Kentucky",
+      "review_note": "Near coin flip but market FPI SP+ and Elo all lean Western Kentucky"
+    },
+    {
+      "away_team": "UCLA",
+      "display_order": 8,
+      "home_team": "California",
+      "manual_override": false,
+      "market_win_probability": "0.5427",
+      "pick": "UCLA",
+      "review_note": "Close market; SP+ favors UCLA while FPI and Elo are nearly even"
+    },
+    {
+      "away_team": "Louisville",
+      "display_order": 9,
+      "home_team": "Ole Miss",
+      "manual_override": false,
+      "market_win_probability": "0.7002",
+      "pick": "Ole Miss",
+      "review_note": "Market FPI SP+ and Elo favor Ole Miss at the neutral site"
+    },
+    {
+      "away_team": "SMU",
+      "display_order": 10,
+      "home_team": "Florida State",
+      "manual_override": false,
+      "market_win_probability": "0.5893",
+      "pick": "SMU",
+      "review_note": "Market FPI SP+ and Elo favor SMU; official preview presents Kevin Jennings as available"
+    }
+  ],
+  "recorded_at_utc": "2026-09-04T16:40:01.530669Z",
+  "schema_version": "weekly_submission.v1",
+  "submitted_at_utc": "2026-09-04T16:39:47Z",
+  "submitted_picks_path": "weekly/2026-W01/final_picks.csv",
+  "submitted_picks_sha256": "bbc93e6628a2fb5b944ce0cd7e0ce2a5f94f0f8f0e5d92f6ebb438deab022725",
+  "tiebreaker_total": 51,
+  "week_dir": "weekly/2026-W01"
+}
