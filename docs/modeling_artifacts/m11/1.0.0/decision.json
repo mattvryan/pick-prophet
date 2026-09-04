@@ -1,0 +1,29 @@
+{
+  "baseline_retained": "market_only",
+  "challenger_trained": false,
+  "decision_version": "m11-decision-1.0.0",
+  "inference_seasons": [
+    2022,
+    2023,
+    2024,
+    2025
+  ],
+  "m10_approved_feature_set_path": "docs/modeling_artifacts/m10/1.0.0/approved_feature_set.json",
+  "m10_approved_feature_set_sha256": "c984bac1c7fd7e0a71cb63a3acbcbbb42f17a7602c068e18d6e63b0e92a44ad0",
+  "m10_decision_version": "m10-decisions-1.0.0",
+  "m11_decision_version": "m11-decision-1.0.0",
+  "matrix_schema_version": "1.0.0",
+  "outcome": "Skipping M11 is an evidence-driven successful outcome; market_only baseline retained. No boosted challenger trained.",
+  "promoted_features": [],
+  "protocol_version": "1.0.0",
+  "reopening_condition": "Reopen M11 only after a new M10 evidence version promotes at least one feature into promoted_features; review_only and rejected features remain ineligible.",
+  "review_only_families": [
+    "market_context"
+  ],
+  "review_only_features": [
+    "home_sos"
+  ],
+  "reviewed_at_utc": "2026-09-04T21:26:18Z",
+  "reviewer": "Matt Ryan",
+  "status": "not_run_no_promoted_features"
+}
