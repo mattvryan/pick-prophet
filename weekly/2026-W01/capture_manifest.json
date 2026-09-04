@@ -1,11 +1,11 @@
 {
   "captured_at_utc": "2026-09-04T14:01:57Z",
   "contest_week": 1,
-  "confidence_mode": null,
+  "confidence_mode": false,
   "interpretation": {
     "left_team": "away",
     "lock_timezone": "America/Denver",
-    "notes": "Away/home orientation and timezone are inferred and require confirmation. Stable ESPN and CFBD game IDs were not visible."
+    "notes": "Away/home orientation, kickoff UTC, neutral-site status, and stable game IDs were independently matched against the CFBD 2026 Week 1 schedule. ESPN game IDs were not visible."
   },
   "season": 2026,
   "sources": [

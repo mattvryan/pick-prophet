@@ -48,14 +48,23 @@ def build_rows(snapshot_dir: Path) -> list[dict[str, Any]]:
 
     games, lines = load("games"), load("lines")
     ranks = _rank_index(load("rankings"))
-    ratings = {
-        "fpi": _rating_index(load("fpi"), "fpi"),
-        "sp": _rating_index(load("sp"), "rating"),
-        "elo": _rating_index(load("elo"), "elo"),
-    }
+    # Do not join season-level FPI/SP+ snapshots to historical games: a pull made
+    # after the season contains future information. They remain raw-only until a
+    # genuinely dated weekly archive is available.
+    ratings = {"elo": _rating_index(load("elo"), "elo")}
     lines_by_id = {int(row["id"]): row.get("lines", []) for row in lines}
     output = []
     for game in games:
+        # An FBS game includes at least one FBS program; this retains FBS-vs-FCS
+        # games while excluding the thousands of lower-division-only matchups.
+        home_classification = _get(
+            game, "home_classification", "homeClassification"
+        )
+        away_classification = _get(
+            game, "away_classification", "awayClassification"
+        )
+        if "fbs" not in {home_classification, away_classification}:
+            continue
         game_id = int(game["id"])
         week = int(game["week"])
         home = _get(game, "home_team", "homeTeam")
@@ -74,6 +83,8 @@ def build_rows(snapshot_dir: Path) -> list[dict[str, Any]]:
             "away_team_id": _get(game, "away_id", "awayId"),
             "home_conference": _get(game, "home_conference", "homeConference"),
             "away_conference": _get(game, "away_conference", "awayConference"),
+            "home_classification": home_classification,
+            "away_classification": away_classification,
             "neutral_site": _get(game, "neutral_site", "neutralSite"),
             "home_points": hp,
             "away_points": ap,
@@ -82,6 +93,10 @@ def build_rows(snapshot_dir: Path) -> list[dict[str, Any]]:
             "is_pickem_game": None,
             "espn_home_pick_pct": None,
             "espn_expert_home_pct": None,
+            "fpi_home": None,
+            "fpi_away": None,
+            "sp_home": None,
+            "sp_away": None,
             "source_snapshot": snapshot_dir.name,
         }
         # Use the preceding week. This conservative join avoids post-game values.

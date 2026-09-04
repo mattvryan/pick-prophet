@@ -1,11 +1,11 @@
-display_order,season,contest_week,cfbd_game_id,espn_game_id,away_team,home_team,away_record,home_record,away_ap_rank,home_ap_rank,away_moneyline,home_moneyline,away_public_pick_pct,home_public_pick_pct,lock_at_utc,displayed_lock_time,timezone_assumption,network,captured_at_utc,source
-1,2026,1,,,Tulane,Duke,0-0,0-0,,,+260,-325,8,92,2026-09-05T19:30:00Z,"Sat 9/5 1:30 PM",America/Denver,ACC Network / ACCNX,2026-09-04T14:01:57Z,user-provided ESPN screenshot
-2,2026,1,,,Boston College,Cincinnati,0-0,0-0,,,+245,-305,5,95,2026-09-05T19:30:00Z,"Sat 9/5 1:30 PM",America/Denver,FOX,2026-09-04T14:01:57Z,user-provided ESPN screenshot
-3,2026,1,,,Baylor,Auburn,0-0,0-0,,,+240,-298,8,92,2026-09-05T19:30:00Z,"Sat 9/5 1:30 PM",America/Denver,ABC / Disney+,2026-09-04T14:01:57Z,user-provided ESPN screenshot
-4,2026,1,,,Wyoming,Colorado State,0-0,0-0,,,+130,-155,22,78,2026-09-05T22:00:00Z,"Sat 9/5 4:00 PM",America/Denver,USA Network,2026-09-04T14:01:57Z,user-provided ESPN screenshot
-5,2026,1,,,Clemson,LSU,0-0,0-0,,11,+295,-375,9,91,2026-09-05T23:30:00Z,"Sat 9/5 5:30 PM",America/Denver,ABC,2026-09-04T14:01:57Z,user-provided ESPN screenshot
-6,2026,1,,,UNLV,Hawaii,0-1,0-1,,,-148,+124,83,17,2026-09-06T02:00:00Z,"Sat 9/5 8:00 PM",America/Denver,CW / CW,2026-09-04T14:01:57Z,user-provided ESPN screenshot
-7,2026,1,,,Western Kentucky,Nevada,0-0,0-0,,,-115,-105,57,43,2026-09-06T02:30:00Z,"Sat 9/5 8:30 PM",America/Denver,CBSSN,2026-09-04T14:01:57Z,user-provided ESPN screenshot
-8,2026,1,,,UCLA,California,0-0,0-0,,,-130,+110,79,21,2026-09-06T02:30:00Z,"Sat 9/5 8:30 PM",America/Denver,ESPN,2026-09-04T14:01:57Z,user-provided ESPN screenshot
-9,2026,1,,,Louisville,Ole Miss,0-0,0-0,24,9,+220,-270,6,94,2026-09-06T23:30:00Z,"Sun 9/6 5:30 PM",America/Denver,ABC,2026-09-04T14:01:57Z,user-provided ESPN screenshot
-10,2026,1,,,SMU,Florida State,0-0,1-0,19,,-148,+124,57,43,2026-09-07T23:30:00Z,"Mon 9/7 5:30 PM",America/Denver,ESPN,2026-09-04T14:01:57Z,user-provided ESPN screenshot
+display_order,season,contest_week,cfbd_game_id,espn_game_id,away_team,home_team,neutral_site,away_record,home_record,away_ap_rank,home_ap_rank,away_moneyline,home_moneyline,away_public_pick_pct,home_public_pick_pct,lock_at_utc,displayed_lock_time,timezone_assumption,network,captured_at_utc,source
+1,2026,1,401858209,,Tulane,Duke,false,0-0,0-0,,,+260,-325,8,92,2026-09-05T19:30:00Z,"Sat 9/5 1:30 PM",America/Denver,ACC Network / ACCNX,2026-09-04T14:01:57Z,user-provided ESPN screenshot
+2,2026,1,401856777,,Boston College,Cincinnati,false,0-0,0-0,,,+245,-305,5,95,2026-09-05T19:30:00Z,"Sat 9/5 1:30 PM",America/Denver,FOX,2026-09-04T14:01:57Z,user-provided ESPN screenshot
+3,2026,1,401856636,,Baylor,Auburn,true,0-0,0-0,,,+240,-298,8,92,2026-09-05T19:30:00Z,"Sat 9/5 1:30 PM",America/Denver,ABC / Disney+,2026-09-04T14:01:57Z,user-provided ESPN screenshot
+4,2026,1,401860878,,Wyoming,Colorado State,false,0-0,0-0,,,+130,-155,22,78,2026-09-05T22:00:00Z,"Sat 9/5 4:00 PM",America/Denver,USA Network,2026-09-04T14:01:57Z,user-provided ESPN screenshot
+5,2026,1,401856660,,Clemson,LSU,false,0-0,0-0,,11,+295,-375,9,91,2026-09-05T23:30:00Z,"Sat 9/5 5:30 PM",America/Denver,ABC,2026-09-04T14:01:57Z,user-provided ESPN screenshot
+6,2026,1,401864497,,UNLV,Hawai'i,false,0-1,0-1,,,-148,+124,83,17,2026-09-06T02:00:00Z,"Sat 9/5 8:00 PM",America/Denver,CW / CW,2026-09-04T14:01:57Z,user-provided ESPN screenshot
+7,2026,1,401864432,,Western Kentucky,Nevada,false,0-0,0-0,,,-115,-105,57,43,2026-09-06T02:30:00Z,"Sat 9/5 8:30 PM",America/Denver,CBSSN,2026-09-04T14:01:57Z,user-provided ESPN screenshot
+8,2026,1,401858210,,UCLA,California,false,0-0,0-0,,,-130,+110,79,21,2026-09-06T02:30:00Z,"Sat 9/5 8:30 PM",America/Denver,ESPN,2026-09-04T14:01:57Z,user-provided ESPN screenshot
+9,2026,1,401856661,,Louisville,Ole Miss,true,0-0,0-0,24,9,+220,-270,6,94,2026-09-06T23:30:00Z,"Sun 9/6 5:30 PM",America/Denver,ABC,2026-09-04T14:01:57Z,user-provided ESPN screenshot
+10,2026,1,401858212,,SMU,Florida State,false,0-0,1-0,19,,-148,+124,57,43,2026-09-07T23:30:00Z,"Mon 9/7 5:30 PM",America/Denver,ESPN,2026-09-04T14:01:57Z,user-provided ESPN screenshot
