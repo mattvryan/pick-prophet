@@ -61,3 +61,14 @@ pick-prophet diagnose-residual \
 
 See `docs/residual_diagnostics.md`. No calibrated prediction candidate is
 produced in M09.
+
+## Ablation (M10)
+
+```bash
+pick-prophet ablate-residual \
+  --matrix data/processed/matrix/games_matrix_v1.csv \
+  --out-dir artifacts/residual_ablation/run \
+  --write-report docs/incremental_value_report.md
+```
+
+See `docs/incremental_value_report.md`. Recommendations are human-only.

@@ -25,6 +25,7 @@ from .features.pickem_registry import (
     write_registry,
 )
 from .ingest.cfbd import ingest_season
+from .models.residual_ablation import run_ablation
 from .models.residual_diagnostics import diagnose_residual
 from .models.residual_fit import fit_residual_walkforward
 from .weekly.grade import grade_week
@@ -139,6 +140,25 @@ def parser() -> argparse.ArgumentParser:
         "--out-dir",
         type=Path,
         default=Path("artifacts/residual_diagnostics/run"),
+    )
+
+    ablate = commands.add_parser(
+        "ablate-residual",
+        help="M10 feature ablation and robustness over residual stack",
+    )
+    ablate.add_argument("--matrix", type=Path, required=True)
+    ablate.add_argument("--protocol", default="1.0.0")
+    ablate.add_argument("--matrix-schema", default="1.0.0")
+    ablate.add_argument(
+        "--out-dir",
+        type=Path,
+        default=Path("artifacts/residual_ablation/run"),
+    )
+    ablate.add_argument(
+        "--write-report",
+        type=Path,
+        default=None,
+        help="optional path for incremental_value_report.md",
     )
 
     coverage = commands.add_parser(
@@ -415,6 +435,20 @@ def main(argv: list[str] | None = None) -> None:
             print(f"ERROR: {exc}", file=sys.stderr)
             raise SystemExit(1) from exc
         print(artifacts["summary"])
+        print(artifacts["report"])
+    elif args.command == "ablate-residual":
+        try:
+            artifacts = run_ablation(
+                args.matrix,
+                args.out_dir,
+                protocol_version=args.protocol,
+                matrix_schema_version=args.matrix_schema,
+                write_report_path=args.write_report,
+            )
+        except ValueError as exc:
+            print(f"ERROR: {exc}", file=sys.stderr)
+            raise SystemExit(1) from exc
+        print(artifacts["decision_worksheet"])
         print(artifacts["report"])
     elif args.command == "coverage":
         kwargs = {

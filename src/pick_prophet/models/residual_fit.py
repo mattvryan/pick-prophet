@@ -119,8 +119,13 @@ def fit_residual_walkforward(
     *,
     protocol_version: str = "1.0.0",
     matrix_schema_version: str = MATRIX_SCHEMA_VERSION,
+    variants: dict[str, tuple[str, ...]] | None = None,
 ) -> dict[str, Any]:
-    assert_variants_valid()
+    active_variants = variants if variants is not None else VARIANTS
+    if variants is None:
+        assert_variants_valid()
+    if "market_only" not in active_variants:
+        raise ValueError("variants must include market_only")
     if matrix_schema_version != MATRIX_SCHEMA_VERSION:
         raise ValueError(
             f"unsupported matrix schema {matrix_schema_version!r}; "
@@ -185,7 +190,7 @@ def fit_residual_walkforward(
 
         fold_metrics: dict[str, Any] = {"fold_id": fold.fold_id, "variants": {}}
 
-        for variant, columns in VARIANTS.items():
+        for variant, columns in active_variants.items():
             if variant == "market_only":
                 beta = np.zeros(0)
                 feature_names: list[str] = []
@@ -329,7 +334,7 @@ def fit_residual_walkforward(
         "folds": fold_summaries,
         "matrix_schema_version": matrix_schema_version,
         "protocol_version": protocol.protocol_version,
-        "variants": list(VARIANTS),
+        "variants": list(active_variants),
     }
     summary_path = output_dir / "summary.json"
     write_summary(summary, summary_path)
@@ -344,7 +349,7 @@ def fit_residual_walkforward(
         "protocol_version": protocol.protocol_version,
         "residual_details_sha256": _sha256_file(details_path),
         "summary_sha256": _sha256_file(summary_path),
-        "variants": list(VARIANTS),
+        "variants": list(active_variants),
     }
     (output_dir / "run_manifest.json").write_text(
         json.dumps(manifest, indent=2, sort_keys=True) + "\n"

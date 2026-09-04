@@ -298,21 +298,26 @@ miscalibration. Cluster key is `(test_season, season_type, week)`.
 
 ## M10 — Feature ablation and robustness report
 
+**Status:** implemented (evidence runner; human recommendations unset)
 **Branch:** `modeling/m10-ablation-robustness`
 **Dependencies:** M08–M09
 
 Scope:
 
-- Run predeclared single-feature additions and leave-family-out ablations.
-- Report early season, neutral site, location, favorite strength, conference, and
+- [x] Run predeclared single-feature additions and leave-family-out ablations.
+- [x] Report early season, neutral site, location, favorite strength, conference, and
   verified-ESPN slices with sample sizes.
-- Check coefficient stability, missingness dependence, season sensitivity, and
+- [x] Check coefficient stability, missingness dependence, season sensitivity, and
   sensitivity to anomalous seasons.
-- Produce `docs/incremental_value_report.md` with decisions per feature family:
+- [x] Produce `docs/incremental_value_report.md` with decisions per feature family:
   promote, retain as review-only, or reject.
 
 Acceptance: every comparison is paired and exposes coverage loss; no feature is
 approved from one favorable season or exploratory slice.
+
+Notes: Decision worksheet leaves `recommendation` blank for human review.
+Season-drop analysis aggregates existing held-out predictions (not a retrain).
+Anomalous season predeclared: 2020. Verified-ESPN `n < 50` → `insufficient`.
 
 ## M11 — Gradient-boosting challenger
 
