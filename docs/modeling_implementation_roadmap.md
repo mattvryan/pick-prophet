@@ -298,7 +298,7 @@ miscalibration. Cluster key is `(test_season, season_type, week)`.
 
 ## M10 — Feature ablation and robustness report
 
-**Status:** implemented (evidence runner; human recommendations unset)
+**Status:** complete (evidence `1.0.0` + human dispositions; `no_features_promoted`)
 **Branch:** `modeling/m10-ablation-robustness`
 **Dependencies:** M08–M09
 
@@ -315,14 +315,18 @@ Scope:
 Acceptance: every comparison is paired and exposes coverage loss; no feature is
 approved from one favorable season or exploratory slice.
 
-Notes: Decision worksheet leaves `recommendation` blank for human review.
-Season-drop analysis aggregates existing held-out predictions (not a retrain).
-Anomalous season predeclared: 2020. Verified-ESPN `n < 50` → `insufficient`.
+Notes: Human dispositions recorded in `decision_worksheet.csv` and
+`approved_feature_set.json` (`status=no_features_promoted`). Season-drop
+analysis aggregates existing held-out predictions (not a retrain). Anomalous
+season predeclared: 2020. Verified-ESPN `n < 50` → `insufficient`. M11 remains
+fail-closed on empty `promoted_features` unless a design explicitly permits
+baseline-only / no-challenger.
 
 ## M11 — Gradient-boosting challenger
 
 **Branch:** `modeling/m11-boosted-challenger`
-**Dependencies:** M10
+**Dependencies:** M10 approved feature set (`promoted_features` non-empty, or
+explicit baseline-only design)
 
 Scope:
 
