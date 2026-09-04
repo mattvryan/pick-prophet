@@ -39,6 +39,8 @@ from .registry.transitions import (
 from .weekly.grade import grade_week
 from .weekly.recommend import recommend
 from .weekly.results import fetch_results
+from .weekly.shadow import ShadowRunError, run_weekly_shadow
+from .weekly.shadow_select import ShadowSelectionError
 from .weekly.signals import fetch_signals_snapshot
 from .weekly.submission import record_submission
 from .weekly.tiebreaker import recommend_tiebreaker
@@ -435,7 +437,35 @@ def parser() -> argparse.ArgumentParser:
     grade_cmd.add_argument("--submission", type=Path)
     grade_cmd.add_argument("--recommendations", type=Path)
     grade_cmd.add_argument("--tiebreaker-json", type=Path)
+    grade_cmd.add_argument(
+        "--shadow-dir",
+        type=Path,
+        help="optional experimental shadow pack for market/shadow/submitted compare",
+    )
     grade_cmd.add_argument("--output-dir", type=Path)
+
+    shadow_cmd = weekly_commands.add_parser(
+        "shadow",
+        help="emit experimental registry shadow compare (never mutates final card)",
+    )
+    shadow_cmd.add_argument("--slate", type=Path, required=True)
+    shadow_cmd.add_argument("--as-of", required=True)
+    shadow_cmd.add_argument("--market", type=Path)
+    shadow_cmd.add_argument("--output-dir", type=Path, required=True)
+    shadow_cmd.add_argument(
+        "--registry-root",
+        type=Path,
+        default=Path("docs/modeling_artifacts/m12/1.0.0"),
+    )
+    shadow_cmd.add_argument("--repo-root", type=Path, default=Path("."))
+    shadow_cmd.add_argument("--model-id")
+    shadow_cmd.add_argument("--protocol", default="1.0.0")
+    shadow_cmd.add_argument("--matrix-schema", default="1.0.0")
+    shadow_cmd.add_argument(
+        "--feature-frame-json",
+        type=Path,
+        help="optional JSON list of per-game feature rows for ML shadow scoring",
+    )
 
     return root
 
@@ -796,6 +826,7 @@ def main(argv: list[str] | None = None) -> None:
                     submission_path=args.submission,
                     recommendations_path=args.recommendations,
                     tiebreaker_path=args.tiebreaker_json,
+                    shadow_dir=args.shadow_dir,
                     output_dir=args.output_dir,
                 )
             except (ValueError, FileExistsError, FileNotFoundError) as exc:
@@ -804,6 +835,39 @@ def main(argv: list[str] | None = None) -> None:
             print(artifacts["output_dir"])
             print(artifacts["json"])
             print(artifacts["markdown"])
+        elif args.weekly_command == "shadow":
+            feature_frame = None
+            if args.feature_frame_json is not None:
+                feature_frame = json.loads(args.feature_frame_json.read_text())
+                if not isinstance(feature_frame, list):
+                    print("ERROR: feature-frame-json must be a JSON list", file=sys.stderr)
+                    raise SystemExit(1)
+            try:
+                artifacts = run_weekly_shadow(
+                    slate_path=args.slate,
+                    as_of=args.as_of,
+                    output_dir=args.output_dir,
+                    market_path=args.market,
+                    registry_root=args.registry_root,
+                    repo_root=args.repo_root,
+                    model_id=args.model_id,
+                    protocol_version=args.protocol,
+                    matrix_schema_version=args.matrix_schema,
+                    feature_frame=feature_frame,
+                )
+            except (
+                ShadowRunError,
+                ShadowSelectionError,
+                ValueError,
+                FileExistsError,
+                FileNotFoundError,
+            ) as exc:
+                print(f"ERROR: {exc}", file=sys.stderr)
+                raise SystemExit(1) from exc
+            print(artifacts["output_dir"])
+            print(artifacts["shadow_manifest"])
+            print(artifacts["shadow_compare"])
+            print(artifacts["shadow_card"])
 
 
 if __name__ == "__main__":

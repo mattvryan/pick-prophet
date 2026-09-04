@@ -393,24 +393,28 @@ Tests and acceptance:
 
 ## M13 — Weekly shadow-mode integration
 
+**Status:** complete (experimental shadow plumbing; live outcome `no_ml_shadow`)
 **Branch:** `production/m13-shadow-model`
 **Dependencies:** M12
+**Docs:** [`docs/weekly_shadow.md`](weekly_shadow.md)
 
 Scope:
 
-- Add a weekly shadow command/mode that loads only compatible registered models.
-- Enforce training/serving feature parity and point-in-time joins.
-- Emit market and shadow picks/probabilities, adjustment, disagreement, warnings,
-  and all model/input hashes without altering the market card.
-- Fall back visibly to market when optional features are unavailable.
-- Extend grading to compare market, shadow, and authorized manual decisions.
-- Never silently change final or submitted picks.
+- [x] Add a weekly shadow command/mode that loads only compatible registered models.
+- [x] Enforce training/serving feature parity and point-in-time joins (PIT audit +
+  residual serving contract; boosted interface fail-closed until implemented).
+- [x] Emit market and shadow picks/probabilities, disagreement, warnings, and
+  model/input hashes without altering the market card.
+- [x] Fall back visibly via explicit `no_ml_shadow` when no ML tip exists (null ML
+  columns; never silent market substitution for an unavailable ML model).
+- [x] Extend grading to compare market, shadow, and authorized manual decisions.
+- [x] Never silently change final or submitted picks.
 
 Tests and acceptance:
 
-- Test parity, incompatible schemas, missing-signal fallback, and immutable final
-  artifacts.
-- Process at least one slate end to end with output labelled experimental.
+- [x] Test parity, incompatible schemas, missing-signal/ineligible tips, and
+  immutable final artifacts.
+- [x] Process at least one slate end to end with output labelled experimental.
 
 ## Deferred feature-family PRs
 

@@ -55,6 +55,7 @@ def grade_week(
     submission_path: Path | str | None = None,
     recommendations_path: Path | str | None = None,
     tiebreaker_path: Path | str | None = None,
+    shadow_dir: Path | str | None = None,
     output_dir: Path | str | None = None,
     graded_at: str | None = None,
 ) -> dict[str, Path]:
@@ -107,6 +108,22 @@ def grade_week(
         for row in _load_csv(recommendations_path):
             baseline_by_order[int(row["display_order"])] = row
 
+    shadow_status = "not_provided"
+    shadow_by_game: dict[str, dict[str, str]] = {}
+    if shadow_dir is not None:
+        from pick_prophet.weekly.shadow import load_shadow_pack
+
+        shadow_path = Path(shadow_dir)
+        shadow_manifest = load_shadow_pack(shadow_path)
+        shadow_status = str(shadow_manifest.get("status") or "unknown")
+        for row in _load_csv(shadow_path / "shadow_compare.csv"):
+            gid = str(row.get("cfbd_game_id") or "")
+            if not gid:
+                raise ValueError("shadow_compare row missing cfbd_game_id")
+            if gid in shadow_by_game:
+                raise ValueError(f"duplicate shadow game_id: {gid}")
+            shadow_by_game[gid] = row
+
     game_rows: list[dict[str, Any]] = []
     y_true: list[int] = []
     probs: list[float] = []
@@ -116,6 +133,10 @@ def grade_week(
     override_games = 0
     override_correct = 0
     override_baseline_correct = 0
+    shadow_games = 0
+    shadow_correct = 0
+    market_shadow_agree = 0
+    submitted_shadow_agree = 0
 
     for pick in sorted(submitted_picks, key=lambda row: int(row["display_order"])):
         order = int(pick["display_order"])
@@ -151,6 +172,21 @@ def grade_week(
             y_true.append(1 if is_correct else 0)
             probs.append(pick_prob)
 
+        gid = str(result.get("cfbd_game_id") or pick.get("cfbd_game_id") or "")
+        shadow_row = shadow_by_game.get(gid) if gid else None
+        shadow_pick = None
+        shadow_ok = None
+        if shadow_status == "ml_shadow" and shadow_row is not None:
+            shadow_pick = (shadow_row.get("shadow_pick") or "").strip() or None
+            if shadow_pick:
+                shadow_games += 1
+                shadow_ok = shadow_pick == winner
+                shadow_correct += int(bool(shadow_ok))
+                if baseline_pick and shadow_pick == baseline_pick:
+                    market_shadow_agree += 1
+                if shadow_pick == submitted:
+                    submitted_shadow_agree += 1
+
         game_rows.append(
             {
                 "display_order": order,
@@ -159,12 +195,14 @@ def grade_week(
                 "home_team": pick["home_team"],
                 "submitted_pick": submitted,
                 "baseline_pick": baseline_pick,
+                "shadow_pick": shadow_pick,
                 "winner": winner,
                 "away_points": int(result["away_points"]),
                 "home_points": int(result["home_points"]),
                 "total_points": int(result["total_points"]),
                 "correct": is_correct,
                 "baseline_correct": baseline_ok,
+                "shadow_correct": shadow_ok,
                 "manual_override": override,
                 "market_win_probability": pick_prob,
             }
@@ -222,12 +260,19 @@ def grade_week(
         "recommendations_path": str(recommendations_path)
         if recommendations_path.exists()
         else None,
+        "shadow_dir": str(shadow_dir) if shadow_dir is not None else None,
+        "shadow_status": shadow_status,
         "games": games,
         "correct": correct,
         "accuracy": correct / games if games else None,
         "baseline_games": baseline_games,
         "baseline_correct": baseline_correct,
         "baseline_accuracy": baseline_correct / baseline_games if baseline_games else None,
+        "shadow_games": shadow_games,
+        "shadow_correct": shadow_correct,
+        "shadow_accuracy": shadow_correct / shadow_games if shadow_games else None,
+        "market_shadow_agree": market_shadow_agree,
+        "submitted_shadow_agree": submitted_shadow_agree,
         "override_games": override_games,
         "override_correct": override_correct,
         "override_accuracy": override_correct / override_games if override_games else None,
@@ -239,7 +284,8 @@ def grade_week(
         "games_detail": game_rows,
         "notes": (
             "Confidence points are omitted for standard contests. "
-            "market_win_probability is scored as P(submitted pick wins)."
+            "market_win_probability is scored as P(submitted pick wins). "
+            "no_ml_shadow packs are not double-counted as shadow model performance."
         ),
     }
 
@@ -258,6 +304,10 @@ def grade_week(
         f"- Market baseline: **{baseline_correct}/{baseline_games}**"
         if baseline_games
         else "- Market baseline: unavailable",
+        f"- Shadow status: `{shadow_status}`",
+        f"- Shadow model: **{shadow_correct}/{shadow_games}**"
+        if shadow_games
+        else "- Shadow model: not scored",
         f"- Manual overrides: **{override_correct}/{override_games}**"
         if override_games
         else "- Manual overrides: none",
