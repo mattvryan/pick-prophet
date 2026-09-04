@@ -95,6 +95,8 @@ def build_rows(snapshot_dir: Path) -> list[dict[str, Any]]:
             "fpi_away": None,
             "sp_home": None,
             "sp_away": None,
+            "elo_home": _get(game, "home_pregame_elo", "homePregameElo"),
+            "elo_away": _get(game, "away_pregame_elo", "awayPregameElo"),
             "source_snapshot": snapshot_dir.name,
         }
         # Use the preceding week. This conservative join avoids post-game values.
@@ -103,8 +105,10 @@ def build_rows(snapshot_dir: Path) -> list[dict[str, Any]]:
             row[f"{poll}_home_rank"] = ranks.get((feature_week, poll, home))
             row[f"{poll}_away_rank"] = ranks.get((feature_week, poll, away))
         for name, index in ratings.items():
-            row[f"{name}_home"] = index.get((feature_week, home))
-            row[f"{name}_away"] = index.get((feature_week, away))
+            if row.get(f"{name}_home") is None:
+                row[f"{name}_home"] = index.get((feature_week, home))
+            if row.get(f"{name}_away") is None:
+                row[f"{name}_away"] = index.get((feature_week, away))
         output.append(row)
     return output
 

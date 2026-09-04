@@ -322,6 +322,7 @@ Every implementation handoff should state:
 | 2026-09-04 | Keep all-FBS and confirmed ESPN-slate evaluation separate | ESPN's selection process changes the game distribution and may bias results |
 | 2026-09-04 | Preserve manual picks separately from model output | Required to measure whether qualitative intervention helps or hurts |
 | 2026-09-04 | Treat the screenshot's left team as away and lock times as America/Denver | All ten pairings are consistent with that orientation; retain as an explicit assumption pending user confirmation |
+| 2026-09-04 | Do not blend pregame Elo into the Week 1 market baseline | On identical Week 1 rows across eight walk-forward folds, spread + Elo had worse log loss and Brier score than spread alone |
 | 2026-09-04 | Ship weekly validate/recommend machinery before publishing the Week 1 card | Lets the market baseline be tested on synthetic fixtures without locking in this weekend's selections early |
 
 ## Immediate human inputs needed
