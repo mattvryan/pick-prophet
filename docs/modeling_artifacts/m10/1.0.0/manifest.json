@@ -6,7 +6,7 @@
     "anomalous_season.csv": "46f3ce49423919e6fc2a92461a9cac65eeca771ec9a310d27337672d977dfa68",
     "calibration_summary.csv": "f71ea6d2954b95ed25f2b6e96782b6453179efd5f3af4e26ddc4304a9897c629",
     "coverage_missingness.csv": "04eafd1bbc7dc44d2d65e4098ecd92b83f4ce32264ac910f7eebe3c7591f19ce",
-    "decision_worksheet.csv": "01ebce04ba6d68d7cfe5e94a8a8ad93e1278632eb5b1b1cc0f4a542bfbef020f",
+    "decision_worksheet.csv": "deffbebca11a81ed5659d182704e37e6b696dc3650d4d53696ca9bb64f559eda",
     "fold_metrics.csv": "71875870222628cd6892a1681b32d6e960d6dd7de1c47e9ac79e464ee46a1cce",
     "incremental_value_report_generated.md": "288a54220999a902b0357bd711799b3319da00cf262627bcd82c3e6f1a0d3781",
     "overall_metrics.csv": "ecbd34b1a39173f284283d0851504db68a27313be40ad7a5321727e10c3a5ad1",
@@ -24,6 +24,7 @@
     "fit/summary.json",
     "fit/run_manifest.json"
   ],
+  "human_dispositions_recorded": true,
   "inference_seasons": [
     2022,
     2023,
@@ -37,6 +38,8 @@
   "pr": "https://github.com/mattvryan/pick-prophet/pull/32",
   "pr_merge_commit": "d003407feab30004624580578a62c2b94eceac91",
   "protocol_version": "1.0.0",
+  "reviewed_at_utc": "2026-09-04T21:20:02Z",
+  "reviewer": "Matt Ryan",
   "source_matrix_path": "data/processed/matrix/games_matrix_v1.csv",
   "source_matrix_sha256": "238865ccf9060c5a68563c2bd8873aabef0977bfb3a263f387e11f9fdd3a506d"
 }

@@ -1,0 +1,65 @@
+{
+  "artifact_version": "1.0.0",
+  "decision_version": "m10-decisions-1.0.0",
+  "decision_worksheet_path": "docs/modeling_artifacts/m10/1.0.0/decision_worksheet.csv",
+  "decision_worksheet_sha256": "deffbebca11a81ed5659d182704e37e6b696dc3650d4d53696ca9bb64f559eda",
+  "evidence_manifest_path": "docs/modeling_artifacts/m10/1.0.0/manifest.json",
+  "evidence_manifest_sha256": "c62b1a134a98c727109788dee7c930a61678f6a9bac899b8f5415dae26e7c6cf",
+  "evidence_version": "m10-1.0.0",
+  "inference_seasons": [
+    2022,
+    2023,
+    2024,
+    2025
+  ],
+  "leave_family_out_status": "not_applicable",
+  "m11_block_reason": "promoted_features is empty; M11 must fail closed unless design explicitly permits a baseline-only/no-challenger outcome.",
+  "m11_blocked": true,
+  "matrix_schema_version": "1.0.0",
+  "promoted_features": [],
+  "protocol_version": "1.0.0",
+  "rejected_families": [
+    "history",
+    "site_temporal"
+  ],
+  "rejected_features": [
+    "away_classification",
+    "away_conference",
+    "away_days_rest",
+    "away_entering_losses",
+    "away_entering_wins",
+    "away_previous_result",
+    "away_sos",
+    "home_classification",
+    "home_conference",
+    "home_days_rest",
+    "home_entering_losses",
+    "home_entering_wins",
+    "home_field_advantage",
+    "home_previous_result",
+    "is_week_1",
+    "is_weeks_1_3",
+    "line_provider_count",
+    "spread_home",
+    "total"
+  ],
+  "rejected_units": [
+    "combined"
+  ],
+  "review_only_families": [
+    "market_context"
+  ],
+  "review_only_features": [
+    "home_sos"
+  ],
+  "reviewed_at_utc": "2026-09-04T21:20:02Z",
+  "reviewer": "Matt Ryan",
+  "status": "no_features_promoted",
+  "unavailable_features": [
+    "spread_home_open",
+    "total_open",
+    "spread_move_home",
+    "total_move"
+  ],
+  "unavailable_reason": "Opening/movement fields are structurally missing under CFBD historical timing and remain unavailable (not converted to reject)."
+}
