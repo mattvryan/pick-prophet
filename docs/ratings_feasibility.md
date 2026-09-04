@@ -37,7 +37,7 @@ This PR ships **no adapters and no join changes**. Specifically:
 > publication timestamp, so agreement cannot be upgraded into a leakage
 > guarantee.
 
-Two corollaries are applied throughout this memo:
+Three corollaries are applied throughout this memo:
 
 1. **Absence of a documented restriction is not permission.** Where licensing
    terms are silent or ambiguous, the source is labeled `unknown`, not
@@ -45,6 +45,12 @@ Two corollaries are applied throughout this memo:
 2. **Unresolved facts are labeled.** Claims are tagged `inference` where they
    are our reasoning rather than a publisher statement, and `unknown` where no
    primary source could be found. Everything else cites a primary source.
+3. **Computation time is not publication time.** A field documenting *when a
+   provider computed a value* bounds what information could have entered that
+   value; it does not establish when the value became retrievable by a
+   consumer. Publication/availability time is recorded as `absent` or `unknown`
+   unless a primary source states it. This memo therefore never reports a
+   computation timestamp under the "publication timestamp" heading.
 
 ## 2. Current production Elo behavior (documented, not changed)
 
@@ -380,8 +386,12 @@ Each dossier answers items 1–9 of the design's source evaluation contract.
    query parameters — `year`, `team`, `conference` — and **no `week`**;[^cfbd-ratings-v2]
    the legacy swagger agrees.[^cfbd-swagger] One row per team per season.
 2. **Temporal fields.** *Effective time*: the season, with no intra-season
-   resolution. *Publication time*: absent. *Retrieval time*: ours only. A pull
-   made after a season necessarily reflects end-of-season information.
+   resolution — the endpoint exposes no field narrowing the observation to a
+   week.[^cfbd-ratings-v2] *Publication time*: absent. *Computation time*:
+   absent. *Retrieval time*: ours only. `inference`: a season-labeled rating
+   pulled after that season most plausibly reflects end-of-season information,
+   but CFBD documents nothing about when the served value is computed, so this
+   is our reading rather than a publisher statement.
 3. **Retrieval.** `GET /ratings/fpi?year={season}`, already ingested as
    `fpi.json` and retained raw-only (`Endpoint("fpi", "/ratings/fpi")`).
 4. **Licensing / redistribution.** Same CFBD Terms.[^cfbd-terms] Additionally,
@@ -393,18 +403,32 @@ Each dossier answers items 1–9 of the design's source evaluation contract.
    response.[^cfbd-ratings-v2]
 6. **Coverage.** Believed complete at FBS season level for the research window,
    but coverage is irrelevant given the temporal defect.
-7. **Revision behavior.** A season-level rating retrieved today *is* the
-   post-season revision. There is no mechanism to recover the value as it stood
-   in week *w*.
-8. **Join-before-kickoff.** **No.** There is no observation whose effective or
-   publication time can be placed before a mid-season `kickoff_utc`. Joining
-   this to a week-*w* game injects end-of-season information — exactly the
-   leakage the existing `build.py` comment guards against.
-9. **Recommendation: `omit`.** Not a close call. The public CFBD FPI endpoint
-   has no week parameter, so there is nothing to make PIT-safe; the only
-   available observation embeds the full season's results. It must stay raw-only
-   and unjoined. This is a statement about *this endpoint*, not about FPI as a
-   metric — see § 4.4 for the weekly FPI route.
+7. **Revision behavior.** **Unknown.** CFBD guarantees no correction
+   schedule.[^cfbd-terms] We found no primary source stating that the endpoint
+   overwrites a season row in place, nor any archive of prior values, so the
+   memo does **not** assert that today's value is the post-season or final
+   revision — that would be an unsupported claim read off a schema.
+   `inference`: since the response carries one row per team-season with no
+   week, season-type, or version discriminator,[^cfbd-ratings-v2] whatever
+   revision the endpoint serves is the only one obtainable, and there is no
+   mechanism *in this endpoint* to recover the value as it stood in week *w*.
+   Which revision that is, and whether it changes between pulls, is untested; a
+   re-pull-and-diff probe against hashed snapshots would answer it.
+8. **Join-before-kickoff.** **No**, and this conclusion does not depend on
+   item 7. The blocking fact is documented, not inferred: the endpoint has no
+   week parameter and no publication or computation timestamp, so **no
+   observation can be placed before a mid-season `kickoff_utc` at all**. A
+   week-*w* join would therefore be asserting a timing property that no field
+   in the response supports. `inference`, and the reason the existing
+   `build.py` comment is prudent: a season-labeled value most likely also
+   embeds that season's later results.
+9. **Recommendation: `omit`.** Not a close call, and it rests only on
+   documented facts: the public CFBD FPI endpoint has no week parameter and no
+   temporal field of any kind,[^cfbd-ratings-v2] so there is nothing to make
+   PIT-safe — a week-*w* join would be unfalsifiable rather than merely
+   unproven. It must stay raw-only and unjoined. This is a statement about
+   *this endpoint*, not about FPI as a metric — see § 4.5 for the weekly FPI
+   route.
 
 ### 4.4 CFBD SP+ (`/ratings/sp`)
 
@@ -412,8 +436,10 @@ Each dossier answers items 1–9 of the design's source evaluation contract.
    `team` and **no `week`**;[^cfbd-ratings-v2] the legacy swagger shows the same
    two parameters plus `minimum: 1970`.[^cfbd-swagger] One row per team per
    season.
-2. **Temporal fields.** *Effective time*: the season. *Publication time*:
-   absent. *Retrieval time*: ours only. Same end-of-season contamination as FPI.
+2. **Temporal fields.** *Effective time*: the season, with no week
+   field.[^cfbd-ratings-v2] *Publication time*: absent. *Computation time*:
+   absent. *Retrieval time*: ours only. Same `inference` as § 4.3 item 2 about
+   end-of-season contamination, carrying the same label.
 3. **Retrieval.** `GET /ratings/sp?year={season}`, ingested as `sp.json` and
    retained raw-only (`Endpoint("sp", "/ratings/sp")`).
 4. **Licensing / redistribution.** Same CFBD Terms.[^cfbd-terms] SP+ is Bill
@@ -423,11 +449,20 @@ Each dossier answers items 1–9 of the design's source evaluation contract.
    ID.[^cfbd-ratings-v2]
 6. **Coverage.** Season-level FBS coverage back to 1970 per the swagger
    minimum,[^cfbd-swagger] but again irrelevant given the temporal defect.
-7. **Revision behavior.** As with FPI, today's value is the final revision;
-   in-season states are unrecoverable from this endpoint.
-8. **Join-before-kickoff.** **No**, for the same reason as § 4.3.
-9. **Recommendation: `omit`.** Identical reasoning to FPI. Keep raw-only and
-   unjoined.
+7. **Revision behavior.** **Unknown**, exactly as in § 4.3 item 7. No primary
+   source states that today's value is the final or post-season revision, and
+   the memo does not claim it; CFBD guarantees no correction
+   schedule.[^cfbd-terms] `inference`: with one undiscriminated row per
+   team-season,[^cfbd-ratings-v2] in-season states are unrecoverable *from this
+   endpoint* whichever revision is being served.
+8. **Join-before-kickoff.** **No**, for the same documented reason as § 4.3
+   item 8: no week parameter and no publication or computation timestamp, so no
+   observation can be placed before a mid-season `kickoff_utc`. The conclusion
+   is independent of item 7.
+9. **Recommendation: `omit`.** Identical reasoning to FPI, and likewise
+   unchanged by the item 7 relabel — the recommendation turns on documented
+   absence of week granularity and timestamps, not on any assumption about
+   which revision is served. Keep raw-only and unjoined.
 
    *Adjacent lead, explicitly not in scope.* While confirming the above, we
    noted that CFBD's newer `/ratings/core` endpoint returns `throughWeek`,
@@ -443,15 +478,27 @@ Each dossier answers items 1–9 of the design's source evaluation contract.
 1. **Availability.** Weekly, one row per team-week, "with FPI and its components
    as published that week".[^cfbfastr-fpi] Published coverage is 21 seasons,
    2005–2025, plus a partial 2026, as 63 assets totaling 18.4 MB.[^sdv-fpi-release]
-   This fully spans our 2017–2025 research window.
+   This fully spans our 2017–2025 research window. Note that "as published that
+   week" is the dataset's prose description of weekly cadence; it is not a
+   per-row publication timestamp, and it is not treated as one below.
 2. **Temporal fields.** **This is the only in-scope source with explicit
-   as-of metadata**, and the distinctions are documented precisely:
+   as-of metadata**, and the distinctions are documented precisely — but note
+   that none of the documented fields is a publication timestamp:
    - `run_date_time_key` — "ESPN's run key for the snapshot, as an integer
      timestamp (e.g. 20241021040000). This is the AS-OF date the snapshot
      represents, which is not the same as `last_updated` (when ESPN computed
      it)".[^cfbfastr-fpi] → *effective time*.
-   - `last_updated` — when ESPN computed the snapshot.[^cfbfastr-fpi] →
-     *publication/computation time*.
+   - `last_updated` — when ESPN **computed** the snapshot.[^cfbfastr-fpi] →
+     *computation time only*. The publisher's own wording is "when ESPN
+     computed it"; nothing in the column dictionary says when the value became
+     retrievable by a consumer. Per corollary 3 in § 1, this is **not** a
+     publication timestamp and is not reported as one.
+   - *Publication / availability time*: **absent from the documented schema,
+     and `unknown`.** No reviewed primary source states when an ESPN FPI
+     snapshot, or the sportsdataverse re-publication of it, first became
+     available. The sportsdataverse release asset carries its own upload time,
+     which is a property of the redistribution, not of the rating.
+   - *Retrieval time*: ours only, and only once an adapter downloads an asset.
    - `snapshot_is_contemporaneous` — "True when the snapshot was computed inside
      its own season's window ... i.e. it is a live weekly run rather than a
      retrospective backfill. False for every row before 2015, which ESPN
@@ -464,8 +511,10 @@ Each dossier answers items 1–9 of the design's source evaluation contract.
      2024-12-15). Filter these out for any point-in-time or backtest
      use."[^cfbfastr-fpi]
 
-   The publisher therefore not only exposes both timestamps but names the exact
-   leakage trap and instructs consumers to filter it.
+   The publisher therefore exposes an as-of key, a computation time, and two
+   per-row PIT flags, and names the exact leakage trap while instructing
+   consumers to filter it. That is more temporal metadata than any other source
+   here — but it is still one step short of a publication timestamp.
 3. **Retrieval.** **No package install is required**, which resolves the
    dependency concern. Release assets are "plain files on a public URL" with
    "Direct download (no auth, no API key)" at
@@ -494,81 +543,137 @@ Each dossier answers items 1–9 of the design's source evaluation contract.
    row before 2015".[^cfbfastr-fpi] For our 2017–2025 window that is not a
    limitation. FBS row-level completeness within the window is **unverified**
    here — we did not download the assets.
-7. **Revision behavior.** **Documented, and the most honest of any source
-   reviewed.** ESPN overwrites the week-1 slot with a late-season computation
-   (2024 week 1 is stamped 2024-12-15), and pre-2015 rows are a single
-   retrospective pass.[^cfbfastr-fpi] Both conditions are flagged per row rather
-   than left for the consumer to discover.
-8. **Join-before-kickoff.** **Yes, in principle — the only source reviewed for
-   which this is true.** An adapter can filter to
+7. **Revision behavior.** **Documented by the redistributor, and the most
+   forthcoming of any source reviewed — but unverified here.** ESPN overwrites
+   the week-1 slot with a late-season computation (2024 week 1 is stamped
+   2024-12-15), and pre-2015 rows are a single retrospective
+   pass.[^cfbfastr-fpi] Both conditions are flagged per row rather than left for
+   the consumer to discover. This is a documentation claim about ESPN's
+   behavior, taken from cfbfastR's column dictionary rather than from ESPN, and
+   no asset was downloaded to check it (item 9).
+8. **Join-before-kickoff.** **Partially — stronger than any other source here,
+   but not a proven publication-time join.** An adapter can filter to
    `snapshot_is_contemporaneous == True` and `snapshot_out_of_sequence == False`,
-   then select the latest row whose `last_updated` (computation time) is strictly
-   before `kickoff_utc`. Because both an as-of key and a computation timestamp
-   are present, the strict-inequality predicate the design asks for is actually
-   expressible instead of assumed.
-9. **Recommendation: `investigate further`.** On temporal semantics this is the
-   strongest candidate in the memo and the only one that could support a
-   genuinely defensible PIT claim. It is held back by two unresolved
-   non-technical questions, not by data quality: (a) the redistribution
-   question in item 4, which needs a human decision on whether ESPN-derived
-   weekly FPI may be stored and whether derived features may be committed; and
-   (b) the ESPN↔CFBD team-ID crosswalk in item 5, which introduces a second
-   join needing its own audit trail. A follow-up should also verify the
-   timestamp fields empirically on one downloaded season before any adapter is
-   designed, since every claim in items 2 and 7 is currently documentation-based
-   rather than observed.
+   then select the latest row whose `last_updated` is strictly before
+   `kickoff_utc`. What that predicate buys, stated exactly:
+   - It is a **computation-time** predicate. `inference`: if `last_updated` is
+     accurate and row-specific, a snapshot computed before kickoff cannot
+     contain that game's result, which bounds the *input* information and rules
+     out the most direct form of leakage. Both conditionals are untested here
+     (item 9).
+   - It is **not** an availability predicate. Because publication/availability
+     time is `unknown` (item 2), the join cannot assert that the value was
+     retrievable before kickoff — only that it had been computed. A backtest
+     using it is therefore claiming "no future results in the inputs", not
+     "this is what we could have acted on at the time".
+   - The as-of key plus the two PIT flags make the strict-inequality predicate
+     the design asks for *expressible* rather than assumed, which is the real
+     advance over the CFBD surfaces. Expressible is not the same as verified.
+9. **Recommendation: `investigate further`** — unchanged, and for the same
+   reason the CFBD Elo surfaces are not promoted: no publication timestamp is
+   available for any in-scope source. On temporal semantics this remains the
+   strongest candidate in the memo, because it is the only one that exposes a
+   computation time and per-row PIT flags at all. It is held back by three
+   unresolved questions: (a) the redistribution question in item 4, which needs
+   a human decision on whether ESPN-derived weekly FPI may be stored and whether
+   derived features may be committed; (b) the ESPN↔CFBD team-ID crosswalk in
+   item 5, which introduces a second join needing its own audit trail; and
+   (c) the publication/availability gap in items 2 and 8 — a computation
+   timestamp is not proof that the snapshot was retrievable before kickoff, and
+   no primary source establishing availability was found. A follow-up should
+   also verify the timestamp fields empirically on one downloaded season before
+   any adapter is designed, since every claim in items 2 and 7 is currently
+   documentation-based rather than observed.
 
 ### 4.6 Credible weekly SP+ archive
 
-Searching for a PIT-safe weekly SP+ source produced two candidate families,
-and **neither is usable as a point-in-time archive**.
+Searching for a PIT-safe weekly SP+ source produced two candidate families, and
+**neither is usable as a point-in-time archive**. Both are carried through the
+same items 1–9 as every other dossier, answered as **(a)** ESPN's weekly SP+
+articles by Bill Connelly and **(b)** sportsdataverse's `cfb_ratings_weekly`
+release.
 
-**(a) ESPN weekly SP+ articles (Bill Connelly).** SP+ rankings are genuinely
-published weekly with per-article timestamps — for example the post-Week 11
-2023 rankings are bylined "Bill Connelly, ESPN Staff Writer Nov 12, 2023,
-12:00 PM ET" and carry a full ratings table, and the Week 8 2023 installment
-carries `datePublished` `2023-10-22T15:30:00Z` in its syndicated metadata. So
-publication timestamps *exist* at article granularity. But:
-
-- *Retrieval* would mean scraping ESPN Insider article bodies. The content is
-  paywalled, HTML-formatted, and has no stable machine-readable endpoint.
-- *Licensing* is the harder problem: ESPN article content is not ours to
-  redistribute, and CFBD's Terms grant no third-party rights.[^cfbd-terms]
-  `unknown` at best, and realistically prohibited.
-- *Identifiers* are display team names inside prose tables, with no IDs.
-- *Coverage* across 2017–2025 for every week would require locating and parsing
-  well over a hundred paywalled articles, with no guarantee of a complete set.
-
-**(b) `cfb_ratings_weekly` (sportsdataverse).** This release does provide weekly
-opponent-adjusted team ratings for 2004–2025 in long format with a
-`through_week` column.[^sdv-ratings-weekly] Two facts disqualify it as *SP+*
-and complicate it as a PIT source:
-
-- It is **not Bill Connelly's SP+**. The related `cfb_ratings` release describes
-  the family as "SP+-**style**" opponent-adjusted ratings built by
-  sportsdataverse over released play-by-play — a different system that happens
-  to resemble SP+.[^sdv-ratings] Treating it as SP+ would misattribute the
-  metric.
-- Its as-of semantics are a **retrospective refit**, and the publisher is
-  admirably explicit about the trap: "`through_week == W` is **inclusive of
-  week W**: the snapshot contains games PLAYED in week W. To project week W, use
-  the `through_week == W - 1` row. Filtering `through_week == W` and predicting
-  week W leaks that week's results." They verified this empirically against 2024
-  data: 97.0% consistent with the inclusive reading versus 58.7% with the
-  exclusive one.[^sdv-ratings-weekly] `inference`: because "the ridge is refit
-  on everything up to week W",[^sdv-ratings-weekly] a `through_week == W - 1`
-  row is *input*-PIT-safe (no future game results enter the fit) even though it
-  was computed retrospectively and therefore has no contemporaneous publication
-  time.
-
-**Recommendation: `omit`** for weekly SP+ specifically. No credible,
-reproducible, license-clear weekly SP+ archive with as-of timestamps was
-identified. The ESPN articles have timestamps but are unscrapable and
-unlicensable; `cfb_ratings_weekly` is license-clearer and PIT-tractable but is a
-different metric and must not be labeled SP+. If a future PR wants an
-opponent-adjusted weekly rating, it should evaluate `cfb_ratings_weekly` **on
-its own terms and under its own name**, using the `through_week == W - 1` rule,
-as a new source dossier — not as a stand-in for SP+.
+1. **Availability.**
+   (a) Weekly in season, as ESPN Insider articles containing a full ratings
+   table in prose — e.g. the post-Week 11 2023 installment (§ 7, leads
+   consulted). There is no endpoint, feed, or dataset release; availability is
+   article-by-article.
+   (b) Weekly, 2004–2025, published in long format with a `through_week`
+   column.[^sdv-ratings-weekly] Note before anything else that **this is not
+   Bill Connelly's SP+**: the related `cfb_ratings` release describes the family
+   as "SP+-**style**" opponent-adjusted ratings built by sportsdataverse over
+   released play-by-play.[^sdv-ratings] Treating it as SP+ would misattribute
+   the metric, so it is evaluated here only to close out the search.
+2. **Temporal fields.**
+   (a) *Publication time*: **present, and the only genuine one encountered in
+   this memo** — the post-Week 11 2023 article is bylined "Bill Connelly, ESPN
+   Staff Writer Nov 12, 2023, 12:00 PM ET" and the Week 8 2023 installment
+   carries `datePublished` `2023-10-22T15:30:00Z` in syndicated metadata (§ 7).
+   But it is attached to an article, not to a team row. *Effective time*: the
+   week the article describes, stated in prose. *Computation time*: absent.
+   (b) *Effective time*: `through_week`, and the publisher is explicit that it
+   is **inclusive of week W** — "the snapshot contains games PLAYED in week W.
+   To project week W, use the `through_week == W - 1` row. Filtering
+   `through_week == W` and predicting week W leaks that week's results", a
+   reading they verified against 2024 data at 97.0% consistency versus 58.7%
+   for the exclusive reading.[^sdv-ratings-weekly] *Publication time* and
+   *computation time*: **absent per row**; the ratings are a retrospective
+   refit, so no row carries a contemporaneous timestamp. Per corollary 3 in
+   § 1, nothing here may be reported as a publication time.
+3. **Retrieval.**
+   (a) Would require scraping ESPN Insider article bodies: paywalled,
+   HTML-formatted prose with no stable machine-readable endpoint. Not
+   reproducible.
+   (b) Release assets on public URLs, the same mechanism as § 4.5 item 3.
+4. **Licensing / redistribution.**
+   (a) The harder problem. ESPN article content is not ours to redistribute,
+   and CFBD's Terms grant no third-party rights.[^cfbd-terms] `unknown` at best
+   and realistically prohibited.
+   (b) `unknown`, and inherits the § 4.5 item 4 analysis: the
+   `sportsdataverse-data` repo is MIT,[^sdv-license] but the ratings are built
+   over upstream play-by-play, and a redistributor cannot grant rights it does
+   not hold upstream. License-clearer than (a); not resolved.
+5. **Stable identifiers.**
+   (a) Display team names inside prose tables. No IDs, so any use would need a
+   name join with a full audit trail.
+   (b) **`unknown`.** The release describes long format keyed by team and
+   `through_week`,[^sdv-ratings-weekly] but we did not download an asset, so
+   whether a numeric team ID is present — and whose ID scheme it would be — is
+   unverified.
+6. **Coverage.**
+   (a) `unknown` and probably incomplete. Covering 2017–2025 week by week would
+   mean locating and parsing well over a hundred paywalled articles, with no
+   guarantee a complete set exists or remains online.
+   (b) 2004–2025 published,[^sdv-ratings-weekly] which spans the research
+   window. Row-level FBS completeness is **unverified** — no asset was
+   downloaded.
+7. **Revision behavior.**
+   (a) **`unknown`.** A published article is fixed once posted, but SP+ itself
+   is recomputed weekly and no archive of corrections or restatements was
+   found.
+   (b) **Documented: every row is a recomputation.** "The ridge is refit on
+   everything up to week W",[^sdv-ratings-weekly] so the series is a
+   retrospective refit rather than a sequence of live weekly runs.
+8. **Join-before-kickoff.**
+   (a) **Not achievable in practice.** Article publication timestamps do
+   precede the following week's kickoffs, so the timing predicate would in
+   principle be expressible — but items 3 and 4 make it moot: a source we
+   cannot licensably or reproducibly retrieve cannot be joined at all.
+   (b) **Partially, and only on inputs.** `inference`: because the fit uses
+   everything up to week W, a `through_week == W - 1` row contains no results
+   from week W, so it is *input*-PIT-safe for a week-W game. It was still
+   computed retrospectively with no contemporaneous publication or computation
+   time, so — as in § 4.5 item 8 — this bounds input information without
+   establishing that any such value existed or was available before kickoff.
+9. **Recommendation: `omit`** for weekly SP+ specifically. No credible,
+   reproducible, license-clear weekly SP+ archive with as-of timestamps was
+   identified. The ESPN articles have publication timestamps but are
+   unscrapable and unlicensable; `cfb_ratings_weekly` is license-clearer and
+   PIT-tractable on inputs but is a different metric and must not be labeled
+   SP+. If a future PR wants an opponent-adjusted weekly rating, it should
+   evaluate `cfb_ratings_weekly` **on its own terms and under its own name**,
+   using the `through_week == W - 1` rule, as a new source dossier — not as a
+   stand-in for SP+.
 
 ## 5. Recommendation table
 
@@ -578,8 +683,18 @@ as a new source dossier — not as a stand-in for SP+.
 | CFBD weekly Elo (`/ratings/elo`) | Yes (max-week filter) | No | **No** (name only) | Approximate; no Wk 1 / postseason | `investigate further` (fallback only) |
 | CFBD FPI (`/ratings/fpi`) | **No** (season only) | No | No | **No** | `omit` |
 | CFBD SP+ (`/ratings/sp`) | **No** (season only) | No | No | **No** | `omit` |
-| sportsdataverse weekly FPI (`cfb_fpi_weekly`) | Yes | **Yes** (`last_updated` + as-of key + PIT flags) | Yes (ESPN `team_id`; needs crosswalk) | **Yes, in principle** | `investigate further` |
-| Weekly SP+ (ESPN articles / other archives) | Yes | Yes, but paywalled prose | No | Not licensably | `omit` |
+| sportsdataverse weekly FPI (`cfb_fpi_weekly`) | Yes | **No** — computation time only (`last_updated`); availability `unknown` | Yes (ESPN `team_id`; needs crosswalk) | Inputs only, in principle | `investigate further` |
+| Weekly SP+ — ESPN articles (§ 4.6a) | Yes | Yes, but article-level paywalled prose | No | Not licensably or reproducibly | `omit` |
+| Weekly SP+ — `cfb_ratings_weekly` (§ 4.6b) | Yes | No (retrospective refit, none per row) | `unknown` (not downloaded) | Inputs only, and **not SP+** | `omit` (as SP+) |
+
+The **publication timestamp** column means publication/availability time only.
+A provider-documented *computation* time does not qualify (§ 1, corollary 3);
+where one exists it is named in the cell. On that reading, **no in-scope source
+carries a per-row publication timestamp** — the ESPN SP+ articles are the sole
+place a real publication time was found, and they are unusable for other
+reasons. The **PIT join** column reads "inputs only" where the best available
+predicate bounds what information entered a value without establishing that the
+value was retrievable before kickoff.
 
 ### Canonical Elo recommendation for a future adapter
 
@@ -631,7 +746,7 @@ with its own design doc, tests, and leakage review:
 | Branch | Scope | Entry gate |
 |---|---|---|
 | `data/m06b-elo-adapter` | Canonical Elo join per § 5; game-level primary, weekly *w−1* audited fallback | Human sign-off on § 5, plus the revision-diff probe and week-0 probe |
-| `data/m06c-fpi-weekly-feasibility` | sportsdataverse `cfb_fpi_weekly`: verify timestamp fields on one downloaded season, resolve ESPN↔CFBD crosswalk audit | **Licensing decision resolved first** (§ 4.5 item 4) |
+| `data/m06c-fpi-weekly-feasibility` | sportsdataverse `cfb_fpi_weekly`: verify the computation-time and PIT-flag fields on one downloaded season, seek any primary source on availability time (§ 4.5 items 2, 8), resolve ESPN↔CFBD crosswalk audit | **Licensing decision resolved first** (§ 4.5 item 4) |
 | `data/m06d-core-ratings-probe` | Evaluate `/ratings/core` (`throughWeek` / `modelVersion`) as a new source dossier | Optional; lowest priority |
 
 No branch above is authorized by this memo. Each requires the human review step
