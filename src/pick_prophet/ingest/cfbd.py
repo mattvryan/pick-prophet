@@ -213,7 +213,7 @@ def ingest_season(
                         {"year": season, "week": week, "seasonType": "both"},
                     )
                     if not isinstance(rows, list):
-                        raise ValueError(
+                        raise TypeError(
                             f"CFBD {endpoint.name} week {week}: expected array"
                         )
                     for row in rows:
@@ -231,7 +231,7 @@ def ingest_season(
                 else {"year": season}
             )
             manifest.setdefault("files", {})[filename] = meta
-        except Exception as exc:  # noqa: BLE001 - persist bad payload then fail loudly
+        except Exception as exc:
             if payload is not None:
                 bad = _persist_bad_payload(target, filename, payload)
                 errors.append(f"{endpoint.name}: {exc} (preserved {bad.name})")
