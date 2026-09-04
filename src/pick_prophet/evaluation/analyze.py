@@ -47,7 +47,10 @@ def analyze_file(input_path: Path, output_path: Path | None = None) -> Path:
         "prospective_holdout": DEFAULT_PROTOCOL.prospective_holdout,
         "seasons": seasons,
         "rows": len(frame),
-        "sampling_frame": "all games involving at least one FBS team; not confirmed ESPN slates",
+        "sampling_frame": (
+            "default all_fbs; verified_espn_pickem only for registry rows with "
+            "exact_id match and verification_status=confirmed"
+        ),
         "line_timing": (
             "CFBD historical provider values are treated as final/closing-like snapshots; "
             "provider observation timestamps are unavailable"

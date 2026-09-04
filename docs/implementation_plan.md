@@ -358,6 +358,7 @@ Every implementation handoff should state:
 | 2026-09-04 | Extend coverage auditor with week tables, structural vs join missingness, and usable-window recommendations | P1.2 gates were thin; M02 must label FPI/SP+ as structurally blocked without dropping seasons |
 | 2026-09-04 | Close M03 on top of P1.1 ingest harden: name-join audit CSV + live smoke doc + overwrite refusal test | Roadmap required ID-preferring joins with an audit trail and fixture-only CI |
 | 2026-09-04 | Ship M04 market contract with vig-free logit, open-field movement, and post-kick rejection when timestamped | CFBD historical lines lack observation times; do not invent open/close order |
+| 2026-09-04 | Ship M05 Pick'em registry with exact-ID joins, fallback isolation, and all_fbs vs verified_espn_pickem labels | No historical archives yet; tooling must not invent slate membership |
 
 ## Immediate human inputs needed
 

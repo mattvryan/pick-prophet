@@ -341,9 +341,17 @@ def merge_pickem(rows: list[dict[str, Any]], path: Path) -> None:
         external = {int(r["game_id"]): r for r in csv.DictReader(handle)}
     for row in rows:
         if match := external.get(row["game_id"]):
-            row["is_pickem_game"] = match["is_pickem_game"].lower() == "true"
+            row["is_pickem_game"] = str(match.get("is_pickem_game", "")).lower() == "true"
+            row["verification_status"] = match.get("verification_status") or None
+            row["match_status"] = match.get("match_status") or None
+            if match.get("sampling_frame"):
+                row["sampling_frame"] = match["sampling_frame"]
             for field in ("espn_home_pick_pct", "espn_expert_home_pct"):
                 row[field] = float(match[field]) if match.get(field) else None
+        else:
+            row.setdefault("sampling_frame", "all_fbs")
+            row.setdefault("verification_status", None)
+            row.setdefault("match_status", None)
 
 
 def write_name_join_audit(audit: list[dict[str, Any]], path: Path) -> Path:

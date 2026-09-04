@@ -1,0 +1,557 @@
+{
+  "note": "Absence from this list does not invent membership; it only tracks where verified archive evidence has not yet been registered.",
+  "recovered_season_weeks": [],
+  "research_seasons": [
+    2017,
+    2018,
+    2019,
+    2020,
+    2021,
+    2022,
+    2023,
+    2024,
+    2025
+  ],
+  "unrecoverable_or_unsearched_season_weeks": [
+    {
+      "season": 2017,
+      "week": 1
+    },
+    {
+      "season": 2017,
+      "week": 2
+    },
+    {
+      "season": 2017,
+      "week": 3
+    },
+    {
+      "season": 2017,
+      "week": 4
+    },
+    {
+      "season": 2017,
+      "week": 5
+    },
+    {
+      "season": 2017,
+      "week": 6
+    },
+    {
+      "season": 2017,
+      "week": 7
+    },
+    {
+      "season": 2017,
+      "week": 8
+    },
+    {
+      "season": 2017,
+      "week": 9
+    },
+    {
+      "season": 2017,
+      "week": 10
+    },
+    {
+      "season": 2017,
+      "week": 11
+    },
+    {
+      "season": 2017,
+      "week": 12
+    },
+    {
+      "season": 2017,
+      "week": 13
+    },
+    {
+      "season": 2017,
+      "week": 14
+    },
+    {
+      "season": 2017,
+      "week": 15
+    },
+    {
+      "season": 2018,
+      "week": 1
+    },
+    {
+      "season": 2018,
+      "week": 2
+    },
+    {
+      "season": 2018,
+      "week": 3
+    },
+    {
+      "season": 2018,
+      "week": 4
+    },
+    {
+      "season": 2018,
+      "week": 5
+    },
+    {
+      "season": 2018,
+      "week": 6
+    },
+    {
+      "season": 2018,
+      "week": 7
+    },
+    {
+      "season": 2018,
+      "week": 8
+    },
+    {
+      "season": 2018,
+      "week": 9
+    },
+    {
+      "season": 2018,
+      "week": 10
+    },
+    {
+      "season": 2018,
+      "week": 11
+    },
+    {
+      "season": 2018,
+      "week": 12
+    },
+    {
+      "season": 2018,
+      "week": 13
+    },
+    {
+      "season": 2018,
+      "week": 14
+    },
+    {
+      "season": 2018,
+      "week": 15
+    },
+    {
+      "season": 2019,
+      "week": 1
+    },
+    {
+      "season": 2019,
+      "week": 2
+    },
+    {
+      "season": 2019,
+      "week": 3
+    },
+    {
+      "season": 2019,
+      "week": 4
+    },
+    {
+      "season": 2019,
+      "week": 5
+    },
+    {
+      "season": 2019,
+      "week": 6
+    },
+    {
+      "season": 2019,
+      "week": 7
+    },
+    {
+      "season": 2019,
+      "week": 8
+    },
+    {
+      "season": 2019,
+      "week": 9
+    },
+    {
+      "season": 2019,
+      "week": 10
+    },
+    {
+      "season": 2019,
+      "week": 11
+    },
+    {
+      "season": 2019,
+      "week": 12
+    },
+    {
+      "season": 2019,
+      "week": 13
+    },
+    {
+      "season": 2019,
+      "week": 14
+    },
+    {
+      "season": 2019,
+      "week": 15
+    },
+    {
+      "season": 2020,
+      "week": 1
+    },
+    {
+      "season": 2020,
+      "week": 2
+    },
+    {
+      "season": 2020,
+      "week": 3
+    },
+    {
+      "season": 2020,
+      "week": 4
+    },
+    {
+      "season": 2020,
+      "week": 5
+    },
+    {
+      "season": 2020,
+      "week": 6
+    },
+    {
+      "season": 2020,
+      "week": 7
+    },
+    {
+      "season": 2020,
+      "week": 8
+    },
+    {
+      "season": 2020,
+      "week": 9
+    },
+    {
+      "season": 2020,
+      "week": 10
+    },
+    {
+      "season": 2020,
+      "week": 11
+    },
+    {
+      "season": 2020,
+      "week": 12
+    },
+    {
+      "season": 2020,
+      "week": 13
+    },
+    {
+      "season": 2020,
+      "week": 14
+    },
+    {
+      "season": 2020,
+      "week": 15
+    },
+    {
+      "season": 2021,
+      "week": 1
+    },
+    {
+      "season": 2021,
+      "week": 2
+    },
+    {
+      "season": 2021,
+      "week": 3
+    },
+    {
+      "season": 2021,
+      "week": 4
+    },
+    {
+      "season": 2021,
+      "week": 5
+    },
+    {
+      "season": 2021,
+      "week": 6
+    },
+    {
+      "season": 2021,
+      "week": 7
+    },
+    {
+      "season": 2021,
+      "week": 8
+    },
+    {
+      "season": 2021,
+      "week": 9
+    },
+    {
+      "season": 2021,
+      "week": 10
+    },
+    {
+      "season": 2021,
+      "week": 11
+    },
+    {
+      "season": 2021,
+      "week": 12
+    },
+    {
+      "season": 2021,
+      "week": 13
+    },
+    {
+      "season": 2021,
+      "week": 14
+    },
+    {
+      "season": 2021,
+      "week": 15
+    },
+    {
+      "season": 2022,
+      "week": 1
+    },
+    {
+      "season": 2022,
+      "week": 2
+    },
+    {
+      "season": 2022,
+      "week": 3
+    },
+    {
+      "season": 2022,
+      "week": 4
+    },
+    {
+      "season": 2022,
+      "week": 5
+    },
+    {
+      "season": 2022,
+      "week": 6
+    },
+    {
+      "season": 2022,
+      "week": 7
+    },
+    {
+      "season": 2022,
+      "week": 8
+    },
+    {
+      "season": 2022,
+      "week": 9
+    },
+    {
+      "season": 2022,
+      "week": 10
+    },
+    {
+      "season": 2022,
+      "week": 11
+    },
+    {
+      "season": 2022,
+      "week": 12
+    },
+    {
+      "season": 2022,
+      "week": 13
+    },
+    {
+      "season": 2022,
+      "week": 14
+    },
+    {
+      "season": 2022,
+      "week": 15
+    },
+    {
+      "season": 2023,
+      "week": 1
+    },
+    {
+      "season": 2023,
+      "week": 2
+    },
+    {
+      "season": 2023,
+      "week": 3
+    },
+    {
+      "season": 2023,
+      "week": 4
+    },
+    {
+      "season": 2023,
+      "week": 5
+    },
+    {
+      "season": 2023,
+      "week": 6
+    },
+    {
+      "season": 2023,
+      "week": 7
+    },
+    {
+      "season": 2023,
+      "week": 8
+    },
+    {
+      "season": 2023,
+      "week": 9
+    },
+    {
+      "season": 2023,
+      "week": 10
+    },
+    {
+      "season": 2023,
+      "week": 11
+    },
+    {
+      "season": 2023,
+      "week": 12
+    },
+    {
+      "season": 2023,
+      "week": 13
+    },
+    {
+      "season": 2023,
+      "week": 14
+    },
+    {
+      "season": 2023,
+      "week": 15
+    },
+    {
+      "season": 2024,
+      "week": 1
+    },
+    {
+      "season": 2024,
+      "week": 2
+    },
+    {
+      "season": 2024,
+      "week": 3
+    },
+    {
+      "season": 2024,
+      "week": 4
+    },
+    {
+      "season": 2024,
+      "week": 5
+    },
+    {
+      "season": 2024,
+      "week": 6
+    },
+    {
+      "season": 2024,
+      "week": 7
+    },
+    {
+      "season": 2024,
+      "week": 8
+    },
+    {
+      "season": 2024,
+      "week": 9
+    },
+    {
+      "season": 2024,
+      "week": 10
+    },
+    {
+      "season": 2024,
+      "week": 11
+    },
+    {
+      "season": 2024,
+      "week": 12
+    },
+    {
+      "season": 2024,
+      "week": 13
+    },
+    {
+      "season": 2024,
+      "week": 14
+    },
+    {
+      "season": 2024,
+      "week": 15
+    },
+    {
+      "season": 2025,
+      "week": 1
+    },
+    {
+      "season": 2025,
+      "week": 2
+    },
+    {
+      "season": 2025,
+      "week": 3
+    },
+    {
+      "season": 2025,
+      "week": 4
+    },
+    {
+      "season": 2025,
+      "week": 5
+    },
+    {
+      "season": 2025,
+      "week": 6
+    },
+    {
+      "season": 2025,
+      "week": 7
+    },
+    {
+      "season": 2025,
+      "week": 8
+    },
+    {
+      "season": 2025,
+      "week": 9
+    },
+    {
+      "season": 2025,
+      "week": 10
+    },
+    {
+      "season": 2025,
+      "week": 11
+    },
+    {
+      "season": 2025,
+      "week": 12
+    },
+    {
+      "season": 2025,
+      "week": 13
+    },
+    {
+      "season": 2025,
+      "week": 14
+    },
+    {
+      "season": 2025,
+      "week": 15
+    }
+  ]
+}
