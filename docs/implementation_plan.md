@@ -280,7 +280,6 @@ missing-value behavior, calibration, limitations, and artifact hash.
 - [x] `weekly record-submission`: immutable ESPN entry confirmation record.
 - [x] `weekly fetch-results` / `weekly grade`: capture scores and grade the card.
 - [ ] `weekly report`: append cumulative market/model/manual comparisons.
-- [ ] `weekly report`: append cumulative market/model/manual comparisons.
 
 The production model must refuse to run when required columns, feature versions,
 or model schema differ. It should degrade to the market baseline when optional
