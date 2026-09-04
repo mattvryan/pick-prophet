@@ -13,7 +13,7 @@ from .metrics import score_probabilities
 def contrast_rng(seed: int, contrast_id: str) -> random.Random:
     """Deterministic RNG stream keyed by protocol seed + stable contrast ID."""
 
-    digest = hashlib.sha256(f"{seed}:{contrast_id}".encode("utf-8")).hexdigest()
+    digest = hashlib.sha256(f"{seed}:{contrast_id}".encode()).hexdigest()
     derived = int(digest[:16], 16)
     return random.Random(derived)
 

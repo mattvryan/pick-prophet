@@ -25,6 +25,7 @@ from .features.pickem_registry import (
     write_registry,
 )
 from .ingest.cfbd import ingest_season
+from .models.residual_diagnostics import diagnose_residual
 from .models.residual_fit import fit_residual_walkforward
 from .weekly.grade import grade_week
 from .weekly.recommend import recommend
@@ -125,6 +126,19 @@ def parser() -> argparse.ArgumentParser:
         "--output-dir",
         type=Path,
         default=Path("data/processed/residual"),
+    )
+
+    diagnose = commands.add_parser(
+        "diagnose-residual",
+        help="M09 inference/calibration diagnostics on raw residual predictions",
+    )
+    diagnose.add_argument("--predictions-dir", type=Path, required=True)
+    diagnose.add_argument("--matrix", type=Path, required=True)
+    diagnose.add_argument("--protocol", default="1.0.0")
+    diagnose.add_argument(
+        "--out-dir",
+        type=Path,
+        default=Path("artifacts/residual_diagnostics/run"),
     )
 
     coverage = commands.add_parser(
@@ -389,6 +403,19 @@ def main(argv: list[str] | None = None) -> None:
         print(args.output_dir / "predictions.csv")
         print(args.output_dir / "summary.json")
         print(f"folds={len(summary.get('folds', []))}")
+    elif args.command == "diagnose-residual":
+        try:
+            artifacts = diagnose_residual(
+                args.predictions_dir,
+                args.matrix,
+                args.out_dir,
+                protocol_version=args.protocol,
+            )
+        except ValueError as exc:
+            print(f"ERROR: {exc}", file=sys.stderr)
+            raise SystemExit(1) from exc
+        print(artifacts["summary"])
+        print(artifacts["report"])
     elif args.command == "coverage":
         kwargs = {
             "report_path": args.report,
