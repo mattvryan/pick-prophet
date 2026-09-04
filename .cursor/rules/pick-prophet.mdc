@@ -1,0 +1,23 @@
+---
+description: Pick Prophet implementation and research workflow
+alwaysApply: true
+---
+
+Before changing this repository, read:
+
+- `docs/implementation_plan.md`
+- `docs/schema.md`
+- `docs/methodology.md`
+- `docs/data_sources.md`
+
+Work from the first unchecked, unblocked task in the implementation plan unless
+the user assigns another task. Treat P0 weekly-card work as higher priority than
+historical research until the current card is finalized.
+
+Never overwrite raw snapshots or finalized cards, invent missing values, expose
+credentials, join on team names without an audit trail, or use data published
+after kickoff. Add tests with implementation changes and update the plan only
+after the documented acceptance checks pass.
+
+Every handoff must identify the task ID, tests run, timing semantics of any new
+data, leakage risks, known gaps, output readiness, and next unblocked task.
