@@ -1,0 +1,43 @@
+{
+  "coverage": {
+    "away_fpi": 1.0,
+    "away_pregame_elo": 1.0,
+    "away_sp": 1.0,
+    "home_fpi": 1.0,
+    "home_pregame_elo": 1.0,
+    "home_sp": 1.0,
+    "venue": 1.0
+  },
+  "files": {
+    "raw/fpi.json": "7f935c0627dd15b60f946489379fdb8ca45d88762cb6aa26133382713e0a1859",
+    "raw/games.json": "e0fbdea5dee32eec0570800df62424f663588b1ad8baf07163fafa2be756d194",
+    "raw/rankings.json": "ec2e4228fb5f57a6600969bd70c5d1bf4e5173889bd44ad31607493d49a9cd9d",
+    "raw/sp.json": "29586cd16ebfe799747d5af276d22a75f61f78da3318b91714457f3b49139b1f",
+    "signals.csv": "94bce688d6ed0f97c8335d5812be2e771f87479576683204f2fadb16ecef6233"
+  },
+  "matched_games": 10,
+  "requests": {
+    "fpi": {
+      "year": 2026
+    },
+    "games": {
+      "seasonType": "regular",
+      "week": 1,
+      "year": 2026
+    },
+    "rankings": {
+      "seasonType": "regular",
+      "week": 1,
+      "year": 2026
+    },
+    "sp": {
+      "year": 2026
+    }
+  },
+  "row_count": 10,
+  "schema_version": "weekly_signals.v1",
+  "slate_path": "weekly/2026-W01/slate.csv",
+  "slate_sha256": "d1099fa17a1eb70cec218879ceb9b05b606788c04d87d8fe6c5cb0affa65ffb0",
+  "snapshot_at_utc": "2026-09-04T15:10:44Z",
+  "timing_note": "FPI and SP+ are current season-level values captured before slate locks; game pregame Elo is used instead of the sparse week endpoint."
+}

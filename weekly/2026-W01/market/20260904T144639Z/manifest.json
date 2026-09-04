@@ -1,0 +1,19 @@
+{
+  "files": {
+    "cfbd_lines.json": "fe83a85391627a895c8406806f53ccde1246a9c99827d4973d30636f7b45e4c9",
+    "market.csv": "d759a0be713532888e8b8b224e722ee907d5779637f0f6bfa521ab145c8c5bcb"
+  },
+  "games_with_lines": 10,
+  "matched_games": 10,
+  "request": {
+    "seasonType": "regular",
+    "week": 1,
+    "year": 2026
+  },
+  "schema_version": "weekly_market.v1",
+  "slate_games": 10,
+  "slate_path": "weekly/2026-W01/slate.csv",
+  "slate_sha256": "d1099fa17a1eb70cec218879ceb9b05b606788c04d87d8fe6c5cb0affa65ffb0",
+  "snapshot_at_utc": "2026-09-04T14:46:39Z",
+  "source": "https://api.collegefootballdata.com/lines"
+}
