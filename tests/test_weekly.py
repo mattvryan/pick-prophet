@@ -59,6 +59,22 @@ def _write_slate(path: Path, rows: list[dict[str, object]]) -> Path:
     return path
 
 
+def _write_market(path: Path, rows: list[dict[str, object]]) -> Path:
+    headers = [
+        "cfbd_game_id",
+        "away_team",
+        "home_team",
+        "away_moneyline",
+        "home_moneyline",
+        "status",
+    ]
+    with path.open("w", newline="", encoding="utf-8") as handle:
+        writer = csv.DictWriter(handle, fieldnames=headers)
+        writer.writeheader()
+        writer.writerows(rows)
+    return path
+
+
 class ValidateSlateTests(unittest.TestCase):
     def test_valid_standard_slate(self) -> None:
         with tempfile.TemporaryDirectory() as directory:
@@ -213,6 +229,36 @@ class ValidateSlateTests(unittest.TestCase):
 
 
 class RecommendTests(unittest.TestCase):
+    def test_market_snapshot_replaces_screenshot_odds(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            slate = _write_slate(root / "slate.csv", [_row()])
+            market = _write_market(
+                root / "market.csv",
+                [
+                    {
+                        "cfbd_game_id": "401000001",
+                        "away_team": "Away U",
+                        "home_team": "Home U",
+                        "away_moneyline": "-140",
+                        "home_moneyline": "+120",
+                        "status": "ok",
+                    }
+                ],
+            )
+            artifacts = recommend(
+                slate,
+                as_of="2026-09-05T12:00:00Z",
+                output_dir=root / "output",
+                market_path=market,
+            )
+            with artifacts["recommendations"].open(encoding="utf-8") as handle:
+                row = next(csv.DictReader(handle))
+            self.assertEqual(row["baseline_pick"], "Away U")
+            self.assertEqual(row["away_moneyline"], "-140.0")
+            manifest = json.loads(artifacts["run_manifest"].read_text())
+            self.assertEqual(manifest["command_arguments"]["market"], str(market))
+
     def test_vig_removal_and_favorite_selection(self) -> None:
         with tempfile.TemporaryDirectory() as directory:
             root = Path(directory)
