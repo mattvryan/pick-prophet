@@ -15,7 +15,7 @@ Given an exact ESPN slate, generate a checked and timestamped card containing:
 
 - selected winner for every game;
 - market-derived win probability when a two-way moneyline is available;
-- confidence rank with no duplicates;
+- confidence rank with no duplicates when the contest uses confidence points;
 - market disagreement and upset flags;
 - missing-data warnings;
 - separate, recorded manual adjustments; and
@@ -52,7 +52,7 @@ pass and its checkbox is updated in this file.
 ### P0.1 — Environment and credentials
 
 - [ ] Create `.venv` and install `.[dev]`.
-- [ ] Configure `CFBD_API_KEY` locally; never commit the value.
+- [x] Configure `CFBD_API_KEY` locally; never commit the value.
 - [ ] Run `pytest` and the CLI help command.
 
 Acceptance:
@@ -67,11 +67,11 @@ continue with manual odds import rather than blocking the card.
 
 ### P0.2 — Capture the exact ESPN slate
 
-- [ ] Create `weekly/2026-WNN/slate.csv` from the contest page.
-- [ ] Record ESPN game ID if visible, teams, kickoff, display order, lock time,
+- [x] Create `weekly/2026-WNN/slate.csv` from the contest page.
+- [x] Record ESPN game ID if visible, teams, kickoff, display order, lock time,
   confidence-mode status, source URL, and `captured_at_utc`.
-- [ ] Save a screenshot or exported payload beside the CSV when permitted.
-- [ ] Match every row to a CFBD game ID; unresolved matches remain explicit.
+- [x] Record screenshot filenames and hashes in a capture manifest.
+- [x] Match every row to a CFBD game ID; unresolved matches remain explicit.
 
 Implement `pick-prophet weekly validate-slate PATH`. It must reject duplicate game
 IDs, duplicate display positions, missing teams, malformed timestamps, and games
@@ -110,10 +110,12 @@ pick-prophet weekly recommend \
 Rules for version 0:
 
 1. Pick the side with market probability greater than 0.5.
-2. Rank confidence by distance from 0.5. If probabilities are unavailable, use
-   absolute consensus spread only as a clearly labelled fallback.
+2. For confidence contests only, rank confidence by distance from 0.5. If
+   probabilities are unavailable, use absolute consensus spread only as a clearly
+   labelled fallback.
 3. Break ties deterministically by ESPN display order, then game ID.
-4. Assign confidence points `1..N`, with `N` on the strongest pick.
+4. For confidence contests only, assign points `1..N`, with `N` on the strongest
+   pick. Standard contests leave confidence fields null.
 5. Set `upset_candidate=true` only when a later model/manual selection chooses
    the market underdog. Market-baseline output has no disagreement by definition.
 6. Preserve the original model selection and probability when a manual override
@@ -122,9 +124,9 @@ Rules for version 0:
 Output both `recommendations.csv` and `card.md`, including source snapshot IDs,
 generation time, missingness, and warnings.
 
-Acceptance: one row per slate game; unique confidence values exactly `1..N`;
-winner is always one of the two teams; rerunning identical inputs is byte-stable
-except for an explicitly separated run manifest.
+Acceptance: one row per slate game; winner is always one of the two teams;
+confidence values are null for the current standard league; rerunning identical
+inputs is byte-stable except for an explicitly separated run manifest.
 
 ### P0.5 — Manual review and final lock snapshot
 
@@ -307,11 +309,10 @@ Every implementation handoff should state:
 | 2026-09-04 | Use 2017–2025 as the initial research window | It provides multiple walk-forward folds while keeping source coverage plausibly modern; retain only after coverage audit |
 | 2026-09-04 | Keep all-FBS and confirmed ESPN-slate evaluation separate | ESPN's selection process changes the game distribution and may bias results |
 | 2026-09-04 | Preserve manual picks separately from model output | Required to measure whether qualitative intervention helps or hurts |
+| 2026-09-04 | Treat the screenshot's left team as away and lock times as America/Denver | All ten pairings are consistent with that orientation; retain as an explicit assumption pending user confirmation |
 
 ## Immediate human inputs needed
 
 - A local CFBD API key, or permission to proceed with manual odds input.
-- The exact current ESPN slate and contest lock rules.
-- Whether this pool uses confidence points and, if so, the point convention.
 - Any historical screenshots, exports, or emails that can establish prior ESPN
   slate membership and public-pick percentages.

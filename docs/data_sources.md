@@ -38,7 +38,9 @@ public percentages stay null.
   kickoff timestamps when odds snapshots are available.
 - CFBD's consensus providers and coverage vary by game and season. The builder
   records provider counts and never treats missing odds as pick'em lines.
-- Ratings joined to week *w* must be published before the game. The pipeline
-  defaults to week *w - 1* to avoid accidental post-game ratings.
+- Ratings joined to week *w* must be published before the game. CFBD's current
+  FPI and SP+ endpoints are season-level, so those values remain unjoined until
+  dated weekly archives are available. Elo is requested weekly and joined from
+  week *w - 1*.
 - Returning-QB status, rivalry labels, and coach tenure need separately sourced,
   season-specific tables; current rosters must never be projected backward.

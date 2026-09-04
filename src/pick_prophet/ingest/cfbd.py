@@ -32,8 +32,10 @@ ENDPOINTS = (
     Endpoint("games", "/games"),
     Endpoint("lines", "/lines"),
     Endpoint("rankings", "/rankings"),
-    Endpoint("fpi", "/ratings/fpi", weekly=True),
-    Endpoint("sp", "/ratings/sp", weekly=True),
+    # CFBD currently exposes only season-level FPI/SP+ through these endpoints.
+    # Preserve them as raw research inputs, but do not pretend they are weekly.
+    Endpoint("fpi", "/ratings/fpi"),
+    Endpoint("sp", "/ratings/sp"),
     Endpoint("elo", "/ratings/elo", weekly=True),
 )
 

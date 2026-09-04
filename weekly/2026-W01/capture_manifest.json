@@ -1,0 +1,33 @@
+{
+  "captured_at_utc": "2026-09-04T14:01:57Z",
+  "contest_week": 1,
+  "confidence_mode": false,
+  "interpretation": {
+    "left_team": "away",
+    "lock_timezone": "America/Denver",
+    "notes": "Away/home orientation, kickoff UTC, neutral-site status, and stable game IDs were independently matched against the CFBD 2026 Week 1 schedule. ESPN game IDs were not visible."
+  },
+  "season": 2026,
+  "sources": [
+    {
+      "filename": "codex-clipboard-dddeae65-11a6-464c-8b47-bcc90da7ce58.png",
+      "sha256": "cc0372e9084c76590ea0b3ba782588302246913b9fc09cb05bd0851c12a0bffc"
+    },
+    {
+      "filename": "codex-clipboard-6d608bfd-5d07-44af-b166-add629bd585b.png",
+      "sha256": "206a3379cee3eb10fa2f58a77d7d0f52a2a2e52c6fe07fd044a5d05d2205adf0"
+    },
+    {
+      "filename": "codex-clipboard-0c8c32e9-9463-4574-b63b-76f9c05aa6c9.png",
+      "sha256": "20b8ecf7515bcb93cd699f6ca96ef8b795fa9e58aea9217553f72695aa7bcccf"
+    },
+    {
+      "filename": "codex-clipboard-55b89988-db16-48ff-9103-95f417efff7c.png",
+      "sha256": "e861a8e68345cd9d387764be124b296242bfdd9bbbfb48cd9dc070bc09eafda2"
+    },
+    {
+      "filename": "codex-clipboard-23c65faa-9dde-440e-bc39-17de3af67c15.png",
+      "sha256": "bfbb72a66023cc5f8e38d627b13cab931ac5480502a9d29c8b917e304a844efd"
+    }
+  ]
+}
