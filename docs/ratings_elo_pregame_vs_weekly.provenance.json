@@ -3,9 +3,9 @@
   "exclusions": {
     "non_fbs_games": 15617
   },
-  "generated_at_utc": "2026-09-04T18:53:09.642465Z",
-  "helper_module": "/Users/matt/git/pick-prophet/src/pick_prophet/research/elo_pregame_vs_weekly.py",
-  "helper_sha256": "906fa595c65f31d9047095647b001c10eb098a2a7473147030a94e646e38a273",
+  "generated_at_utc": "2026-09-04T19:23:22.281825Z",
+  "helper_module": "pick_prophet.research.elo_pregame_vs_weekly",
+  "helper_sha256": "46e3a0ab217987b1b14cc79a48f45042c2979fbb21ed8b8e7da142934b0827fd",
   "identical_duplicate_count": 0,
   "input_game_rows": 7763,
   "input_side_rows": 15526,
@@ -32,7 +32,7 @@
     "tolerance": 1.0
   },
   "percentile_method": "sorted_index",
-  "repository_revision": "0458a111c34fe83bc2a1aa31e374663044d34455",
+  "repository_revision": "20bc3f333bd43a0dc956682016b3eaca76020aa7",
   "season_types": [
     "postseason",
     "regular",

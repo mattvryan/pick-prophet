@@ -369,7 +369,11 @@ def write_aggregate_csv(rows: list[dict], path: Path) -> None:
 
     path.parent.mkdir(parents=True, exist_ok=True)
     with path.open("w", newline="") as handle:
-        writer = csv.DictWriter(handle, fieldnames=AGGREGATE_COLUMNS)
+        writer = csv.DictWriter(
+            handle,
+            fieldnames=AGGREGATE_COLUMNS,
+            lineterminator="\n",
+        )
         writer.writeheader()
         writer.writerows(rows)
 
@@ -440,7 +444,7 @@ def build_provenance(
     return {
         "generated_at_utc": datetime.now(UTC).isoformat().replace("+00:00", "Z"),
         "repository_revision": _repository_revision(helper_path),
-        "helper_module": str(helper_path),
+        "helper_module": "pick_prophet.research.elo_pregame_vs_weekly",
         "helper_sha256": sha256_file(helper_path),
         "tolerance": tolerance,
         "percentile_method": PERCENTILE_METHOD,

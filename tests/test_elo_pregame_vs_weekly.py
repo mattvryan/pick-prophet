@@ -166,6 +166,9 @@ def test_write_aggregate_csv_uses_exact_header_and_hashes_output(tmp_path):
         reader = csv.DictReader(handle)
         assert reader.fieldnames == list(AGGREGATE_COLUMNS)
         assert len(list(reader)) == 4
+    output_bytes = output.read_bytes()
+    assert b"\n" in output_bytes
+    assert b"\r\n" not in output_bytes
     assert len(sha256_file(output)) == 64
 
 
@@ -212,6 +215,7 @@ def test_provenance_contains_required_keys_and_snapshot_hashes(tmp_path):
         "notes",
     }
     assert required <= doc.keys()
+    assert doc["helper_module"] == "pick_prophet.research.elo_pregame_vs_weekly"
     assert doc["input_game_rows"] == 4
     assert doc["input_side_rows"] == 8
     assert doc["snapshots"] == [
