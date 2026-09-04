@@ -1,0 +1,12 @@
+{
+  "artifact_set": "m16_market_depth",
+  "artifact_version": "1.0.0",
+  "artifacts_sha256": {
+    "market_depth_audit.json": "72b4eaba1d4970149bbfd5ecad5bc146ee44b13e90772885b5a6f69a8960e5a5"
+  },
+  "experiment_ledger_sha256": "709730ec67af5e10ade5377b599e7cc903b06d8aec2dfdf49376490e5220e921",
+  "protocol_version": "2.0.0",
+  "report_sha256": "837c74ec0bbd0866224e750ed976d68cf13a6e5e030a36a772c79800be9c355c",
+  "spec_sha256": "fd2d50444d3ea787a872f28a1327224716bce793326f0571eb31d9394c087e62",
+  "status": "blocked_paid_timestamped_archive_required"
+}
