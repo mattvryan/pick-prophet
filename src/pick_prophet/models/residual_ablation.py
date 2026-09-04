@@ -18,7 +18,9 @@ from pick_prophet.evaluation.protocol import load_protocol
 from pick_prophet.models.residual_ablation_variants import (
     ANOMALOUS_SEASONS,
     FAMILIES,
+    FAMILIES_DECLARED,
     MIN_ESPN_N,
+    UNAVAILABLE_FOR_EVIDENCE,
     assert_ablation_variants_valid,
     build_ablation_variants,
 )
@@ -206,18 +208,37 @@ def run_ablation(
     matrix_schema_version: str = "1.0.0",
     variants: dict[str, tuple[str, ...]] | None = None,
     n_boot: int | None = None,
+    enforce_protocol_n_boot: bool = True,
     write_report_path: Path | None = None,
+    held_out_inference_note: str | None = None,
 ) -> dict[str, Path]:
     """Fit ablation variants and write compact evidence; never set recommendations."""
 
     active = variants if variants is not None else build_ablation_variants()
     assert_ablation_variants_valid(active)
     protocol = load_protocol(protocol_version)
-    boot_n = protocol.n_boot if n_boot is None else int(n_boot)
+    if enforce_protocol_n_boot:
+        if n_boot is not None and int(n_boot) != int(protocol.n_boot):
+            raise ValueError(
+                f"n_boot={n_boot} does not match protocol n_boot={protocol.n_boot}; "
+                "pass enforce_protocol_n_boot=False only for tests"
+            )
+        boot_n = int(protocol.n_boot)
+    else:
+        boot_n = int(protocol.n_boot if n_boot is None else n_boot)
+    seed = protocol.bootstrap_seed
     out_dir = Path(out_dir)
     fit_dir = out_dir / "fit"
     compact = out_dir / "compact"
     compact.mkdir(parents=True, exist_ok=True)
+
+    inference_note = held_out_inference_note or (
+        "INFERENCE WINDOW: residual ablation proper-score evidence covers held-out "
+        "seasons 2022–2025 only (moneyline/implied coverage; earlier expanding "
+        "folds skipped when train/test eligible sets are empty). "
+        "2020 anomalous-season sensitivity cannot be evaluated in this pull "
+        "(no eligible held-out predictions for 2020)."
+    )
 
     fit_residual_walkforward(
         matrix_path,
@@ -235,9 +256,19 @@ def run_ablation(
     registry = {
         "variants": {k: list(v) for k, v in active.items()},
         "families": {k: list(v) for k, v in FAMILIES.items()},
+        "families_declared": {k: list(v) for k, v in FAMILIES_DECLARED.items()},
+        "unavailable_for_evidence": sorted(UNAVAILABLE_FOR_EVIDENCE),
+        "unavailable_reason": (
+            "Opening/movement fields are structurally missing under CFBD "
+            "historical timing and are excluded from family evidence and M11 "
+            "eligibility."
+        ),
         "min_espn_n": MIN_ESPN_N,
         "anomalous_seasons": list(ANOMALOUS_SEASONS),
         "protocol_version": protocol.protocol_version,
+        "n_boot": boot_n,
+        "bootstrap_seed": seed,
+        "inference_window_note": inference_note,
     }
     registry_path = compact / "ablation_registry.json"
     registry_path.write_text(json.dumps(registry, indent=2, sort_keys=True) + "\n")
@@ -414,32 +445,55 @@ def run_ablation(
             season_drop_rows.append({"variant": candidate, **drop})
 
         for season in ANOMALOUS_SEASONS:
-            # with and without anomalous held-out season
             with_s = [r for r in paired if int(r["test_season"]) == season]
-            without = season_drop_metrics(paired, drop_season=season)
-            if with_s:
-                mc = score_probabilities(
-                    [r["y_true"] for r in with_s], [r["p_candidate"] for r in with_s]
-                )
-                mm = score_probabilities(
-                    [r["y_true"] for r in with_s], [r["p_market"] for r in with_s]
-                )
+            if not with_s:
                 anomalous_rows.append(
                     {
                         "variant": candidate,
                         "anomalous_season": season,
-                        "view": "season_only",
+                        "view": "season_sensitivity",
                         "retrain": False,
-                        "n": mc["n"],
-                        "delta_log_loss": mc["log_loss"] - mm["log_loss"],
-                        "delta_brier": mc["brier"] - mm["brier"],
+                        "n": 0,
+                        "status": "not_available",
+                        "reason": "no_held_out_predictions_for_anomalous_season",
+                        "delta_log_loss": "",
+                        "delta_brier": "",
+                        "delta_accuracy": "",
+                        "log_loss": "",
+                        "brier": "",
+                        "accuracy": "",
+                        "mode": "not_evaluated",
                     }
                 )
+                continue
+            mc = score_probabilities(
+                [r["y_true"] for r in with_s], [r["p_candidate"] for r in with_s]
+            )
+            mm = score_probabilities(
+                [r["y_true"] for r in with_s], [r["p_market"] for r in with_s]
+            )
+            anomalous_rows.append(
+                {
+                    "variant": candidate,
+                    "anomalous_season": season,
+                    "view": "season_only",
+                    "retrain": False,
+                    "n": mc["n"],
+                    "status": "ok",
+                    "reason": "",
+                    "delta_log_loss": mc["log_loss"] - mm["log_loss"],
+                    "delta_brier": mc["brier"] - mm["brier"],
+                    "delta_accuracy": mc["accuracy"] - mm["accuracy"],
+                }
+            )
+            without = season_drop_metrics(paired, drop_season=season)
             anomalous_rows.append(
                 {
                     "variant": candidate,
                     "anomalous_season": season,
                     "view": "exclude_held_out_season",
+                    "status": without.get("status", "ok"),
+                    "reason": "",
                     **{k: without[k] for k in without if k != "drop_season"},
                 }
             )
@@ -552,6 +606,7 @@ def run_ablation(
                 "retrain",
                 "n",
                 "status",
+                "reason",
                 "delta_log_loss",
                 "delta_brier",
                 "log_loss",
@@ -624,8 +679,16 @@ def run_ablation(
     lines = [
         "# Incremental value report (M10)",
         "",
+        f"**{inference_note}**",
+        "",
         "Evidence from the M08 fixed-offset residual ablation runner.",
         "Large row-level fit artifacts are not committed; see compact CSVs.",
+        "",
+        f"- Bootstrap: n_boot={boot_n} (protocol), seed={seed}",
+        (
+            "- Structurally unavailable (excluded from evidence/M11 eligibility): "
+            + ", ".join(sorted(UNAVAILABLE_FOR_EVIDENCE))
+        ),
         "",
         "## Hard rules",
         "",
@@ -633,6 +696,7 @@ def run_ablation(
         "- Season-drop rows are **aggregations of existing held-out predictions**, not retrains.",
         "- Decision labels (`promote` / `review_only` / `reject`) are **human-only**;",
         "  `decision_worksheet.csv` leaves `recommendation` unset.",
+        "- Do not treat an unavailable anomalous season as a successful exclusion contrast.",
         "",
         "## Aggregate deltas vs market_only",
         "",

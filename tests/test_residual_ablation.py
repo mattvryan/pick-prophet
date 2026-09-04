@@ -162,6 +162,7 @@ def test_run_ablation_core(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> N
         out,
         variants=_tiny_variants(),
         n_boot=20,
+        enforce_protocol_n_boot=False,
         write_report_path=tmp_path / "report.md",
     )
     worksheet = list(csv.DictReader(paths["decision_worksheet"].open()))
@@ -209,7 +210,9 @@ def test_identical_ids_enforced(tmp_path: Path, monkeypatch: pytest.MonkeyPatch)
     matrix = tmp_path / "matrix.csv"
     _synth_matrix(matrix)
     out = tmp_path / "ablation"
-    run_ablation(matrix, out, variants=_tiny_variants(), n_boot=5)
+    run_ablation(
+        matrix, out, variants=_tiny_variants(), n_boot=5, enforce_protocol_n_boot=False
+    )
     preds = list(csv.DictReader((out / "fit" / "predictions.csv").open()))
     by_model: dict[str, set[tuple[str, str]]] = {}
     for row in preds:

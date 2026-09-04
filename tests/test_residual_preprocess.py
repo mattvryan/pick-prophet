@@ -22,12 +22,13 @@ def test_unseen_categorical_maps_to_unknown() -> None:
     assert x[0, unk_idx] == 1.0
 
 
-def test_all_missing_numeric_stable_schema() -> None:
+def test_all_missing_numeric_marked_unavailable() -> None:
     train = [{"spread_home": None}, {"spread_home": ""}]
     prep = FoldPreprocessor(("spread_home",)).fit(train)
-    assert prep.feature_names_ == ["spread_home", "spread_home__missing"]
+    assert prep.feature_names_ == []
+    assert prep.unavailable_source_columns_ == ["spread_home"]
     x = prep.transform([{"spread_home": None}])
-    np.testing.assert_allclose(x[0], [0.0, 1.0])
+    assert x.shape == (1, 0)
 
 
 def test_train_only_statistics() -> None:

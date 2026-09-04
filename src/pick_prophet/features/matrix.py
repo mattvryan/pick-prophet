@@ -9,6 +9,7 @@ from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Any
 
+from pick_prophet.features.market import market_logit
 from pick_prophet.features.matrix_history import attach_matrix_history
 from pick_prophet.features.matrix_schema import (
     MATRIX_COLUMNS,
@@ -292,7 +293,12 @@ def project_row(row: dict[str, Any]) -> dict[str, Any]:
             val = row.get(col)
             out[col] = None if val == "" else val
 
-        # defaults for pickem audit
+    # Derive baseline logit from vig-free implied when processed rows omit it.
+    # Never fabricate probability from spread.
+    if out.get("home_market_logit") is None and out.get("home_implied_prob") is not None:
+        out["home_market_logit"] = market_logit(out["home_implied_prob"])
+
+    # defaults for pickem audit
     if out.get("sampling_frame") in (None, ""):
         out["sampling_frame"] = "all_fbs"
     return out
