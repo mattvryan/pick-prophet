@@ -1,0 +1,13 @@
+{
+  "artifact_version": "1.0.0",
+  "contains_2026_outcomes": false,
+  "decisions": {
+    "cfbd_elo": "omit_publication_time_unproven",
+    "cfbd_fpi": "omit_no_weekly_historical_archive",
+    "cfbd_sp_plus": "omit_no_weekly_historical_archive",
+    "sportsdataverse_espn_fpi": "omit_publication_time_and_license_unresolved"
+  },
+  "matrix_2_rating_features": [],
+  "protocol_version": "2.0.0",
+  "status": "completed_no_source_approved"
+}

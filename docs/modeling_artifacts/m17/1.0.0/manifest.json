@@ -1,0 +1,12 @@
+{
+  "artifact_set": "m17_pit_ratings",
+  "artifact_version": "1.0.0",
+  "artifacts_sha256": {
+    "source_decision.json": "978b6db84fec1e33fcc4dabd9e162e1594bb7a7a5143ce2218093cefd2bac905"
+  },
+  "experiment_ledger_sha256": "709730ec67af5e10ade5377b599e7cc903b06d8aec2dfdf49376490e5220e921",
+  "protocol_version": "2.0.0",
+  "report_sha256": "ba856c12655acaf19244b5df6d9075877eeff2162bcd20d833a395e329cd572b",
+  "spec_sha256": "afcb578f9ba44559f3833a7301a0b8a6e9402a7e40686ccca77e14312466b9ac",
+  "status": "completed_no_source_approved"
+}
