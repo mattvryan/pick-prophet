@@ -99,18 +99,6 @@ FORBIDDEN_EXACT: frozenset[str] = frozenset(
     }
 )
 
-FORBIDDEN_SUBSTRINGS: tuple[str, ...] = (
-    "elo_",
-    "fpi_",
-    "sp_",
-    "vs_market",
-    "rating_disagreement",
-    "ap_",
-    "coaches_",
-    "cfp_",
-)
-
-
 def assert_roles_disjoint() -> None:
     seen: dict[str, str] = {}
     names = (
