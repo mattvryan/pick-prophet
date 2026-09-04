@@ -362,27 +362,34 @@ Tests and acceptance:
 
 ## M12 — Model registry and promotion gate
 
+**Status:** complete (v1 pack: approved `market_only` only; no ML challengers)
 **Branch:** `modeling/m12-model-registry`
 **Dependencies:** M09–M11
+**Docs:** [`docs/model_registry.md`](model_registry.md)
+**Artifacts:** [`docs/modeling_artifacts/m12/1.0.0/`](modeling_artifacts/m12/1.0.0/)
 
 Scope:
 
-- Define candidate, shadow, approved, and retired lifecycle states.
-- Save immutable artifacts with model/schema hashes, training window, protocol,
+- [x] Define candidate, shadow, approved, and retired lifecycle states.
+- [x] Save immutable artifacts with model/schema hashes, training window, protocol,
   feature sources, preprocessing/calibration, metrics, coverage, and limitations.
-- Implement a promotion evaluator requiring:
+- [x] Implement a promotion evaluator requiring:
   - held-out log-loss and Brier improvement;
   - no material calibration regression;
   - improvement across multiple seasons;
   - adequate coverage and pre-lock availability;
-  - no unresolved leakage finding.
-- Require human approval; the evaluator must not self-promote.
+  - no unresolved leakage finding;
+  - promoted-features-only vs hash-validated M10 set;
+  - human approval after automated eligibility.
+- [x] Require human approval; the evaluator must not self-promote.
+- [x] Bootstrap-approve `market_only` with explicit governance rationale; retain
+  market baseline with no challenger as a valid successful outcome.
 
 Tests and acceptance:
 
-- Reject tampered artifacts and feature/schema incompatibility.
-- Failed gates cannot create an approved model.
-- If nothing passes, retaining the market baseline is a valid successful result.
+- [x] Reject tampered artifacts and feature/schema incompatibility.
+- [x] Failed gates cannot create an approved model.
+- [x] If nothing passes, retaining the market baseline is a valid successful result.
 
 ## M13 — Weekly shadow-mode integration
 

@@ -28,6 +28,14 @@ from .ingest.cfbd import ingest_season
 from .models.residual_ablation import run_ablation
 from .models.residual_diagnostics import diagnose_residual
 from .models.residual_fit import fit_residual_walkforward
+from .registry.evaluate import CandidatePackage, evaluate_candidate
+from .registry.store import RegistryStore
+from .registry.transitions import (
+    approve,
+    designate_shadow,
+    register_candidate,
+    retire,
+)
 from .weekly.grade import grade_week
 from .weekly.recommend import recommend
 from .weekly.results import fetch_results
@@ -160,6 +168,89 @@ def parser() -> argparse.ArgumentParser:
         default=None,
         help="optional path for incremental_value_report.md",
     )
+
+    registry = commands.add_parser(
+        "registry", help="M12 model registry and promotion gate"
+    )
+    registry_commands = registry.add_subparsers(
+        dest="registry_command", required=True
+    )
+    registry_root = Path("docs/modeling_artifacts/m12/1.0.0")
+
+    reg_validate = registry_commands.add_parser(
+        "validate", help="validate registry pack integrity"
+    )
+    reg_validate.add_argument("--root", type=Path, default=registry_root)
+    reg_validate.add_argument("--repo-root", type=Path, default=Path("."))
+
+    reg_list = registry_commands.add_parser("list", help="list registry tips")
+    reg_list.add_argument("--root", type=Path, default=registry_root)
+    reg_list.add_argument("--repo-root", type=Path, default=Path("."))
+
+    reg_register = registry_commands.add_parser(
+        "register-candidate", help="register a genesis candidate entry from JSON"
+    )
+    reg_register.add_argument("--root", type=Path, default=registry_root)
+    reg_register.add_argument("--repo-root", type=Path, default=Path("."))
+    reg_register.add_argument(
+        "--entry-json",
+        type=Path,
+        required=True,
+        help="JSON object of registry entry fields (status forced to candidate)",
+    )
+
+    reg_eval = registry_commands.add_parser(
+        "evaluate-candidate",
+        help="run automated promotion gates (never approves)",
+    )
+    reg_eval.add_argument("--root", type=Path, default=registry_root)
+    reg_eval.add_argument("--repo-root", type=Path, default=Path("."))
+    reg_eval.add_argument("--candidate-entry-sha256", required=True)
+    reg_eval.add_argument("--package-json", type=Path, required=True)
+    reg_eval.add_argument(
+        "--policy",
+        type=Path,
+        default=Path("docs/modeling_artifacts/m12/1.0.0/promotion_policy.json"),
+    )
+    reg_eval.add_argument("--evaluated-at-utc", required=True)
+
+    reg_approve = registry_commands.add_parser(
+        "approve", help="human approve after eligible evaluation"
+    )
+    reg_approve.add_argument("--root", type=Path, default=registry_root)
+    reg_approve.add_argument("--repo-root", type=Path, default=Path("."))
+    reg_approve.add_argument("--model-id", required=True)
+    reg_approve.add_argument("--evaluation-sha256", required=True)
+    reg_approve.add_argument("--expected-tip", required=True)
+    reg_approve.add_argument("--reviewer", required=True)
+    reg_approve.add_argument("--rationale", required=True)
+    reg_approve.add_argument("--reviewed-at-utc", required=True)
+
+    reg_shadow = registry_commands.add_parser(
+        "designate-shadow",
+        help="human designate shadow after eligible evaluation",
+    )
+    reg_shadow.add_argument("--root", type=Path, default=registry_root)
+    reg_shadow.add_argument("--repo-root", type=Path, default=Path("."))
+    reg_shadow.add_argument("--model-id", required=True)
+    reg_shadow.add_argument("--evaluation-sha256", required=True)
+    reg_shadow.add_argument("--expected-tip", required=True)
+    reg_shadow.add_argument("--reviewer", required=True)
+    reg_shadow.add_argument("--rationale", required=True)
+    reg_shadow.add_argument("--reviewed-at-utc", required=True)
+
+    reg_retire = registry_commands.add_parser(
+        "retire", help="retire a registry lineage tip"
+    )
+    reg_retire.add_argument("--root", type=Path, default=registry_root)
+    reg_retire.add_argument("--repo-root", type=Path, default=Path("."))
+    reg_retire.add_argument("--model-id", required=True)
+    reg_retire.add_argument("--expected-tip", required=True)
+    reg_retire.add_argument("--reviewer", required=True)
+    reg_retire.add_argument("--rationale", required=True)
+    reg_retire.add_argument("--reviewed-at-utc", required=True)
+    reg_retire.add_argument("--superseded-by-model-id")
+    reg_retire.add_argument("--superseded-by-record-sha256")
 
     coverage = commands.add_parser(
         "coverage", help="audit processed season CSVs and write coverage report"
@@ -450,6 +541,83 @@ def main(argv: list[str] | None = None) -> None:
             raise SystemExit(1) from exc
         print(artifacts["decision_worksheet"])
         print(artifacts["report"])
+    elif args.command == "registry":
+        store = RegistryStore(
+            root=args.root.resolve(),
+            repo_root=args.repo_root.resolve(),
+        )
+        try:
+            if args.registry_command == "validate":
+                store.validate()
+                print(f"registry ok: {store.root}")
+            elif args.registry_command == "list":
+                for row in store.list_models():
+                    print(
+                        f"{row['model_id']}\t{row['status']}\t"
+                        f"{row['model_type']}\t{row['tip_sha256']}"
+                    )
+            elif args.registry_command == "register-candidate":
+                fields = json.loads(args.entry_json.read_text())
+                if not isinstance(fields, dict):
+                    raise ValueError("entry JSON must be an object")
+                written = register_candidate(store, entry_fields=fields)
+                print(written["record_sha256"])
+            elif args.registry_command == "evaluate-candidate":
+                package = CandidatePackage.from_json(args.package_json)
+                policy_rel = args.policy
+                if policy_rel.is_absolute():
+                    raise ValueError("policy path must be repo-relative")
+                written = evaluate_candidate(
+                    store,
+                    candidate_entry_sha256=args.candidate_entry_sha256,
+                    package=package,
+                    policy_path=str(policy_rel),
+                    evaluated_at_utc=args.evaluated_at_utc,
+                )
+                print(written["outcome"])
+                print(written["record_sha256"])
+            elif args.registry_command == "approve":
+                written = approve(
+                    store,
+                    model_id=args.model_id,
+                    evaluation_sha256=args.evaluation_sha256,
+                    reviewer=args.reviewer,
+                    rationale=args.rationale,
+                    reviewed_at_utc=args.reviewed_at_utc,
+                    expected_tip=args.expected_tip,
+                )
+                print(written["status"])
+                print(written["record_sha256"])
+            elif args.registry_command == "designate-shadow":
+                written = designate_shadow(
+                    store,
+                    model_id=args.model_id,
+                    evaluation_sha256=args.evaluation_sha256,
+                    reviewer=args.reviewer,
+                    rationale=args.rationale,
+                    reviewed_at_utc=args.reviewed_at_utc,
+                    expected_tip=args.expected_tip,
+                )
+                print(written["status"])
+                print(written["record_sha256"])
+            elif args.registry_command == "retire":
+                written = retire(
+                    store,
+                    model_id=args.model_id,
+                    reviewer=args.reviewer,
+                    rationale=args.rationale,
+                    reviewed_at_utc=args.reviewed_at_utc,
+                    expected_tip=args.expected_tip,
+                    superseded_by_model_id=args.superseded_by_model_id,
+                    superseded_by_record_sha256=args.superseded_by_record_sha256,
+                )
+                print(written["status"])
+                print(written["record_sha256"])
+            else:
+                raise ValueError(f"unknown registry command {args.registry_command}")
+        except Exception as exc:
+            print(f"ERROR: {exc}", file=sys.stderr)
+            raise SystemExit(1) from exc
     elif args.command == "coverage":
         kwargs = {
             "report_path": args.report,
