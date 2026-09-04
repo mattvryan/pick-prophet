@@ -1,0 +1,24 @@
+{
+  "artifact_version": "1.0.0",
+  "complete_movement_rows": 0,
+  "complete_open_spread_and_total_rows": 0,
+  "contains_2026_outcomes": false,
+  "market_timing_counts": {
+    "": 7763
+  },
+  "protocol_version": "2.0.0",
+  "rows": 7763,
+  "rows_by_season": {
+    "2017": 874,
+    "2018": 884,
+    "2019": 888,
+    "2020": 570,
+    "2021": 887,
+    "2022": 896,
+    "2023": 910,
+    "2024": 920,
+    "2025": 934
+  },
+  "status": "blocked_paid_timestamped_archive_required",
+  "timestamped_historical_quote_rows": 0
+}

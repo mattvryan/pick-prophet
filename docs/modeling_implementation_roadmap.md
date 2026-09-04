@@ -508,7 +508,7 @@ Historical `verified_espn_pickem` remains unavailable; see
 
 ### M16 — Improve historical market depth and timing
 
-**Status:** planned
+**Status:** complete with stop condition (timestamped archives require paid access)
 **Suggested branch:** `data/m16-market-depth`
 **Dependencies:** M14; may run in parallel with M15/M17–M19
 
@@ -532,6 +532,9 @@ Acceptance:
 - Provider and timestamp coverage are reported by season/week.
 - Any purchased or restricted source has documented license, cost, cache, and
   redistribution rules before implementation.
+
+Result: no data purchased or substituted. Provider-neutral quote validation and
+the measured local gap are documented in `docs/historical_market_depth.md`.
 
 ### M17 — Reopen point-in-time team-strength ratings
 
