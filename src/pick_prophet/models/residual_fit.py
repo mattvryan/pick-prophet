@@ -188,6 +188,20 @@ def fit_residual_walkforward(
         if len(canonical_ids) != len(set(canonical_ids)):
             raise ValueError(f"{fold.fold_id}: duplicate eligible test game_id")
 
+        if not train_eligible or not test_eligible:
+            eligibility_rows.append(
+                {
+                    "fold_id": fold.fold_id,
+                    "split": "fold",
+                    "game_id": "",
+                    "reason_code": "skipped_empty_eligible",
+                    "input_rows": len(train_rows) + len(test_rows),
+                    "eligible_rows": len(train_eligible) + len(test_eligible),
+                    "excluded_rows": "",
+                }
+            )
+            continue
+
         fold_metrics: dict[str, Any] = {"fold_id": fold.fold_id, "variants": {}}
 
         for variant, columns in active_variants.items():

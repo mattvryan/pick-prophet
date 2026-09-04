@@ -8,12 +8,17 @@ from pick_prophet.models.residual_ablation_variants import (
     ANOMALOUS_SEASONS,
     FAMILIES,
     MIN_ESPN_N,
+    UNAVAILABLE_FOR_EVIDENCE,
     assert_ablation_variants_valid,
     build_ablation_variants,
+    combined_columns_for_evidence,
     eligible_single_features,
 )
 from pick_prophet.models.residual_preprocess import CATEGORICAL_COLUMNS
-from pick_prophet.models.residual_variants import COMBINED_COLUMNS, HISTORY_COLUMNS
+from pick_prophet.models.residual_variants import (
+    HISTORY_COLUMNS,
+    MARKET_CONTEXT_COLUMNS,
+)
 
 
 def test_family_membership_exact() -> None:
@@ -32,9 +37,10 @@ def test_single_features_are_source_columns_not_onehots() -> None:
 
 def test_leave_family_out_construction() -> None:
     variants = build_ablation_variants()
+    combined = combined_columns_for_evidence()
     for name, cols in FAMILIES.items():
         lof = variants[f"lof__without_{name}"]
-        assert set(lof) == set(COMBINED_COLUMNS) - set(cols)
+        assert set(lof) == set(combined) - set(cols)
         assert all(c not in cols for c in lof)
 
 
@@ -50,8 +56,12 @@ def test_no_prohibited_or_deferred() -> None:
 def test_combined_and_market_only() -> None:
     variants = build_ablation_variants()
     assert variants["market_only"] == ()
-    assert variants["combined"] == COMBINED_COLUMNS
-    assert set(eligible_single_features()) == set(COMBINED_COLUMNS)
+    assert variants["combined"] == combined_columns_for_evidence()
+    assert set(eligible_single_features()) == set(combined_columns_for_evidence())
+    assert UNAVAILABLE_FOR_EVIDENCE.isdisjoint(variants["combined"])
+    assert set(FAMILIES["market_context"]) == set(MARKET_CONTEXT_COLUMNS) - set(
+        UNAVAILABLE_FOR_EVIDENCE
+    )
 
 
 def test_constants() -> None:

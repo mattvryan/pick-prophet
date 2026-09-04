@@ -1,0 +1,234 @@
+{
+  "anomalous_seasons": [
+    2020
+  ],
+  "bootstrap_seed": 20260904,
+  "families": {
+    "history": [
+      "home_entering_wins",
+      "home_entering_losses",
+      "away_entering_wins",
+      "away_entering_losses",
+      "home_previous_result",
+      "away_previous_result",
+      "home_sos",
+      "away_sos",
+      "home_days_rest",
+      "away_days_rest"
+    ],
+    "market_context": [
+      "spread_home",
+      "total",
+      "line_provider_count"
+    ],
+    "site_temporal": [
+      "home_field_advantage",
+      "is_week_1",
+      "is_weeks_1_3",
+      "home_conference",
+      "away_conference",
+      "home_classification",
+      "away_classification"
+    ]
+  },
+  "families_declared": {
+    "history": [
+      "home_entering_wins",
+      "home_entering_losses",
+      "away_entering_wins",
+      "away_entering_losses",
+      "home_previous_result",
+      "away_previous_result",
+      "home_sos",
+      "away_sos",
+      "home_days_rest",
+      "away_days_rest"
+    ],
+    "market_context": [
+      "spread_home",
+      "total",
+      "line_provider_count",
+      "spread_home_open",
+      "total_open",
+      "spread_move_home",
+      "total_move"
+    ],
+    "site_temporal": [
+      "home_field_advantage",
+      "is_week_1",
+      "is_weeks_1_3",
+      "home_conference",
+      "away_conference",
+      "home_classification",
+      "away_classification"
+    ]
+  },
+  "inference_window_note": "INFERENCE WINDOW: residual ablation proper-score evidence covers held-out seasons 2022\u20132025 only (moneyline/implied coverage; earlier expanding folds skipped when train/test eligible sets are empty). 2020 anomalous-season sensitivity cannot be evaluated in this pull (no eligible held-out predictions for 2020).",
+  "min_espn_n": 50,
+  "n_boot": 500,
+  "protocol_version": "1.0.0",
+  "unavailable_for_evidence": [
+    "spread_home_open",
+    "spread_move_home",
+    "total_move",
+    "total_open"
+  ],
+  "unavailable_reason": "Opening/movement fields are structurally missing under CFBD historical timing and are excluded from family evidence and M11 eligibility.",
+  "variants": {
+    "combined": [
+      "home_field_advantage",
+      "is_week_1",
+      "is_weeks_1_3",
+      "home_conference",
+      "away_conference",
+      "home_classification",
+      "away_classification",
+      "home_entering_wins",
+      "home_entering_losses",
+      "away_entering_wins",
+      "away_entering_losses",
+      "home_previous_result",
+      "away_previous_result",
+      "home_sos",
+      "away_sos",
+      "home_days_rest",
+      "away_days_rest",
+      "spread_home",
+      "total",
+      "line_provider_count"
+    ],
+    "family__history": [
+      "home_entering_wins",
+      "home_entering_losses",
+      "away_entering_wins",
+      "away_entering_losses",
+      "home_previous_result",
+      "away_previous_result",
+      "home_sos",
+      "away_sos",
+      "home_days_rest",
+      "away_days_rest"
+    ],
+    "family__market_context": [
+      "spread_home",
+      "total",
+      "line_provider_count"
+    ],
+    "family__site_temporal": [
+      "home_field_advantage",
+      "is_week_1",
+      "is_weeks_1_3",
+      "home_conference",
+      "away_conference",
+      "home_classification",
+      "away_classification"
+    ],
+    "lof__without_history": [
+      "home_field_advantage",
+      "is_week_1",
+      "is_weeks_1_3",
+      "home_conference",
+      "away_conference",
+      "home_classification",
+      "away_classification",
+      "spread_home",
+      "total",
+      "line_provider_count"
+    ],
+    "lof__without_market_context": [
+      "home_field_advantage",
+      "is_week_1",
+      "is_weeks_1_3",
+      "home_conference",
+      "away_conference",
+      "home_classification",
+      "away_classification",
+      "home_entering_wins",
+      "home_entering_losses",
+      "away_entering_wins",
+      "away_entering_losses",
+      "home_previous_result",
+      "away_previous_result",
+      "home_sos",
+      "away_sos",
+      "home_days_rest",
+      "away_days_rest"
+    ],
+    "lof__without_site_temporal": [
+      "home_entering_wins",
+      "home_entering_losses",
+      "away_entering_wins",
+      "away_entering_losses",
+      "home_previous_result",
+      "away_previous_result",
+      "home_sos",
+      "away_sos",
+      "home_days_rest",
+      "away_days_rest",
+      "spread_home",
+      "total",
+      "line_provider_count"
+    ],
+    "market_only": [],
+    "single__away_classification": [
+      "away_classification"
+    ],
+    "single__away_conference": [
+      "away_conference"
+    ],
+    "single__away_days_rest": [
+      "away_days_rest"
+    ],
+    "single__away_entering_losses": [
+      "away_entering_losses"
+    ],
+    "single__away_entering_wins": [
+      "away_entering_wins"
+    ],
+    "single__away_previous_result": [
+      "away_previous_result"
+    ],
+    "single__away_sos": [
+      "away_sos"
+    ],
+    "single__home_classification": [
+      "home_classification"
+    ],
+    "single__home_conference": [
+      "home_conference"
+    ],
+    "single__home_days_rest": [
+      "home_days_rest"
+    ],
+    "single__home_entering_losses": [
+      "home_entering_losses"
+    ],
+    "single__home_entering_wins": [
+      "home_entering_wins"
+    ],
+    "single__home_field_advantage": [
+      "home_field_advantage"
+    ],
+    "single__home_previous_result": [
+      "home_previous_result"
+    ],
+    "single__home_sos": [
+      "home_sos"
+    ],
+    "single__is_week_1": [
+      "is_week_1"
+    ],
+    "single__is_weeks_1_3": [
+      "is_weeks_1_3"
+    ],
+    "single__line_provider_count": [
+      "line_provider_count"
+    ],
+    "single__spread_home": [
+      "spread_home"
+    ],
+    "single__total": [
+      "total"
+    ]
+  }
+}
