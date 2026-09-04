@@ -271,24 +271,30 @@ Excludes boosting, production promotion, qualitative news, and M09 calibration.
 
 ## M09 — Inference and calibration diagnostics
 
+**Status:** implemented (diagnostics on raw M08 `p_home`; no calibrated candidate)
 **Branch:** `modeling/m09-inference-calibration`
 **Dependencies:** M08
 
 Scope:
 
-- Add paired metric deltas by fold and aggregate.
-- Bootstrap uncertainty using weeks or seasons as documented clusters.
-- Add reliability tables/plots and calibration intercept/slope.
-- Analyze candidate adjustments and winner flips by magnitude.
-- Label exploratory slices and use multiple-comparison controls for confirmatory
+- [x] Add paired metric deltas by fold and aggregate.
+- [x] Bootstrap uncertainty using weeks or seasons as documented clusters.
+- [x] Add reliability tables/plots and calibration intercept/slope.
+- [x] Analyze candidate adjustments and winner flips by magnitude.
+- [x] Label exploratory slices and use multiple-comparison controls for confirmatory
   claims.
 
 Tests and acceptance:
 
-- Deterministic resampling with configured seed.
-- Known perfect/constant/adversarial fixtures yield expected metrics.
-- Unequal paired game IDs fail.
-- Reports show uncertainty, fold consistency, coverage, and denominators.
+- [x] Deterministic resampling with configured seed.
+- [x] Known perfect/constant/adversarial fixtures yield expected metrics.
+- [x] Unequal paired game IDs fail.
+- [x] Reports show uncertainty, fold consistency, coverage, and denominators.
+
+Notes: Reliability/calibration/flip/adjustment outputs are machine-readable
+tables plus Markdown (no required plots). Calibration fit is diagnostic-only;
+post-hoc calibrated `p_home` remains a follow-up if M09 shows stable
+miscalibration. Cluster key is `(test_season, season_type, week)`.
 
 ## M10 — Feature ablation and robustness report
 
