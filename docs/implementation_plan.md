@@ -213,17 +213,23 @@ in analysis.
 
 Implement and test in this order:
 
-- entering wins/losses and previous-game result from shifted game history;
-- conference and neutral-site status;
-- latest pre-kickoff AP, Coaches, and CFP ranks;
-- FPI, SP+, Elo, then independently licensed Massey/Sagarin data;
-- strength of schedule using only games known before kickoff;
-- head coach, tenure, and first-year flag;
-- returning-QB flag with a written definition and season-specific source;
-- rivalry flag from a versioned mapping, not text matching.
+- [x] entering wins/losses and previous-game result from shifted game history;
+- [x] conference and neutral-site status;
+- [x] latest pre-kickoff AP, Coaches, and CFP ranks;
+- [x] FPI/SP+ left null historically; Elo week *w-1* joined; Massey/Sagarin deferred;
+- [x] strength of schedule using only games known before kickoff;
+- [ ] head coach, tenure, and first-year flag;
+- [ ] returning-QB flag with a written definition and season-specific source;
+- [ ] rivalry flag from a versioned mapping, not text matching.
 
 Every derived feature needs a unit test showing that changing a future game's
 result cannot alter an earlier row.
+
+Notes (2026-09-04): Elo (week *w-1*) plus conference/neutral/ranks ship.
+Entering W-L, previous result, and pre-kickoff SOS ship with leakage tests.
+Season-level FPI/SP+ remain unjoined. Massey/Sagarin, returning QB, rivalry,
+and coach tenure stay deferred (licensing / missing adapters / undefined
+sources)—do not fabricate them for P2 all-FBS provisional labeling.
 
 ## P2: modeling and evaluation
 
@@ -339,6 +345,10 @@ Every implementation handoff should state:
 | 2026-09-04 | Treat the screenshot's left team as away and lock times as America/Denver | All ten pairings are consistent with that orientation; retain as an explicit assumption pending user confirmation |
 | 2026-09-04 | Do not blend pregame Elo into the Week 1 market baseline | On identical Week 1 rows across eight walk-forward folds, spread + Elo had worse log loss and Brier score than spread alone |
 | 2026-09-04 | Ship weekly validate/recommend machinery before publishing the Week 1 card | Lets the market baseline be tested on synthetic fixtures without locking in this weekend's selections early |
+| 2026-09-04 | Harden CFBD ingest before P2 (retries, schema, resume, fixtures) | Provider drift must fail loudly; CI must not call the live API |
+| 2026-09-04 | Require regenerable cross-season coverage gates before modeling | Seasons with thin coverage stay labelled, never silently dropped |
+| 2026-09-04 | Pickem recovery is tooling-first until real archives exist | No in-repo historical ESPN slates; do not invent membership |
+| 2026-09-04 | Ship entering W-L / previous result / SOS; defer FPI archives, Massey/Sagarin, QB, rivalry, coaches | Enough leakage-safe history for provisional all-FBS P2; blocked sources stay explicit |
 
 ## Immediate human inputs needed
 
