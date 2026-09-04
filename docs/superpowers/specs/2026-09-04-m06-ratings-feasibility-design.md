@@ -27,7 +27,7 @@ redistribution, silent leakage, or false confidence from numeric agreement.
    / preseason semantics, without treating agreement as publication-time proof.
 4. End with a per-source recommendation: **implement**, **investigate further**,
    or **omit**.
-5. Mark roadmap: **M06 feasibility memo complete; adapter decisions deferred.**
+5. Mark roadmap: **M06 feasibility memo complete; adapter implementation deferred.**
 6. Keep CI green with synthetic fixtures; treat local-snapshot regeneration as
    an acceptance workflow.
 
@@ -49,7 +49,7 @@ redistribution, silent leakage, or false confidence from numeric agreement.
 |---|---|
 | `docs/ratings_feasibility.md` | Canonical memo + recommendations |
 | `docs/ratings_elo_pregame_vs_weekly.csv` | Aggregate season×week comparison only |
-| Provenance block (in memo and/or sidecar JSON) | Snapshot paths, run time, script identity, seasons covered |
+| `docs/ratings_elo_pregame_vs_weekly.provenance.json` | Mandatory machine-readable provenance for the aggregate CSV |
 | Research helper (not imported by build/CLI production) | Deterministic aggregation for acceptance runs |
 | Synthetic fixtures + unit tests | CI coverage of aggregation and Week 1 edges |
 | Roadmap M06 status line | Exact deferred wording above |
@@ -73,6 +73,11 @@ Every source section in `docs/ratings_feasibility.md` must fill:
 9. **Recommendation** — `implement` | `investigate further` | `omit`, with one
    paragraph of rationale.
 
+Every factual conclusion about endpoint parameters, temporal semantics,
+licensing/redistribution, and revision behavior must cite a primary source when
+one is available. Clearly label inferences and unresolved facts. Absence of a
+documented restriction must not be interpreted as permission to redistribute.
+
 ### Sources in scope
 
 | Source | Notes for this PR |
@@ -93,14 +98,23 @@ via team **name** (audited).
 
 - Join each FBS game’s pregame Elo to the weekly Elo row for the same team at
   week *w−1* (and document Week 1 / week-0 / missing weekly rows separately).
-- Emit **aggregate** rows only: `season`, `week`, counts, match rate within a
-  documented tolerance (e.g. exact float equality after cast), mean/median
-  absolute delta, null rates for each source.
+  The canonical comparison key is `(season, season_type, week, team_id)`.
+  A normalized team name may be used only as an explicitly audited fallback
+  when a stable ID is unavailable. The helper must never match across seasons
+  or season types.
+- Emit **aggregate** rows only: `season`, `season_type`, `week`, total sides,
+  both-present count, exact-match count/rate, within-tolerance count/rate,
+  mean/median/p90/p95/maximum absolute delta, per-source null counts/rates, and
+  side-specific anomaly counts. Exact equality and tolerance matching are
+  separate metrics, and the configured tolerance must be explicit.
 - Commit `docs/ratings_elo_pregame_vs_weekly.csv` from a local acceptance run
   when raw trees exist; regenerate via documented command.
-- Provenance must record: raw snapshot directory identities (season + snapshot
-  id), generation timestamp (UTC), helper module/script path and content hash
-  or git blob identity, seasons included, and tolerance used.
+- The mandatory machine-readable provenance sidecar must record: exact raw
+  snapshot paths and content hashes, the deterministic snapshot-selection rule,
+  generation timestamp (UTC), helper module/script path and content hash or git
+  blob identity, repository revision when available, seasons and season types
+  included, parameters and tolerance, input/output row counts, exclusions, and
+  identical/conflicting duplicate counts.
 
 **Hard interpretation rule:** numeric agreement is evidence that the two CFBD
 surfaces often carry the same number; it **does not** prove either surface’s
@@ -123,9 +137,9 @@ without modifying `build.py`.
 ## Comparison harness shape
 
 ```text
-research/elo_pregame_vs_weekly.py  (or src/pick_prophet/research/...)
+src/pick_prophet/research/elo_pregame_vs_weekly.py
   load_games(snapshot) -> rows with kickoff, week, team names, pregame elo
-  load_weekly_elo(snapshot) -> (week, team) -> elo
+  load_weekly_elo(snapshot) -> (season, season_type, week, team_id) -> elo
   compare_side(...) -> per-game side records (in memory only)
   aggregate(season, week, sides) -> season×week summary dict
   write_aggregate_csv(path)
@@ -134,8 +148,14 @@ research/elo_pregame_vs_weekly.py  (or src/pick_prophet/research/...)
 
 - Production `features/build.py`, ingest, and weekly recommend paths must not
   import this helper.
+- Duplicate weekly rows that are identical after normalization may be
+  deduplicated, but the count must be audited. Conflicting values for the same
+  canonical key must produce an explicit error or documented exclusion; input
+  ordering must never determine the selected rating.
 - CI uses synthetic committed fixtures that include Week 1, mid-season match,
-  mid-season mismatch, and missing weekly / missing pregame cases.
+  mid-season mismatch, missing weekly / missing pregame cases, identical and
+  conflicting duplicates, multiple seasons, and regular/postseason week-number
+  collisions.
 - Optional thin CLI or `python -m` entry for acceptance only is allowed if it
   does not register as a production subcommand required for cards.
 
@@ -144,21 +164,27 @@ research/elo_pregame_vs_weekly.py  (or src/pick_prophet/research/...)
 | Mode | Input | Asserts |
 |---|---|---|
 | CI | `tests/fixtures/ratings_elo_compare/` (synthetic) | Aggregation math, Week 1 bucketing, provenance fields present, no row-level dump required |
-| Acceptance | Local `data/raw/cfbd/{season}/{snapshot}/` | Regenerates aggregate CSV + provenance; operator reviews memo tables |
+| Acceptance | Explicitly selected local `data/raw/cfbd/{season}/{snapshot}/` paths | Regenerates aggregate CSV + provenance using the documented selection rule; operator reviews memo tables |
 
 ## Roadmap / docs updates
 
 - `docs/modeling_implementation_roadmap.md` § M06: status
-  **“M06 feasibility memo complete; adapter decisions deferred.”**
+  **“M06 feasibility memo complete; adapter implementation deferred.”**
 - Cross-link memo from `docs/data_sources.md` (short pointer only).
+- Update `docs/schema.md` so `elo_home` / `elo_away` accurately describe the
+  current preference for game-specific pregame Elo and the weekly *w−1*
+  fallback. This is documentation only; do not change join behavior.
 - Do not mark FPI/SP+/Elo adapters implemented.
 
 ## Tests and acceptance
 
-- Unit tests on synthetic fixtures: Week 1 aggregation, exact-match vs delta,
-  missing weekly, missing pregame, duplicate weekly key resolution rule
-  (deterministic: document last-wins or first-wins explicitly in helper).
-- Memo checklist complete for every in-scope source.
+- Unit tests on synthetic fixtures: Week 1 aggregation, exact-match vs
+  within-tolerance metrics, delta distribution, missing weekly, missing
+  pregame, identical duplicate auditing, conflicting duplicate rejection,
+  multi-season isolation, and regular/postseason isolation.
+- Memo checklist complete for every in-scope source, with primary citations for
+  factual claims where available and explicit `inference` / `unknown` labels
+  otherwise.
 - Aggregate CSV committed with provenance; no row-level dump in git.
 - `build.py` diff empty for join logic.
 - Roadmap wording exact as above.
