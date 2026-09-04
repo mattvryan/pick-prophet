@@ -1,0 +1,17 @@
+{
+  "as_of": "2026-09-04T16:01:38Z",
+  "away_team": "Clemson",
+  "cfbd_game_id": "401856660",
+  "consensus_market_total": 50.5,
+  "generated_at": "2026-09-04T16:11:30.999546Z",
+  "home_team": "LSU",
+  "lock_at_utc": "2026-09-05T23:30:00Z",
+  "market_sha256": "796e34d8917c6f9691c76dd06e4c0b9bb62188b978809f52d63e919fa133c1e5",
+  "market_snapshot_at_utc": "2026-09-04T14:46:39Z",
+  "method": "consensus market over/under baseline",
+  "neutral_site": false,
+  "recommended_integer_total": 51,
+  "rounding_rule": "nearest integer; .5 rounds up",
+  "schema_version": "weekly_tiebreaker.v1",
+  "slate_sha256": "d1099fa17a1eb70cec218879ceb9b05b606788c04d87d8fe6c5cb0affa65ffb0"
+}
