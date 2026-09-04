@@ -17,6 +17,11 @@ are vig-free market estimates, not guarantees.
 | 9 | Louisville vs. Ole Miss | **Ole Miss** | 70.0% | Market and ratings agree; neutral site |
 | 10 | SMU at Florida State | **SMU** | 58.9% | Market and ratings agree; no verified QB absence |
 
+## Tiebreaker
+
+For Clemson at LSU, enter **51 total points**. The current consensus over/under
+is 50.5; the tiebreaker baseline rounds half points up to the nearest integer.
+
 ## Manual review
 
 No selections were overridden. That follows the held-out Week 1 result: adding
