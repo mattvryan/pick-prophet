@@ -1,0 +1,15 @@
+{
+  "artifact_set": "m18_team_form_efficiency",
+  "artifact_version": "1.0.0",
+  "artifacts_sha256": {
+    "coverage.csv": "dd95185618a045c015f06788f73bb57658fc06ebb9bcec782be69be246b996fd",
+    "source_manifest.json": "34f66e51056b48655eacbb8ea5478b8510edd4d1ca8361f6b347535b08249fae"
+  },
+  "contains_2026_outcomes": false,
+  "experiment_ledger_sha256": "709730ec67af5e10ade5377b599e7cc903b06d8aec2dfdf49376490e5220e921",
+  "protocol_sha256": "37d5dd9958e8e298e3a84041414d5a54eb55b38548fa283a5237878f848057dd",
+  "protocol_version": "2.0.0",
+  "report_sha256": "ea4416c9ecdcb077f13b841390561132f1559d962884f717ef71c98a98b58420",
+  "spec_sha256": "b8501ca8c8b6112a15b058ac89ad86197de1f29a0922906d9f883502406e17e8",
+  "status": "source_and_feature_gate_passed_m20_evaluation_required"
+}

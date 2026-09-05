@@ -1,0 +1,24 @@
+{
+  "adapter_version": "m18-1.0.0",
+  "contains_2026_outcomes": false,
+  "endpoint": "/stats/game/advanced",
+  "feature_frame_sha256": "0d3c47311f283aaa479cfedebd1584e0ca7f70efc092f76e063def755d7e37c4",
+  "feature_games": 7763,
+  "feature_games_complete": 6552,
+  "feature_games_complete_rate": 0.8440036068530208,
+  "protocol_version": "2.0.0",
+  "seasons": {
+    "2017": {"retrieved_at_utc": "2026-09-05T00:04:34.658830+00:00", "rows": 1738, "sha256": "6cb5cd4ac1e9ef078cde33619e65269476055710cc699fa9d23263cc3ec0d4fc"},
+    "2018": {"retrieved_at_utc": "2026-09-05T00:04:46.119174+00:00", "rows": 1762, "sha256": "77c06114dbe9f64bc663c1aa0f836bfccb06cdb391eeb4bebc231389c1831e9c"},
+    "2019": {"retrieved_at_utc": "2026-09-05T00:05:02.705159+00:00", "rows": 1774, "sha256": "db169771ff510c581a28054c17cf92d50d2cb16e755feeb277c75c87a60d372d"},
+    "2020": {"retrieved_at_utc": "2026-09-05T00:05:15.530960+00:00", "rows": 1138, "sha256": "555bbeb19938d107873b8af4054ce318c85f4f547fb19ee49217310e6aa7b12b"},
+    "2021": {"retrieved_at_utc": "2026-09-05T00:05:29.924060+00:00", "rows": 1774, "sha256": "6e6a78ff560297570b5e171f9d281e308d2b2f307a3ffb242426d4f8fe378b2f"},
+    "2022": {"retrieved_at_utc": "2026-09-05T00:05:38.311037+00:00", "rows": 2918, "sha256": "ac44ca1907a5376d3fc64da17bd05eebc47a3dd58e8fea7f0fed85e8cc23f67c"},
+    "2023": {"retrieved_at_utc": "2026-09-05T00:05:50.169286+00:00", "rows": 2984, "sha256": "2667527c72f1cd52663988b84cf635b9776d1eafe03a44b0f269c3ebd4d9572e"},
+    "2024": {"retrieved_at_utc": "2026-09-05T00:06:11.362822+00:00", "rows": 3212, "sha256": "de37ee2b152e4ddcdfffe5255da51e1821083f2e30927481513ce4c08063bc3b"},
+    "2025": {"retrieved_at_utc": "2026-09-05T00:06:29.511643+00:00", "rows": 3316, "sha256": "d15f26533a243605d8e51a6f3b7daf7c11cb696e947092c66b4592f023ac89e8"}
+  },
+  "source": "https://api.collegefootballdata.com",
+  "source_rows": 20616,
+  "status": "source_and_feature_gate_passed_m20_evaluation_required"
+}
