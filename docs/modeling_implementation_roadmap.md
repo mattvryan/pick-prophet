@@ -538,7 +538,7 @@ the measured local gap are documented in `docs/historical_market_depth.md`.
 
 ### M17 — Reopen point-in-time team-strength ratings
 
-**Status:** planned
+**Status:** complete with stop condition (no source has proven publication time)
 **Suggested branch:** `data/m17-pit-ratings`
 **Dependencies:** M14 and M06 feasibility memo; may run in parallel
 
@@ -561,6 +561,9 @@ Acceptance:
 - End-of-season/current ratings cannot enter historical pregame rows.
 - Each adapter passes sampled PIT leakage and team-identity audits.
 - A failed source review ends with an explicit omission, not a substitute.
+
+Result: all rating families remain omitted from matrix 2.0; see
+`docs/pit_ratings_m17.md` and the tested future-observation contract.
 
 ### M18 — Point-in-time team form and efficiency
 
