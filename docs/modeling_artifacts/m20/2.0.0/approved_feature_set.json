@@ -1,0 +1,42 @@
+{
+  "artifact_version": "2.0.0",
+  "decision_packet_path": "docs/modeling_artifacts/m20/2.0.0/decision_packet.json",
+  "decision_packet_sha256": "e1c00ae1b02524c2fcb94c4940e8a6ac2704cfa0115579e3516bc0ec63aa252f",
+  "decision_version": "m20-decisions-2.0.0",
+  "evidence_manifest_path": "docs/modeling_artifacts/m20/2.0.0/manifest.json",
+  "evidence_manifest_sha256": "cb82ffba7e36345bc63f08920d45314368da0120c45af180b572b7929ce70350",
+  "exploratory_future_protocol_leads": [
+    "form_offense_explosiveness_diff"
+  ],
+  "human_decision": "no_features_promoted",
+  "inference_seasons": [2022, 2023, 2024, 2025],
+  "m21_block_reason": "No M20 variant passed protocol 2.0 eligibility gates and the human-approved promoted feature set is empty.",
+  "m21_blocked": true,
+  "matrix_schema_version": "2.0.0",
+  "promoted_features": [],
+  "protocol_version": "2.0.0",
+  "rejected_families": [
+    "coaching_context",
+    "team_form_efficiency"
+  ],
+  "rejected_features": [
+    "form_defense_explosiveness_diff",
+    "form_defense_ppa_diff",
+    "form_defense_successRate_diff",
+    "form_offense_explosiveness_diff",
+    "form_offense_ppa_diff",
+    "form_offense_successRate_diff",
+    "opening_coach_tenure_seasons_diff",
+    "opening_first_year_coach_diff"
+  ],
+  "rejected_units": [
+    "combined",
+    "lof__without_coaching_context",
+    "lof__without_team_form_efficiency"
+  ],
+  "reviewed_at_utc": "2026-09-05T00:31:15Z",
+  "reviewer": "Matt Ryan",
+  "status": "no_features_promoted",
+  "variant_summary_path": "docs/modeling_artifacts/m20/2.0.0/variant_summary.csv",
+  "variant_summary_sha256": "8b0865695063e32d801dfc24538aef31e0fa82d4bb9c419e0f97c1a84b17ecba"
+}

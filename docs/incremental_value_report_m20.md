@@ -1,6 +1,6 @@
 # M20 incremental-value report
 
-Status: **study complete; human disposition required**
+Status: **complete; human disposition recorded (`no_features_promoted`)**
 
 ## Result
 
@@ -46,15 +46,13 @@ missingness tables are committed with the packet.
 The verified ESPN Pick'em population remains unavailable, so this is an all-FBS
 inference result. The 2026 prospective stream remains sealed.
 
-## Required human decision
+## Human decision
 
-Automated eligibility is empty. A human must explicitly record either
-`no_features_promoted` (consistent with the frozen gates) or a protocol-level
-exception with rationale. M21 stays blocked unless a nonempty feature set is
-human-promoted. An exception would not be justified by the confirmatory evidence
-in this packet.
+Matt Ryan approved `no_features_promoted` on 2026-09-05. No protocol exception
+was taken. The signed decision is recorded in `approved_feature_set.json`; M21
+therefore closes without fitting a challenger and retains `market_only`.
 
 Detailed values are in `docs/modeling_artifacts/m20/2.0.0/variant_summary.csv`
 and `season_stability.csv`; robustness is in `coefficient_stability.csv` and
-`missingness_sensitivity.csv`. The decision packet intentionally contains no
-human dispositions.
+`missingness_sensitivity.csv`. The prereview decision packet remains immutable;
+the separate approved-feature-set artifact records the later human decision.
