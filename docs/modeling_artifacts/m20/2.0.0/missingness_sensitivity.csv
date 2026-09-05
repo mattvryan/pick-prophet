@@ -1,0 +1,5 @@
+variant,source_status,n,delta_log_loss,delta_brier
+family__team_form_efficiency,complete,2924,2.3828617189525225e-05,1.8566356631333214e-05
+family__team_form_efficiency,has_missing,271,0.00020340327771217748,0.00014009171815713983
+family__coaching_context,complete,2993,9.159266611313832e-05,5.040550706425506e-05
+family__coaching_context,has_missing,202,-0.00012729845739556378,-3.390188893293011e-05

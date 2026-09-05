@@ -31,6 +31,7 @@ from pick_prophet.models.residual_variants import VARIANTS, assert_variants_vali
 
 BASELINE_CONSISTENCY_TOL = 1e-6
 SCORE_CLIP = 1e-15
+SUPPORTED_MATRIX_SCHEMAS = frozenset({MATRIX_SCHEMA_VERSION, "2.0.0"})
 
 
 def _as_float(value: Any) -> float | None:
@@ -126,10 +127,10 @@ def fit_residual_walkforward(
         assert_variants_valid()
     if "market_only" not in active_variants:
         raise ValueError("variants must include market_only")
-    if matrix_schema_version != MATRIX_SCHEMA_VERSION:
+    if matrix_schema_version not in SUPPORTED_MATRIX_SCHEMAS:
         raise ValueError(
             f"unsupported matrix schema {matrix_schema_version!r}; "
-            f"expected {MATRIX_SCHEMA_VERSION!r}"
+            f"expected one of {sorted(SUPPORTED_MATRIX_SCHEMAS)!r}"
         )
     protocol = load_protocol(protocol_version)
     rows = load_matrix_rows(matrix_path)

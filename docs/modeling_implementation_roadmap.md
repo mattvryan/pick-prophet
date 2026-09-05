@@ -635,7 +635,7 @@ for timing or definition failures. See `docs/program_context_m19.md`.
 
 ### M20 — Feature matrix 2.0 and predeclared incremental-value study
 
-**Status:** planned
+**Status:** complete; no variant eligible, awaiting human disposition
 **Suggested branch:** `modeling/m20-matrix-v2-ablation`
 **Dependencies:** M14 and whichever M15–M19 source families pass their gates
 
@@ -658,6 +658,11 @@ Acceptance:
 - Fold-nested preprocessing and PIT tests pass for every included source.
 - Confirmatory and exploratory results are visibly separated.
 - The valid outcome may again be `no_features_promoted`.
+
+Result: matrix 2.0 and the predeclared 2,000-resample study are complete. No
+single, family, combined, or leave-family-out variant passed the frozen gates.
+The decision packet awaits an explicit human disposition; see
+`docs/incremental_value_report_m20.md`.
 
 ### M21 — Challenger, calibration, and registry promotion attempt
 

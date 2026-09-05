@@ -1,0 +1,33 @@
+{
+  "artifact_version": "2.0.0",
+  "audit_columns": [
+    "prior_games_home",
+    "prior_games_away",
+    "coaching_context_known"
+  ],
+  "baseline_columns": [
+    "home_implied_prob",
+    "home_market_logit"
+  ],
+  "candidate_families": {
+    "coaching_context": [
+      "opening_coach_tenure_seasons_diff",
+      "opening_first_year_coach_diff"
+    ],
+    "team_form_efficiency": [
+      "form_offense_ppa_diff",
+      "form_defense_ppa_diff",
+      "form_offense_successRate_diff",
+      "form_defense_successRate_diff",
+      "form_offense_explosiveness_diff",
+      "form_defense_explosiveness_diff"
+    ]
+  },
+  "contains_2026_outcomes": false,
+  "join_contract": "exact_game_id_and_season",
+  "matrix_sha256": "5db0c795cbd3dd2454dc43eb6ee764f0689267751372a0993ea27bbf22aaa6b4",
+  "missingness_contract": "raw_unknown_preserved; fold-local median imputation and missing indicators only",
+  "protocol_version": "2.0.0",
+  "row_count": 7763,
+  "target_columns": ["home_win"]
+}
