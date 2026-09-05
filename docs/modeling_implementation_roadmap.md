@@ -635,7 +635,7 @@ for timing or definition failures. See `docs/program_context_m19.md`.
 
 ### M20 — Feature matrix 2.0 and predeclared incremental-value study
 
-**Status:** complete; no variant eligible, awaiting human disposition
+**Status:** complete; human disposition `no_features_promoted` recorded
 **Suggested branch:** `modeling/m20-matrix-v2-ablation`
 **Dependencies:** M14 and whichever M15–M19 source families pass their gates
 
@@ -666,7 +666,7 @@ The decision packet awaits an explicit human disposition; see
 
 ### M21 — Challenger, calibration, and registry promotion attempt
 
-**Status:** planned; blocked unless M20 promotes at least one feature
+**Status:** complete; no challenger trained, `market_only` retained
 **Suggested branch:** `modeling/m21-challenger-promotion`
 **Dependencies:** M20
 
@@ -691,6 +691,10 @@ Acceptance:
   designate shadow or approve production use.
 - If M20 promotes nothing or all candidates fail, write a hashed no-challenger
   decision and retain `market_only`.
+
+Result: Matt Ryan approved M20's `no_features_promoted` disposition. The hashed
+M21 decision records no training, no bundle, no registry change, and retention
+of `market_only`; see `docs/m21_no_challenger_closeout.md`.
 
 ### Ongoing prospective capture
 
