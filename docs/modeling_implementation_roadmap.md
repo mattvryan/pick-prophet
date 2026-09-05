@@ -600,7 +600,7 @@ eligibility for M20 evaluation, not feature promotion; see
 
 ### M19 — Preseason personnel and program context
 
-**Status:** planned
+**Status:** complete; coaching admitted to M20, other families omitted
 **Suggested branches:** one PR per viable family under `features/m19-*`
 **Dependencies:** M14; may run in parallel
 
@@ -627,6 +627,11 @@ Acceptance:
 - Missing and unknown remain distinct; absence is never interpreted as “no
   change,” “healthy,” or “returning.”
 - No family enters modeling merely because collection work was completed.
+
+Result: season-opening head-coach tenure and first-year status passed source and
+coverage gates with explicit unknown handling. Returning production, talent,
+QB/coordinator continuity, preseason ratings, rivalry, and travel remain omitted
+for timing or definition failures. See `docs/program_context_m19.md`.
 
 ### M20 — Feature matrix 2.0 and predeclared incremental-value study
 

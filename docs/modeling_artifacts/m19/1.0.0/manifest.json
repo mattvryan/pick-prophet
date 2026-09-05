@@ -1,0 +1,15 @@
+{
+  "artifact_set": "m19_program_context",
+  "artifact_version": "1.0.0",
+  "artifacts_sha256": {
+    "coverage.csv": "be89ab546348416853b69cf2d820306434bd179b5e9152c588509a470c06d319",
+    "source_decision.json": "2c3d4033d497df17b66e116a553f6c3d45ff9435096f7745429fc105fa7fdfbb"
+  },
+  "contains_2026_outcomes": false,
+  "experiment_ledger_sha256": "709730ec67af5e10ade5377b599e7cc903b06d8aec2dfdf49376490e5220e921",
+  "protocol_sha256": "37d5dd9958e8e298e3a84041414d5a54eb55b38548fa283a5237878f848057dd",
+  "protocol_version": "2.0.0",
+  "report_sha256": "9f8a58c34eca753226a0b3db78232065d166258dd8bd4e997f3b382a2b090d0e",
+  "spec_sha256": "0f22389147ac475916b2867a8742bf579af57c2648d940e31e915d0153858880",
+  "status": "coaching_gate_passed_other_families_omitted"
+}

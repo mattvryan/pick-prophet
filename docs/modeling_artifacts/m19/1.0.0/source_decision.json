@@ -1,0 +1,27 @@
+{
+  "artifact_version": "1.0.0",
+  "coaching_feature_frame_sha256": "7f238deeebc9be0647d8687d164d9437b39db0f5cf4fb1b8742e4b6c7af3c4d4",
+  "contains_2026_outcomes": false,
+  "decisions": {
+    "coordinator_continuity": "omit_no_stable_dated_history",
+    "head_coach_continuity": "admit_to_m20_evaluation",
+    "preseason_ratings": "omit_m17_timing_stop_applies",
+    "quarterback_continuity": "omit_no_stable_dated_history",
+    "returning_production": "omit_publication_time_unproven",
+    "rivalry_registry": "omit_no_approved_versioned_definition",
+    "team_talent": "omit_publication_time_unproven",
+    "travel_venue": "omit_hypothesis_and_origin_definition_unfrozen"
+  },
+  "feature_games": 7763,
+  "feature_games_known": 6729,
+  "feature_games_known_rate": 0.8668040705912663,
+  "protocol_version": "2.0.0",
+  "source": {
+    "endpoint": "/coaches",
+    "retrieved_at_utc": "2026-09-05T00:13:29.375225+00:00",
+    "rows": 1816,
+    "season_rows": 12564,
+    "sha256": "c0c40228d4e241b3b9476b7093ea8dc64e8cc1c0b852b1b52555e6c5f9eeddfd"
+  },
+  "status": "coaching_gate_passed_other_families_omitted"
+}
