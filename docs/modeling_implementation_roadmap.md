@@ -567,7 +567,7 @@ Result: all rating families remain omitted from matrix 2.0; see
 
 ### M18 — Point-in-time team form and efficiency
 
-**Status:** planned
+**Status:** complete; candidate family admitted to M20 evaluation
 **Suggested branch:** `features/m18-team-form-efficiency`
 **Dependencies:** M14; may run in parallel
 
@@ -592,6 +592,11 @@ Acceptance:
 - Future-game mutation tests prove earlier rows are unchanged.
 - Every rolling feature exposes its observation cutoff and games included.
 - Source coverage, rule changes, and season comparability are documented.
+
+Result: the compact prior-game PPA, success-rate, and explosiveness family
+passed chronology and coverage gates (84.4% complete over 2017–2025). This is
+eligibility for M20 evaluation, not feature promotion; see
+`docs/team_form_efficiency_m18.md`.
 
 ### M19 — Preseason personnel and program context
 
