@@ -1,0 +1,23 @@
+{
+  "contains_2026_outcomes": false,
+  "eligible_variants": [],
+  "families": {
+    "coaching_context": [
+      "opening_coach_tenure_seasons_diff",
+      "opening_first_year_coach_diff"
+    ],
+    "team_form_efficiency": [
+      "form_offense_ppa_diff",
+      "form_defense_ppa_diff",
+      "form_offense_successRate_diff",
+      "form_defense_successRate_diff",
+      "form_offense_explosiveness_diff",
+      "form_defense_explosiveness_diff"
+    ]
+  },
+  "human_dispositions": {},
+  "matrix_schema_version": "2.0.0",
+  "n_boot": 2000,
+  "protocol_version": "2.0.0",
+  "status": "awaiting_human_dispositions"
+}

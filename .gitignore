@@ -17,6 +17,8 @@ data/processed/matrix/
 data/processed/residual/
 data/processed/m18/
 data/processed/m19/
+data/processed/matrix_v2/
+artifacts/m20/
 artifacts/residual_ablation/
 artifacts/residual_diagnostics/
 !data/**/.gitkeep

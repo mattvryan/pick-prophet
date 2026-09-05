@@ -1,0 +1,19 @@
+{
+  "artifact_set": "m20_matrix_v2_incremental_value",
+  "artifact_version": "2.0.0",
+  "artifacts_sha256": {
+    "coefficient_stability.csv": "a88c14002c2a7003afed4f26f1eb602c59bd50dab93a9b927d90ad655d5855eb",
+    "decision_packet.json": "e1c00ae1b02524c2fcb94c4940e8a6ac2704cfa0115579e3516bc0ec63aa252f",
+    "matrix_schema.json": "87553d3a4e8c57f230bcfb40682644f8de68ec9546249aeda70a69e7e6b060d0",
+    "missingness_sensitivity.csv": "95b1cbe11636eff0c95bc322de4fbf0e06774045d3f237374c164b60362b191b",
+    "season_stability.csv": "2462359b45f2852254cbddf8571cf272b9876c8a3c601d19f1dbf0837322e9d6",
+    "variant_summary.csv": "8b0865695063e32d801dfc24538aef31e0fa82d4bb9c419e0f97c1a84b17ecba"
+  },
+  "contains_2026_outcomes": false,
+  "experiment_ledger_sha256": "709730ec67af5e10ade5377b599e7cc903b06d8aec2dfdf49376490e5220e921",
+  "protocol_sha256": "37d5dd9958e8e298e3a84041414d5a54eb55b38548fa283a5237878f848057dd",
+  "protocol_version": "2.0.0",
+  "report_sha256": "113e3064cd3146b79e4ae39427b54a48aee54d5bca3030be787c8132026c0a02",
+  "spec_sha256": "6fbf1c424d79c7cf3004aff967e35d4825632eee1c47361fafda9378e37a84f5",
+  "status": "no_variant_eligible_awaiting_human_disposition"
+}
